@@ -12,10 +12,33 @@ import java.util.List;
  * @author duncan
  */
 public class FieldAttributes {
-    private FieldAttributes(){}
+
+    private FieldAttributes() {
+    }
     
-    private String fieldItWorksTogetherWith;
+    private Field dependentField;
     private List<Aggregation> aggregationType;
-    
-    
+    private Table sourceTable;
+    private DataType dataType;
+    private String alias;
+
+    public static class AttributesBuilder {
+
+        private Field dependentField;
+        private List<Aggregation> aggregationType;
+        private Table sourceTable;
+        private DataType dataType;
+        private String alias;
+
+        public FieldAttributes build() {
+            FieldAttributes fieldAttributes = new FieldAttributes();
+            fieldAttributes.dependentField = this.dependentField;
+            fieldAttributes.aggregationType = this.aggregationType;
+            fieldAttributes.sourceTable = this.sourceTable;
+            fieldAttributes.dataType = this.dataType;
+            fieldAttributes.alias = this.alias;
+            return fieldAttributes;
+        }
+    }
+
 }

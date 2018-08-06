@@ -10,5 +10,8 @@ package com.healthit.dslservice.dto;
  * @author duncan
  */
 public class Field {
+    String name;
+    FieldAttributes attributes;
+    
     
 }
