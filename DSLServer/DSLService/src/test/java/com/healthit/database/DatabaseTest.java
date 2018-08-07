@@ -6,7 +6,7 @@
 package com.healthit.database;
 
 import com.healthit.dslservice.QueryTemplate;
-import com.healthit.dslservice.database.Database;
+import com.healthit.dslservice.util.Database;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.logging.Level;
