@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <web-app version="2.5" xmlns="http://java.sun.com/xml/ns/javaee" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd">
     <display-name>springtest</display-name>
-<!--    <filter>
+    <!--    <filter>
         <filter-name>urlchecker</filter-name>
         <filter-class>com.inmobia.classified.filter.UrlCheckerFilter</filter-class>
     </filter>
@@ -16,9 +16,19 @@
     </servlet>
     <servlet-mapping>
         <servlet-name>spring</servlet-name>
-
         <url-pattern>/</url-pattern>
     </servlet-mapping>
+    
+    <servlet>
+        <servlet-name>InitServlet</servlet-name>
+        <servlet-class>com.healthit.Init</servlet-class>
+        <init-param>
+            <param-name>log4j-location</param-name>
+            <param-value>WEB-INF/log4j.properties</param-value>
+        </init-param>
+        <load-on-startup>1</load-on-startup>
+    </servlet>
+    
     <session-config>
         <session-timeout>60</session-timeout>
     </session-config>
