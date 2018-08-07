@@ -10,6 +10,5 @@
     <packaging>pom</packaging>
     <modules>
         <module>DSLService</module>
-        <module>DSLWeb</module>
     </modules>
 </project>
