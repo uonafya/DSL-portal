@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package com.healthit.dslservice.dto;
+package com.healthit.dslservice.dto.schema;
 
 import java.util.List;
 

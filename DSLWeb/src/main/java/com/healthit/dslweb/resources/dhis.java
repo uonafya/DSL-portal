@@ -21,7 +21,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 @Controller
 public class dhis {
     @ResponseBody
-    @RequestMapping(value = "/kpi", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+    @RequestMapping(value = "/kpi2", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<?> getAllKPI(@RequestParam String msisdn) {
         
         if (true) {

@@ -3,15 +3,12 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package com.healthit.dslservice.dto;
+package com.healthit.dslservice.dto.schema;
 
 /**
  *
  * @author duncan
  */
-public enum DataType {
-     VARCHAR,
-     CHAR,
-     INTEGER,
-     DATE
+public enum Aggregation {
+    SUM, AVERAGE, COUNT, MAX, MIN, AS_IS
 }

@@ -5,6 +5,7 @@
  */
 package com.healthit.dslservice.util;
 
+import com.healthit.dslservice.dao.FacilityDao;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
@@ -28,13 +29,19 @@ public class Database {
 
     private static Connection connect() {
         if (conn == null) {
-            Database db = new Database();
             try {
-                log.info("Making database connection");
-                conn = DriverManager.getConnection(db.url, db.user, db.password);
-                log.info("Connected to the PostgreSQL server successfully.");
-            } catch (SQLException e) {
-                log.error(e.getMessage());
+                Class.forName("org.postgresql.Driver");
+                Database db = new Database();
+                try {
+                    log.info("Making database connection");
+                    conn = DriverManager.getConnection(db.url, db.user, db.password);
+                    log.info("Connected to the PostgreSQL server successfully.");
+                } catch (SQLException e) {
+                    log.error(e.getMessage());
+                }
+                
+            } catch (ClassNotFoundException ex) {
+                log.error(ex);
             }
 
         }

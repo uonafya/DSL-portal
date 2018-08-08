@@ -3,12 +3,12 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package com.healthit.dslservice.dto;
+package com.healthit.dslservice.dto.adminstrationlevel;
 
 /**
  *
  * @author duncan
  */
-public enum Aggregation {
-    SUM, AVERAGE, COUNT, MAX, MIN, AS_IS
+public class County extends Adminstration{
+   
 }
