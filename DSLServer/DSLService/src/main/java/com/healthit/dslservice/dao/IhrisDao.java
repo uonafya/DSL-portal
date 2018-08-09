@@ -21,7 +21,7 @@ import org.apache.log4j.Logger;
  *
  * @author duncan
  */
-public class Ihris {
+public class IhrisDao {
 
     final static Logger log = Logger.getLogger(FacilityDao.class);
     private String getALlCadreGroup = "Select cadreid,cadrename from dim_ihris_cadre";

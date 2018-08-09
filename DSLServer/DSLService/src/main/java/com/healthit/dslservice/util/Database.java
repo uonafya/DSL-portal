@@ -55,10 +55,12 @@ public class Database {
         connect();
         try {
             ps = conn.prepareStatement(sql);
+            log.info("Excecuting query: "+ sql);
             rs = ps.executeQuery();
         } catch (SQLException ex) {
             log.error(ex);
         }
         return rs;
     }
+    
 }

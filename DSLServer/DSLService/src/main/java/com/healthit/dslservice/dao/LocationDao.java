@@ -21,7 +21,7 @@ import org.apache.log4j.Logger;
  *
  * @author duncan
  */
-public class Location {
+public class LocationDao {
 
     final static Logger log = Logger.getLogger(FacilityDao.class);
     private String getALlWards = "Select id, name ,constituency_id from common_ward";

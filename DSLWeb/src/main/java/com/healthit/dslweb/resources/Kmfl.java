@@ -22,7 +22,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
  * @author duncan
  */
 @Controller
-public class kmfl {
+public class Kmfl {
     @ResponseBody
     @RequestMapping(value = "/facilities_ty", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<?> getAllFacilities(@RequestParam String msisdn) {

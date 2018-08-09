@@ -18,7 +18,7 @@ import org.apache.log4j.Logger;
  *
  * @author duncan
  */
-public class Kemsa {
+public class KemsaDao {
 
     final static Logger log = Logger.getLogger(FacilityDao.class);
     private String getALlCommodities = "Select c_order_id as id,mfl as mflcode,product as name,"

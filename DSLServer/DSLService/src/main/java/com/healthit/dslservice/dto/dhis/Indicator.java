@@ -12,6 +12,7 @@ package com.healthit.dslservice.dto.dhis;
 public class Indicator {
     private String id;
     private String idicatorName;
+    private String indicatorGroup;
     private String indicatorValue;
     private String startDate;
     private String endDate;
@@ -63,6 +64,14 @@ public class Indicator {
 
     public void setMflCode(String mflCode) {
         this.mflCode = mflCode;
+    }
+
+    public String getIndicatorGroup() {
+        return indicatorGroup;
+    }
+
+    public void setIndicatorGroup(String indicatorGroup) {
+        this.indicatorGroup = indicatorGroup;
     }
     
     
