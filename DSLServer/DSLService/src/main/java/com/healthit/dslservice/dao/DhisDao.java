@@ -27,7 +27,7 @@ public class DhisDao {
     private StringBuilder getALlFaciltiesBuilder = new StringBuilder(
             "Select \"Indicator ID\" as id,\"Indicator name\" as indicatorName,code as kmflcode,value as kpivalue,"
             + " \"Group name\" as indicatorGroup, startdate, enddate "
-            + "from vw_mohdsl_dhis"
+            + "from vw_mohdsl_dhis where code is not null "
     );
 
     public List<Indicator> getIndicators(
@@ -35,64 +35,64 @@ public class DhisDao {
             List<String> indicatorGroup,
             String startDate,
             String endDate,
-            List<String>  mflCode
+            List<String> mflCode
     ) {
-       
-       if(idicatorName !=null){
-           if(!idicatorName.isEmpty()){
-               Iterator i =idicatorName.iterator();
-               String append="";
-               int count=0;
-               while(i.hasNext()){
-                   if(count==0){
-                       append=" and indicatorName="+(String)i.next()+" ";
-                       count=count+1;
-                   }else{
-                       append=" or indicatorName="+(String)i.next()+" ";
-                   }
-               }
-               getALlFaciltiesBuilder.append(append);
-           }
-       }
-       
-       if(indicatorGroup !=null){
-           if(!indicatorGroup.isEmpty()){
-               Iterator i =indicatorGroup.iterator();
-               String append="";
-               int count=0;
-               while(i.hasNext()){
-                   if(count==0){
-                       append=" and indicatorGroup="+(String)i.next()+" ";
-                       count=count+1;
-                   }else{
-                       append=" or indicatorGroup="+(String)i.next()+" ";
-                   }
-               }
-               getALlFaciltiesBuilder.append(append);
-           }
-       }
-       Filter filter=new Filter();
-       String orderBy=" order by startdate,enddate ";
-       getALlFaciltiesBuilder.append(orderBy+" OFFSET "+filter.getOffset()+ " "+" LIMIT "+ filter.getLimit());
-       
-       if(mflCode !=null){
-           if(!mflCode.isEmpty()){
-               Iterator i =mflCode.iterator();
-               String append="";
-               int count=0;
-               while(i.hasNext()){
-                   if(count==0){
-                       append=" and code="+(String)i.next()+" ";
-                       count=count+1;
-                   }else{
-                       append=" or code="+(String)i.next()+" ";
-                   }
-               }
-               getALlFaciltiesBuilder.append(append);
-           }
-       }
-        
-       
+
+        if (idicatorName != null) {
+            if (!idicatorName.isEmpty()) {
+                Iterator i = idicatorName.iterator();
+                String append = "";
+                int count = 0;
+                while (i.hasNext()) {
+                    if (count == 0) {
+                        append = " and indicatorName=" + (String) i.next() + " ";
+                        count = count + 1;
+                    } else {
+                        append = " or indicatorName=" + (String) i.next() + " ";
+                    }
+                }
+                getALlFaciltiesBuilder.append(append);
+            }
+        }
+
+        if (indicatorGroup != null) {
+            if (!indicatorGroup.isEmpty()) {
+                Iterator i = indicatorGroup.iterator();
+                String append = "";
+                int count = 0;
+                while (i.hasNext()) {
+                    if (count == 0) {
+                        append = " and indicatorGroup=" + (String) i.next() + " ";
+                        count = count + 1;
+                    } else {
+                        append = " or indicatorGroup=" + (String) i.next() + " ";
+                    }
+                }
+                getALlFaciltiesBuilder.append(append);
+            }
+        }
+
+        if (mflCode != null) {
+            if (!mflCode.isEmpty()) {
+                Iterator i = mflCode.iterator();
+                String append = "";
+                int count = 0;
+                while (i.hasNext()) {
+                    if (count == 0) {
+                        append = " and code=" + (String) i.next() + " ";
+                        count = count + 1;
+                    } else {
+                        append = " or code=" + (String) i.next() + " ";
+                    }
+                }
+                getALlFaciltiesBuilder.append(append);
+            }
+        }
+
+        Filter filter = new Filter();
+        String orderBy = " order by startdate,enddate ";
+        getALlFaciltiesBuilder.append(orderBy + " OFFSET " + filter.getOffset() + " " + " LIMIT " + filter.getLimit());
+
         List<Indicator> indicatorList = new ArrayList();
         ResultSet rs = Database.executeQuery(getALlFaciltiesBuilder.toString());
         log.info("Fetching facilities");
