@@ -25,7 +25,7 @@ public class IhrisDao {
 
     final static Logger log = Logger.getLogger(FacilityDao.class);
     private String getALlCadreGroup = "Select cadreid,cadrename from dim_ihris_cadre";
-    private String getALlCadre = "Select dataelementid as id,dataelementname as name, cadreid as cadre_group_id from dim_ihris_dataelement";
+    private String getALlCadre = "Select dataelementid as id,dataelementname as cadrename, cadreid as cadre_group_id from dim_ihris_dataelement";
 
     public List<CadreGroup> getAllCadresGroup() {
         List<CadreGroup> cadreGroupList = new ArrayList();
@@ -51,7 +51,7 @@ public class IhrisDao {
         try {
             while (rs.next()) {
                 Cadre cadre = new Cadre();
-                cadre.setId(rs.getString("cadreid"));
+                cadre.setId(Integer.toString(rs.getInt("id")));
                 cadre.setName(rs.getString("cadrename"));
                 cadre.setCadreGroupId(rs.getString("cadre_group_id"));
                 cadreList.add(cadre);
