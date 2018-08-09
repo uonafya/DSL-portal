@@ -9,6 +9,7 @@ import com.healthit.dslservice.dao.FacilityDao;
 import com.healthit.dslservice.dao.IhrisDao;
 import com.healthit.dslservice.dto.adminstrationlevel.Facility;
 import com.healthit.dslservice.dto.ihris.Cadre;
+import com.healthit.dslservice.dto.ihris.CadreAllocation;
 import com.healthit.dslservice.dto.ihris.CadreGroup;
 import java.util.List;
 import org.springframework.http.HttpStatus;
@@ -54,6 +55,15 @@ public class Ihris {
         IhrisDao ihris=new IhrisDao();
         List<Cadre> cadreList = ihris.getAllCadres();
         return new ResponseEntity<List>(cadreList, HttpStatus.OK);
+
+    }
+    
+    @ResponseBody
+    @RequestMapping(value = "/cadreallocation", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<List> getCadreAllocation() {
+        IhrisDao ihris=new IhrisDao();
+        List<CadreAllocation> cadreAllocationList = ihris.getCadreAllocation();
+        return new ResponseEntity<List>(cadreAllocationList, HttpStatus.OK);
 
     }
     

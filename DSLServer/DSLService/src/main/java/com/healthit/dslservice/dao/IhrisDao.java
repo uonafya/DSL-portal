@@ -9,6 +9,7 @@ import static com.healthit.dslservice.dao.FacilityDao.log;
 import com.healthit.dslservice.dto.ihris.Cadre;
 import com.healthit.dslservice.dto.KephLevel;
 import com.healthit.dslservice.dto.adminstrationlevel.Facility;
+import com.healthit.dslservice.dto.ihris.CadreAllocation;
 import com.healthit.dslservice.dto.ihris.CadreGroup;
 import com.healthit.dslservice.util.Database;
 import java.sql.ResultSet;
@@ -26,7 +27,27 @@ public class IhrisDao {
     final static Logger log = Logger.getLogger(FacilityDao.class);
     private String getALlCadreGroup = "Select cadreid,cadrename from dim_ihris_cadre";
     private String getALlCadre = "Select dataelementid as id,dataelementname as cadrename, cadreid as cadre_group_id from dim_ihris_dataelement";
-
+    private String getCadreAllocation = "Select dataelementid as cadreid,periodid,mflcode,value from fact_ihris_datavalue";
+   
+    
+    public List<CadreAllocation> getCadreAllocation() {
+        List<CadreAllocation> cadreGroupList = new ArrayList();
+        ResultSet rs = Database.executeQuery(getCadreAllocation);
+        log.info("Fetching cadre groups");
+        try {
+            while (rs.next()) {
+                CadreAllocation cadreAllocationList = new CadreAllocation();
+                cadreAllocationList.setCadreid(rs.getString("cadreid"));
+                cadreAllocationList.setCadreNumber(rs.getString("value"));
+                cadreAllocationList.setMflcode(rs.getString("mflcode"));
+                cadreGroupList.add(cadreAllocationList);
+            }
+        } catch (SQLException ex) {
+            log.error(ex);
+        }
+        return cadreGroupList;
+    }
+    
     public List<CadreGroup> getAllCadresGroup() {
         List<CadreGroup> cadreGroupList = new ArrayList();
         ResultSet rs = Database.executeQuery(getALlCadreGroup);
