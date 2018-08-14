@@ -1,0 +1,37 @@
+/* 
+    Created on : Aug 13, 2018, 8:17:49 PM
+    Author     : duncan
+*/
+
+nav.navbar-default {
+    background-color: #276696 !important;
+
+}
+
+.navbar-brand  {
+    color: #ffffff !important;
+}
+
+a.dropdown-toggle {
+    color: #ffffff !important;
+}
+
+a.dropdown-toggle:hover {
+    background-color: #ffffff !important;
+    color: #276696 !important;
+
+
+}
+
+.categories {
+    width: 300px;
+    border-top: 2px solid #e7e7e7;
+    padding-top: 13px;
+    /*margin-top: 51px;*/
+}
+
+.flex-item {
+    padding: 0 30px;
+    border-left: 1px solid #e7e7e7;
+    flex-grow: 1;
+}
