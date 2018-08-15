@@ -5,7 +5,6 @@
 
 nav.navbar-default {
     background-color: #276696 !important;
-
 }
 
 .navbar-brand  {
@@ -19,19 +18,42 @@ a.dropdown-toggle {
 a.dropdown-toggle:hover {
     background-color: #ffffff !important;
     color: #276696 !important;
-
-
 }
 
 .categories {
     width: 300px;
     border-top: 2px solid #e7e7e7;
     padding-top: 13px;
-    /*margin-top: 51px;*/
+    margin-left: 10px;
 }
 
 .flex-item {
-    padding: 0 30px;
+    padding: 0 10px;
     border-left: 1px solid #e7e7e7;
     flex-grow: 1;
+    margin-left: 10px;
+}
+
+.cat-caret {
+    float: right;
+}
+
+.div-side-cover {
+     width: 100%;
+     overflow: hidden; 
+     margin-bottom: 15px
+}
+
+.div-side-left {
+    width: 50%; 
+    float: left;
+}
+
+.div-side-right {
+    width: 50%; 
+    float: right;
+}
+
+div .panel-title i {
+    margin-right: 10px;
 }
