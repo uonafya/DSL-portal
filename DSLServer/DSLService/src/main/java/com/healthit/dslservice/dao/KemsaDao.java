@@ -5,6 +5,7 @@
  */
 package com.healthit.dslservice.dao;
 
+import com.healthit.dslservice.DslException;
 import com.healthit.dslservice.Filter;
 import com.healthit.dslservice.dto.ihris.CadreGroup;
 import com.healthit.dslservice.dto.kemsa.Commodity;
@@ -30,7 +31,7 @@ public class KemsaDao {
             String startDate,
             String endDate,
             List<String> mflCode
-    ) {
+    ) throws DslException {
         
        
        if(mflCode !=null){
@@ -55,7 +56,8 @@ public class KemsaDao {
        getALlCommoditiesBuilder.append(orderBy+" OFFSET "+filter.getOffset()+ " "+" LIMIT "+ filter.getLimit());
         
         List<Commodity> cadreGroupList = new ArrayList();
-        ResultSet rs = Database.executeQuery(getALlCommoditiesBuilder.toString());
+        Database db =new Database();
+        ResultSet rs = db.executeQuery(getALlCommoditiesBuilder.toString());
         log.info("Fetching Commodities");
         try {
             while (rs.next()) {
@@ -71,6 +73,8 @@ public class KemsaDao {
             }
         } catch (SQLException ex) {
             log.error(ex);
+        }finally{
+            db.CloseConnection();
         }
         return cadreGroupList;
     }

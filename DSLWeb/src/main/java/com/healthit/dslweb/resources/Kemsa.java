@@ -5,11 +5,15 @@
  */
 package com.healthit.dslweb.resources;
 
+import com.healthit.dslservice.DslException;
 import com.healthit.dslservice.dao.FacilityDao;
 import com.healthit.dslservice.dao.KemsaDao;
 import com.healthit.dslservice.dto.adminstrationlevel.Facility;
 import com.healthit.dslservice.dto.kemsa.Commodity;
+import com.healthit.dslservice.message.Message;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -39,14 +43,18 @@ public class Kemsa {
 
     @ResponseBody
     @RequestMapping(value = "/commodities", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<List> getAllCommodities() {
-        KemsaDao kemsa = new KemsaDao();
-        List<Commodity> commodityList = kemsa.getAllCommodities(
-                null,
-                null,
-                null
-        );
-        return new ResponseEntity<List>(commodityList, HttpStatus.OK);
+    public ResponseEntity<?> getAllCommodities() {
+        try {
+            KemsaDao kemsa = new KemsaDao();
+            List<Commodity> commodityList = kemsa.getAllCommodities(
+                    null,
+                    null,
+                    null
+            );
+            return new ResponseEntity<List>(commodityList, HttpStatus.OK);
+        } catch (DslException ex) {
+            return new ResponseEntity<Message>(ex.getMsg(), HttpStatus.INTERNAL_SERVER_ERROR);
+        }
 
     }
 

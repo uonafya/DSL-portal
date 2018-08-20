@@ -5,6 +5,7 @@
  */
 package com.healthit.dslservice.dao;
 
+import com.healthit.dslservice.DslException;
 import com.healthit.dslservice.dto.KephLevel;
 import com.healthit.dslservice.dto.adminstrationlevel.Facility;
 import com.healthit.dslservice.util.Database;
@@ -24,9 +25,10 @@ public class FacilityDao {
     private String getALlFacilties = "Select id,name,code as kmflcode,kephlevel_sk, owner_sk as owner_id, ward_id, sub_county_id "
             + "from facilities_facility";
 
-    public List<Facility> getFacilities() {
+    public List<Facility> getFacilities() throws DslException {
         List<Facility> facilityList = new ArrayList();
-        ResultSet rs = Database.executeQuery(getALlFacilties);
+        Database db =new Database();
+        ResultSet rs = db.executeQuery(getALlFacilties);
         log.info("Fetching facilities");
         try {
             while (rs.next()) {
@@ -42,6 +44,8 @@ public class FacilityDao {
             }
         } catch (SQLException ex) {
             log.error(ex);
+        }finally{
+            db.CloseConnection();
         }
         return facilityList;
     }

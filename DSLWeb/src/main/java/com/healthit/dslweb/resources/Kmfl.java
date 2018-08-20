@@ -5,9 +5,13 @@
  */
 package com.healthit.dslweb.resources;
 
+import com.healthit.dslservice.DslException;
 import com.healthit.dslservice.dao.FacilityDao;
 import com.healthit.dslservice.dto.adminstrationlevel.Facility;
+import com.healthit.dslservice.message.Message;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -37,10 +41,14 @@ public class Kmfl {
     
     @ResponseBody
     @RequestMapping(value = "/facilities", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<List> getAllContentCategorySubType() {
-        FacilityDao facilityDao=new FacilityDao();
-        List<Facility> facilityList = facilityDao.getFacilities();
-        return new ResponseEntity<List>(facilityList, HttpStatus.OK);
+    public ResponseEntity<?> getAllContentCategorySubType() {
+        try {
+            FacilityDao facilityDao=new FacilityDao();
+            List<Facility> facilityList = facilityDao.getFacilities();
+            return new ResponseEntity<List>(facilityList, HttpStatus.OK);
+        } catch (DslException ex) {
+            return new ResponseEntity<Message>(ex.getMsg(), HttpStatus.INTERNAL_SERVER_ERROR);
+        }
 
     }
     

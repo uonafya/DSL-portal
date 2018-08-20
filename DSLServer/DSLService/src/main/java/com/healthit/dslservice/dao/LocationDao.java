@@ -5,6 +5,7 @@
  */
 package com.healthit.dslservice.dao;
 
+import com.healthit.dslservice.DslException;
 import com.healthit.dslservice.dto.adminstrationlevel.Constituency;
 import com.healthit.dslservice.dto.adminstrationlevel.County;
 import com.healthit.dslservice.dto.adminstrationlevel.SubCounty;
@@ -32,9 +33,10 @@ public class LocationDao {
 
     
 
-    public List<Ward> getALlWards() {
+    public List<Ward> getALlWards() throws DslException {
         List<Ward> wardList = new ArrayList();
-        ResultSet rs = Database.executeQuery(getALlWards);
+        Database db =new Database();
+        ResultSet rs = db.executeQuery(getALlWards);
         log.info("Fetching getWards");
         try {
             while (rs.next()) {
@@ -46,14 +48,17 @@ public class LocationDao {
             }
         } catch (SQLException ex) {
             log.error(ex);
+        }finally{
+            db.CloseConnection();
         }
         return wardList;
     }
 
    
-    public List<County> getCounties() {
+    public List<County> getCounties() throws DslException {
          List<County> countyList = new ArrayList();
-        ResultSet rs = Database.executeQuery(getAllCounties);
+         Database db =new Database();
+        ResultSet rs = db.executeQuery(getAllCounties);
         log.info("Fetching Counties");
         try {
             while (rs.next()) {
@@ -64,13 +69,16 @@ public class LocationDao {
             }
         } catch (SQLException ex) {
             log.error(ex);
+        }finally{
+            db.CloseConnection();
         }
         return countyList;
     }
 
-    public List<Constituency> getConstituencies() {
+    public List<Constituency> getConstituencies() throws DslException {
         List<Constituency> constituencyList = new ArrayList();
-        ResultSet rs = Database.executeQuery(getAllConstituencies);
+        Database db =new Database();
+        ResultSet rs = db.executeQuery(getAllConstituencies);
         log.info("Fetching Constituencies");
         try {
             while (rs.next()) {
@@ -82,6 +90,8 @@ public class LocationDao {
             }
         } catch (SQLException ex) {
             log.error(ex);
+        }finally{
+            db.CloseConnection();
         }
         return constituencyList;
     }

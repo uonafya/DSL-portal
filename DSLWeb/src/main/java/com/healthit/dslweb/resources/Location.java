@@ -5,13 +5,17 @@
  */
 package com.healthit.dslweb.resources;
 
+import com.healthit.dslservice.DslException;
 import com.healthit.dslservice.dao.FacilityDao;
 import com.healthit.dslservice.dao.LocationDao;
 import com.healthit.dslservice.dto.adminstrationlevel.Constituency;
 import com.healthit.dslservice.dto.adminstrationlevel.County;
 import com.healthit.dslservice.dto.adminstrationlevel.Facility;
 import com.healthit.dslservice.dto.adminstrationlevel.Ward;
+import com.healthit.dslservice.message.Message;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -28,30 +32,42 @@ import org.springframework.web.bind.annotation.ResponseBody;
 public class Location {
     @ResponseBody
     @RequestMapping(value = "/ward", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<List> getALlWards() {
-        LocationDao locationDao=new LocationDao();
-        List<Ward> wardList = locationDao.getALlWards();
-        return new ResponseEntity<List>(wardList, HttpStatus.OK);
+    public ResponseEntity<?> getALlWards() {
+        try {
+            LocationDao locationDao=new LocationDao();
+            List<Ward> wardList = locationDao.getALlWards();
+            return new ResponseEntity<List>(wardList, HttpStatus.OK);
+        } catch (DslException ex) {
+            return new ResponseEntity<Message>(ex.getMsg(), HttpStatus.INTERNAL_SERVER_ERROR);
+        }
 
     }
     
     
     @ResponseBody
     @RequestMapping(value = "/constituency", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<List> getConstituencies() {
-        LocationDao locationDao=new LocationDao();
-        List<Constituency> constituencyList = locationDao.getConstituencies();
-        return new ResponseEntity<List>(constituencyList, HttpStatus.OK);
+    public ResponseEntity<?> getConstituencies() {
+        try {
+            LocationDao locationDao=new LocationDao();
+            List<Constituency> constituencyList = locationDao.getConstituencies();
+            return new ResponseEntity<List>(constituencyList, HttpStatus.OK);
+        } catch (DslException ex) {
+            return new ResponseEntity<Message>(ex.getMsg(), HttpStatus.INTERNAL_SERVER_ERROR);
+        }
 
     }
     
     
     @ResponseBody
     @RequestMapping(value = "/county", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<List> getCounties() {
-        LocationDao locationDao=new LocationDao();
-        List<County> countyList = locationDao.getCounties();
-        return new ResponseEntity<List>(countyList, HttpStatus.OK);
+    public ResponseEntity<?> getCounties() {
+        try {
+            LocationDao locationDao=new LocationDao();
+            List<County> countyList = locationDao.getCounties();
+            return new ResponseEntity<List>(countyList, HttpStatus.OK);
+        } catch (DslException ex) {
+            return new ResponseEntity<Message>(ex.getMsg(), HttpStatus.INTERNAL_SERVER_ERROR);
+        }
 
     }
     

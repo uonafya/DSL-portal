@@ -5,13 +5,17 @@
  */
 package com.healthit.dslweb.resources;
 
+import com.healthit.dslservice.DslException;
 import com.healthit.dslservice.dao.FacilityDao;
 import com.healthit.dslservice.dao.IhrisDao;
 import com.healthit.dslservice.dto.adminstrationlevel.Facility;
 import com.healthit.dslservice.dto.ihris.Cadre;
 import com.healthit.dslservice.dto.ihris.CadreAllocation;
 import com.healthit.dslservice.dto.ihris.CadreGroup;
+import com.healthit.dslservice.message.Message;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -41,29 +45,41 @@ public class Ihris {
     
     @ResponseBody
     @RequestMapping(value = "/cadregroups", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<List> getAllCadresGroup() {
-        IhrisDao ihris=new IhrisDao();
-        List<CadreGroup> cadreGroupList = ihris.getAllCadresGroup();
-        return new ResponseEntity<List>(cadreGroupList, HttpStatus.OK);
+    public ResponseEntity<?> getAllCadresGroup() {
+        try {
+            IhrisDao ihris=new IhrisDao();
+            List<CadreGroup> cadreGroupList = ihris.getAllCadresGroup();
+            return new ResponseEntity<List>(cadreGroupList, HttpStatus.OK);
+        } catch (DslException ex) {
+            return new ResponseEntity<Message>(ex.getMsg(), HttpStatus.INTERNAL_SERVER_ERROR);
+        }
 
     }
     
     
     @ResponseBody
     @RequestMapping(value = "/cadre", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<List> getAllCadres() {
-        IhrisDao ihris=new IhrisDao();
-        List<Cadre> cadreList = ihris.getAllCadres();
-        return new ResponseEntity<List>(cadreList, HttpStatus.OK);
+    public ResponseEntity<?> getAllCadres() {
+        try {
+            IhrisDao ihris=new IhrisDao();
+            List<Cadre> cadreList = ihris.getAllCadres();
+            return new ResponseEntity<List>(cadreList, HttpStatus.OK);
+        } catch (DslException ex) {
+            return new ResponseEntity<Message>(ex.getMsg(), HttpStatus.INTERNAL_SERVER_ERROR);
+        }
 
     }
     
     @ResponseBody
     @RequestMapping(value = "/cadreallocation", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<List> getCadreAllocation() {
-        IhrisDao ihris=new IhrisDao();
-        List<CadreAllocation> cadreAllocationList = ihris.getCadreAllocation();
-        return new ResponseEntity<List>(cadreAllocationList, HttpStatus.OK);
+    public ResponseEntity<?> getCadreAllocation() {
+        try {
+            IhrisDao ihris=new IhrisDao();
+            List<CadreAllocation> cadreAllocationList = ihris.getCadreAllocation();
+            return new ResponseEntity<List>(cadreAllocationList, HttpStatus.OK);
+        } catch (DslException ex) {
+            return new ResponseEntity<Message>(ex.getMsg(), HttpStatus.INTERNAL_SERVER_ERROR);
+        }
 
     }
     

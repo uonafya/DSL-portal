@@ -5,6 +5,7 @@
  */
 package com.healthit.database;
 
+import com.healthit.dslservice.DslException;
 import com.healthit.dslservice.QueryTemplate;
 import com.healthit.dslservice.util.Database;
 import java.sql.ResultSet;
@@ -23,21 +24,32 @@ public class DatabaseTest {
     
    @Test
    public void testDatabaseConnection() {
-    //  assertEquals(message,messageUtil.printMessage());
-      assertNotNull(Database.executeQuery("SELECT 1"));
+       try {
+           //  assertEquals(message,messageUtil.printMessage());
+           Database db =new Database();
+           assertNotNull(db.executeQuery("SELECT 1"));
+       } catch (DslException ex) {
+           Logger.getLogger(DatabaseTest.class.getName()).log(Level.SEVERE, null, ex);
+       }
    } 
    
    @Test
    public void testDatabaseQuery(){
-       ResultSet rs=
-       Database.executeQuery(QueryTemplate.SELECT+QueryTemplate.DHIS_MFL+ "limit 10");
        try {
-           while(rs.next()){
-               System.out.println(rs.getString(2));
+           Database db =new Database();
+           ResultSet rs=
+                   db.executeQuery(QueryTemplate.SELECT+QueryTemplate.DHIS_MFL+ "limit 10");
+           try {
+               while(rs.next()){
+                   System.out.println(rs.getString(2));
+               }
+           } catch (SQLException ex) {
+               Logger.getLogger(DatabaseTest.class.getName()).log(Level.SEVERE, null, ex);
            }
-       } catch (SQLException ex) {
+           assertNotNull(db.executeQuery(QueryTemplate.SELECT+QueryTemplate.DHIS_MFL+ "limit 100"));
+       } catch (DslException ex) {
            Logger.getLogger(DatabaseTest.class.getName()).log(Level.SEVERE, null, ex);
        }
-       assertNotNull(Database.executeQuery(QueryTemplate.SELECT+QueryTemplate.DHIS_MFL+ "limit 100"));
    }
+   
 }

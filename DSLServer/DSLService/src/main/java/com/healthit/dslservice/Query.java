@@ -24,8 +24,9 @@ public class Query {
         this.sqlQuery = sqlQuery;
     }
 
-    public ResultSet getRs() {
-        rs=Database.executeQuery(sqlQuery);
+    public ResultSet getRs() throws DslException {
+        Database db =new Database();
+        rs=db.executeQuery(sqlQuery);
         return rs;
     }
     

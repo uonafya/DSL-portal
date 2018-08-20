@@ -5,6 +5,7 @@
  */
 package com.healthit.dslservice.dao;
 
+import com.healthit.dslservice.DslException;
 import static com.healthit.dslservice.dao.FacilityDao.log;
 import com.healthit.dslservice.dto.ihris.Cadre;
 import com.healthit.dslservice.dto.KephLevel;
@@ -30,9 +31,10 @@ public class IhrisDao {
     private String getCadreAllocation = "Select dataelementid as cadreid,periodid,mflcode,value from fact_ihris_datavalue where periodid is not null";
    
     
-    public List<CadreAllocation> getCadreAllocation() {
+    public List<CadreAllocation> getCadreAllocation() throws DslException {
         List<CadreAllocation> cadreGroupList = new ArrayList();
-        ResultSet rs = Database.executeQuery(getCadreAllocation);
+        Database db =new Database();
+        ResultSet rs = db.executeQuery(getCadreAllocation);
         log.info("Fetching cadre groups");
         try {
             while (rs.next()) {
@@ -46,13 +48,16 @@ public class IhrisDao {
             }
         } catch (SQLException ex) {
             log.error(ex);
+        }finally{
+            db.CloseConnection();
         }
         return cadreGroupList;
     }
     
-    public List<CadreGroup> getAllCadresGroup() {
+    public List<CadreGroup> getAllCadresGroup() throws DslException {
         List<CadreGroup> cadreGroupList = new ArrayList();
-        ResultSet rs = Database.executeQuery(getALlCadreGroup);
+        Database db =new Database();
+        ResultSet rs = db.executeQuery(getALlCadreGroup);
         log.info("Fetching cadre groups");
         try {
             while (rs.next()) {
@@ -63,13 +68,16 @@ public class IhrisDao {
             }
         } catch (SQLException ex) {
             log.error(ex);
+        }finally{
+            db.CloseConnection();
         }
         return cadreGroupList;
     }
 
-    public List<Cadre> getAllCadres() {
+    public List<Cadre> getAllCadres() throws DslException {
         List<Cadre> cadreList = new ArrayList();
-        ResultSet rs = Database.executeQuery(getALlCadre);
+        Database db =new Database();
+        ResultSet rs = db.executeQuery(getALlCadre);
         log.info("Fetching cadres");
         try {
             while (rs.next()) {
@@ -81,6 +89,8 @@ public class IhrisDao {
             }
         } catch (SQLException ex) {
             log.error(ex);
+        }finally{
+            db.CloseConnection();
         }
         return cadreList;
     }

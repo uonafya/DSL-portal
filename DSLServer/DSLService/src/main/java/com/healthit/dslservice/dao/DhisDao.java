@@ -5,22 +5,29 @@
  */
 package com.healthit.dslservice.dao;
 
+import com.healthit.dslservice.DslException;
 import com.healthit.dslservice.Filter;
+import static com.healthit.dslservice.dao.IhrisDao.log;
 import com.healthit.dslservice.dto.KephLevel;
 import com.healthit.dslservice.dto.adminstrationlevel.Facility;
 import com.healthit.dslservice.dto.dhis.Indicator;
+import com.healthit.dslservice.dto.ihris.CadreAllocation;
 import com.healthit.dslservice.util.Database;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 import org.apache.log4j.Logger;
+import org.springframework.stereotype.Component;
 
 /**
  *
  * @author duncan
  */
+@Component
 public class DhisDao {
 
     final static Logger log = Logger.getLogger(FacilityDao.class);
@@ -30,13 +37,16 @@ public class DhisDao {
             + "from vw_mohdsl_dhis where code is not null "
     );
 
+    private String getIndicatorNames = "select DISTINCT(\"Indicator name\") as indicatorName from vw_mohdsl_dhis where code is not null";
+    private String getIndicatorGroups = "select DISTINCT(\"Group name\") as indicatorGroup from vw_mohdsl_dhis where code is not null";
+
     public List<Indicator> getIndicators(
             List<String> idicatorName,
             List<String> indicatorGroup,
             String startDate,
             String endDate,
             List<String> mflCode
-    ) {
+    ) throws DslException {
 
         if (idicatorName != null) {
             if (!idicatorName.isEmpty()) {
@@ -94,7 +104,8 @@ public class DhisDao {
         getALlFaciltiesBuilder.append(orderBy + " OFFSET " + filter.getOffset() + " " + " LIMIT " + filter.getLimit());
 
         List<Indicator> indicatorList = new ArrayList();
-        ResultSet rs = Database.executeQuery(getALlFaciltiesBuilder.toString());
+        Database db = new Database();
+        ResultSet rs = db.executeQuery(getALlFaciltiesBuilder.toString());
         log.info("Fetching facilities");
         try {
             while (rs.next()) {
@@ -110,8 +121,47 @@ public class DhisDao {
             }
         } catch (SQLException ex) {
             log.error(ex);
+        } finally {
+            db.CloseConnection();
         }
         return indicatorList;
     }
 
+    public List<Map<String, String>> getIndicatorNames() throws DslException {
+        List<Map<String, String>> indicatorNames = new ArrayList();
+        Database db = new Database();
+        ResultSet rs = db.executeQuery(getIndicatorNames);
+        log.info("Fetching indicator Names");
+        try {
+            while (rs.next()) {
+                Map<String, String> indicatorName = new HashMap();
+                indicatorName.put("name", rs.getString("indicatorName"));  // put("name",rs.getString("indicatorName"))
+                indicatorNames.add(indicatorName);
+            }
+        } catch (SQLException ex) {
+            log.error(ex);
+        } finally {
+            db.CloseConnection();
+        }
+        return indicatorNames;
+    }
+
+    public List<Map<String, String>> getIndicatorGroups() throws DslException {
+        List<Map<String, String>> indicatorNames = new ArrayList();
+        Database db = new Database();
+        ResultSet rs = db.executeQuery(getIndicatorGroups);
+        log.info("Fetching indicator groups");
+        try {
+            while (rs.next()) {
+                Map<String, String> indicatorGroupName = new HashMap();
+                indicatorGroupName.put("name", rs.getString("indicatorGroup"));
+                indicatorNames.add(indicatorGroupName);
+            }
+        } catch (SQLException ex) {
+            log.error(ex);
+        } finally {
+            db.CloseConnection();
+        }
+        return indicatorNames;
+    }
 }

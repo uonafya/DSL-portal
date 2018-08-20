@@ -5,7 +5,10 @@
  */
 package com.healthit.dslservice.util;
 
+import com.healthit.dslservice.DslException;
 import com.healthit.dslservice.dao.FacilityDao;
+import com.healthit.dslservice.message.MessageType;
+import com.healthit.dslservice.message.Message;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
@@ -14,6 +17,8 @@ import java.sql.SQLException;
 import java.util.logging.Level;
 import org.apache.log4j.Logger;
 import org.apache.log4j.PropertyConfigurator;
+import org.springframework.context.annotation.Scope;
+import org.springframework.stereotype.Component;
 
 /**
  *
@@ -21,46 +26,57 @@ import org.apache.log4j.PropertyConfigurator;
  */
 public class Database {
 
-    private static Connection conn = null;
+    private Connection conn = null;
     private final String url = "jdbc:postgresql://41.89.93.180:5432/mohdsl";
     private final String user = "dsl";
     private final String password = "dsl2017";
     final static Logger log = Logger.getLogger(Database.class);
-
-    private static Connection connect() {
-        if (conn == null) {
+    private Message msg=null;
+    
+    private Boolean connect() throws DslException {
+        Boolean isConneced = false;
+        try {
+            Class.forName("org.postgresql.Driver");
+            Database db = new Database();
             try {
-                Class.forName("org.postgresql.Driver");
-                Database db = new Database();
-                try {
-                    log.info("Making database connection");
-                    conn = DriverManager.getConnection(db.url, db.user, db.password);
-                    log.info("Connected to the PostgreSQL server successfully.");
-                } catch (SQLException e) {
-                    log.error(e.getMessage());
-                }
-                
-            } catch (ClassNotFoundException ex) {
-                log.error(ex);
+                log.info("Making database connection");
+                conn = DriverManager.getConnection(db.url, db.user, db.password);
+                log.info("Connected to the PostgreSQL server successfully.");
+            } catch (SQLException e) {
+                log.error(e.getMessage());
+                msg=new Message();
+                msg.setMessageType(MessageType.DB_CONNECTION_ERROR);
+                msg.setMesageContent(e.getMessage());
+                throw new DslException(msg);
             }
-
+            isConneced=true;
+        } catch (ClassNotFoundException ex) {
+            log.error(ex);
         }
-        return conn;
+
+        return isConneced;
     }
 
-    
-    public static ResultSet executeQuery(String sql) {
+    public ResultSet executeQuery(String sql) throws DslException {
         PreparedStatement ps;
         ResultSet rs = null;
         connect();
         try {
             ps = conn.prepareStatement(sql);
-            log.info("Excecuting query: "+ sql);
+            log.info("Excecuting query: " + sql);
             rs = ps.executeQuery();
         } catch (SQLException ex) {
             log.error(ex);
         }
         return rs;
     }
-    
+
+    public void CloseConnection() {
+        try {
+            conn.close();
+        } catch (SQLException ex) {
+            log.error(ex);
+        }
+    }
+
 }
