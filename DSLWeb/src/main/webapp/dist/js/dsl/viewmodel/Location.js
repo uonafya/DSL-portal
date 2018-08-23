@@ -1,105 +1,99 @@
-var IndicatorName= function(name){
+var Constituency= function(name){
     var self=this;
     self.name=ko.observable(name);
            
 };
 
-var IndicatorGroupName= function(name){
+var Ward= function(name){
     var self=this;
     self.name=ko.observable(name);
            
 };
 
-var dhisViewModel={
-    indicatorNames: ko.observableArray(),
-    indicatorGroups :  ko.observableArray()
+var County= function(name){
+    var self=this;
+    self.name=ko.observable(name);
+           
+};
+
+var locationViewModel={
+    ward: ko.observableArray(),
+    contituency :  ko.observableArray(),
+    county :  ko.observableArray(),
+    chosenWards :  ko.observableArray(),
+    chosenContituencys :  ko.observableArray(),
+    chosenCountys :  ko.observableArray()
 };
 
 $(document).ready(function () {
 
-    //Fetch indicator groups
+    //Fetch  wards
     $.ajax({
         type: 'GET', // define the type of HTTP verb we want to use
-        url: '/DSLWeb/api/indicator_group', // the url from server we that we want to use
+        url: '/DSLWeb/api/ward', // the url from server we that we want to use
         contentType: 'application/json; charset=utf-8',
         dataType: 'json', // what type of data do we expect back from the server
         encode: true,
         success: function (data, textStatus, jqXHR) {
             //alert("fetch indicators succes");\
-            console.log("indicator_group");
+            console.log("wards");
             $.each(data, function (index, objValue) {
-                modelData = data;
-                //dhisViewModel.indicatorGroups.push(objValue);
-                var name=new IndicatorGroupName(objValue.name);
-                dhisViewModel.indicatorGroups.push(name);
-                
+                var ward=new Ward(objValue.name);
+                locationViewModel.ward.push(ward); 
             });
+            $('#wardList').dropdown({});
         },
         error: function (response, request) {
-            //alert("fetch indicators failed");
-            //alert(this.url);
-            console.log("got an error fetching indicator_group");
+            console.log("got an error fetching wards");
             var parsed_data = JSON.parse(response.responseText);
         }
 
     });
     
-    //Fetch indicator names
+    //Fetch constituencies
     $.ajax({
         type: 'GET', // define the type of HTTP verb we want to use
-        url: '/DSLWeb/api/indicator_name', // the url from server we that we want to use
+        url: '/DSLWeb/api/constituency', // the url from server we that we want to use
         contentType: 'application/json; charset=utf-8',
         dataType: 'json', // what type of data do we expect back from the server
         encode: true,
         success: function (data, textStatus, jqXHR) {
-            //alert("fetch indicators succes");\
-            console.log("indicator_name");
+            console.log("constituencies");
             $.each(data, function (index, objValue) {
-                modelData = data;
-                //indicatorNames.push(objValue);
-                //var indicatorName = new IndicatorName()
-                //console.log(objValue);
-                //dhisViewModel.indicatorNames.push(objValue);
-                var name=new IndicatorName(objValue.name);
-                dhisViewModel.indicatorNames.push(name);
-                  // var item = new ItemViewModel(json[i]);
-                  // self.items.push(item);
-             
-            });
+                var constituency=new Constituency(objValue.name); 
+                locationViewModel.contituency.push(constituency); 
+            });           
+            $('#constituencyList').dropdown({});
         },
         error: function (response, request) {
             
-            console.log("got an error fetching indicator_name");
+            console.log("got an error fetching constituencies");
             var parsed_data = JSON.parse(response.responseText);
         }
         
     });
     
-    //fetch key performance idicators
+    //Fetch county
     $.ajax({
         type: 'GET', // define the type of HTTP verb we want to use
-        url: '/DSLWeb/api/kpi', // the url from server we that we want to use
+        url: '/DSLWeb/api/county', // the url from server we that we want to use
         contentType: 'application/json; charset=utf-8',
         dataType: 'json', // what type of data do we expect back from the server
         encode: true,
         success: function (data, textStatus, jqXHR) {
-            //alert("fetch indicators succes");\
-            console.log("kpi");
-            $.each(data, function (index, objValue) {
-                modelData = data;
-                var content = objValue;
-                // console.log(objValue);
+            console.log("counties");
+            $.each(data, function (index, objValue) {             
+                var county=new County(objValue.name);
+                locationViewModel.county.push(county);               
             });
+            $('#countyList').dropdown({});
         },
         error: function (response, request) {
-            //alert("fetch indicators failed");
-            //alert(this.url);
-            console.log("got an error  fetching kpi");
+            console.log("got an error fetching constituencies");
             var parsed_data = JSON.parse(response.responseText);
-
         }
-
+        
     });
-
+    
 
 });

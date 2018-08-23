@@ -36,6 +36,7 @@ $(document).ready(function () {
                 dhisViewModel.indicatorGroups.push(name);
                 
             });
+            $('#IndicatorGroupNames').dropdown({});
         },
         error: function (response, request) {
             //alert("fetch indicators failed");
@@ -65,6 +66,7 @@ $(document).ready(function () {
                   // self.items.push(item);
              
             });
+             $('#IndicatorNames').dropdown({});
         },
         error: function (response, request) {
             

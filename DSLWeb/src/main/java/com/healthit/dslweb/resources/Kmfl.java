@@ -41,7 +41,34 @@ public class Kmfl {
     
     @ResponseBody
     @RequestMapping(value = "/facilities", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<?> getAllContentCategorySubType() {
+    public ResponseEntity<?> getAllFacility() {
+        try {
+            FacilityDao facilityDao=new FacilityDao();
+            List<Facility> facilityList = facilityDao.getFacilities();
+            return new ResponseEntity<List>(facilityList, HttpStatus.OK);
+        } catch (DslException ex) {
+            return new ResponseEntity<Message>(ex.getMsg(), HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+
+    }
+    
+    
+    @ResponseBody
+    @RequestMapping(value = "/facility-levels", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<?> getAllFacilityLevels() {
+        try {
+            FacilityDao facilityDao=new FacilityDao();
+            List<Facility> facilityList = facilityDao.getFacilities();
+            return new ResponseEntity<List>(facilityList, HttpStatus.OK);
+        } catch (DslException ex) {
+            return new ResponseEntity<Message>(ex.getMsg(), HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+
+    }
+    
+    @ResponseBody
+    @RequestMapping(value = "/facility-type", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<?> getAllFacilityTypes() {
         try {
             FacilityDao facilityDao=new FacilityDao();
             List<Facility> facilityList = facilityDao.getFacilities();

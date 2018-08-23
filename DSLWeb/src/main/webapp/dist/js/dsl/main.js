@@ -1,5 +1,5 @@
 var viewModel = {
-               dhisViewModel: dhisViewModel
-//               childViewModel2: footerViewModel,
+    dhisViewModel: dhisViewModel,
+    locationViewModel: locationViewModel
 //               childViewModel3: contentViewModel
-        };
+};

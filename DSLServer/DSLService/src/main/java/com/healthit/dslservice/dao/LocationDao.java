@@ -25,11 +25,11 @@ import org.apache.log4j.Logger;
 public class LocationDao {
 
     final static Logger log = Logger.getLogger(FacilityDao.class);
-    private String getALlWards = "Select id, name ,constituency_id from common_ward";
+    private String getALlWards = "Select id, name ,constituency_id from common_ward order by name desc";
 
-    private String getAllConstituencies = "Select id, name ,county_id from common_constituency";
+    private String getAllConstituencies = "Select id, name ,county_id from common_constituency order by name desc";
 
-     private String getAllCounties = "Select id, name from common_county";
+     private String getAllCounties = "Select id, name from common_county order by name desc";
 
     
 
