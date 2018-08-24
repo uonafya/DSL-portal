@@ -11,4 +11,8 @@ package com.healthit.dslservice.util;
  */
 public class CacheKeys {
     public static String facilityList="FACILITYLIST";
+    public static String facilityLevel="FACILITYLEVEL";
+    public static String facilityType="FACILITYTYPES";
+    public static String indicatorName="INDICATORNAMES";
+    public static String indicatorGroup="INDICATORGROUP";
 }

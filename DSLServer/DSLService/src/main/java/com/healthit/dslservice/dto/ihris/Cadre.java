@@ -10,6 +10,7 @@ package com.healthit.dslservice.dto.ihris;
  * @author duncan
  */
 public class Cadre {
+
     private String id;
     private String name;
     private String cadreGroupId;
@@ -37,6 +38,5 @@ public class Cadre {
     public void setCadreGroupId(String cadreGroupId) {
         this.cadreGroupId = cadreGroupId;
     }
-    
-    
+
 }

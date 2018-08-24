@@ -130,7 +130,7 @@
                         <span class="icon-bar"></span>
                         <span class="icon-bar"></span>
                     </button>
-                    <a class="navbar-brand" href="index.html">DSL Visualizer</a>
+                    <a class="navbar-brand" href="index.html">DSL Board</a>
                 </div>
                 <!-- /.navbar-header -->
 
@@ -387,13 +387,13 @@
                                         <div class="form-group">
                                             <label for="IndicatorGroupNames">Indicator Group</label>
 
-<!--                                            <select id="IndicatorGroupNames" class="form-control" multiple="multiple"  
-                                                    data-bind="options: $root.dhisViewModel.indicatorGroups, optionsValue: 'name', optionsText: 'name',
-                                                                        selectedOptions: $root.dhisViewModel.chosenIndicatorGroups, 
-                                                                        multiselect: {includeSelectAllOption: true }">
-                                            </select>-->
-                                            
-                                            
+                                            <!--                                            <select id="IndicatorGroupNames" class="form-control" multiple="multiple"  
+                                                                                                data-bind="options: $root.dhisViewModel.indicatorGroups, optionsValue: 'name', optionsText: 'name',
+                                                                                                                    selectedOptions: $root.dhisViewModel.chosenIndicatorGroups, 
+                                                                                                                    multiselect: {includeSelectAllOption: true }">
+                                                                                        </select>-->
+
+
                                             <div id="IndicatorGroupNames">
                                                 <!--<select style="display:none"  multiple>-->
                                                 <select id="indicator-group-names" multiple data-bind="options: $root.dhisViewModel.indicatorGroups, optionsValue: 'name', optionsText: 'name'">
@@ -403,11 +403,11 @@
 
                                             <label for="IndicatorNames">Indicator Name</label>
 
-<!--                                            <select id="IndicatorNames" class="form-control" multiple="multiple"
-                                                    data-bind="options: $root.dhisViewModel.indicatorNames, optionsValue: 'name', optionsText: 'name',
-                                                                        selectedOptions: $root.dhisViewModel.chosenIndicatorNames, 
-                                                                                        multiselect: {includeSelectAllOption: true }">
-                                            </select>-->
+                                            <!--                                            <select id="IndicatorNames" class="form-control" multiple="multiple"
+                                                                                                data-bind="options: $root.dhisViewModel.indicatorNames, optionsValue: 'name', optionsText: 'name',
+                                                                                                                    selectedOptions: $root.dhisViewModel.chosenIndicatorNames, 
+                                                                                                                                    multiselect: {includeSelectAllOption: true }">
+                                                                                        </select>-->
 
                                             <div id="IndicatorNames">
                                                 <!--<select style="display:none"  multiple>-->
@@ -433,33 +433,30 @@
                                 <div id="collapseTwo" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingTwo">
                                     <div class="panel-body">
                                         <div class="form-group">
-                                            <label for="exampleFormControlSelect1">Facility Name</label>
-                                            <select class="form-control" id="exampleFormControlSelect1">
-                                                <option>1</option>
-                                                <option>2</option>
-                                                <option>3</option>
-                                                <option>4</option>
-                                                <option>5</option>
-                                            </select>
+                                            <label for="facilities">Facility Name</label>
+                                            <div id="facilities">
+                                                <!--<select style="display:none"  multiple>-->
+                                                <select id="facilities-list" multiple data-bind="options: $root.kmlfViewModel.facilities, optionsValue: 'kmflCode', optionsText: 'name'">
+
+                                                </select>
+                                            </div>
 
 
-                                            <label for="exampleFormControlSelect1">Facility Type</label>
-                                            <select class="form-control" id="exampleFormControlSelect1">
-                                                <option>1</option>
-                                                <option>2</option>
-                                                <option>3</option>
-                                                <option>4</option>
-                                                <option>5</option>
-                                            </select>
+                                            <label for="facility-types">Facility Type</label>
+                                            <div id="facility-types">
+                                                <!--<select style="display:none"  multiple>-->
+                                                <select id="facility-types-list" multiple data-bind="options: $root.kmlfViewModel.facilityTypes, optionsValue: 'kmflCode', optionsText: 'name'">
 
-                                            <label for="exampleFormControlSelect1">Facility Level</label>
-                                            <select class="form-control" id="exampleFormControlSelect1">
-                                                <option>1</option>
-                                                <option>2</option>
-                                                <option>3</option>
-                                                <option>4</option>
-                                                <option>5</option>
-                                            </select>
+                                                </select>
+                                            </div>
+
+                                            <label for="facility-levels">Facility Level</label>
+                                            <div id="facility-levels">
+                                                <!--<select style="display:none"  multiple>-->
+                                                <select id="facility-levels-list" multiple data-bind="options: $root.kmlfViewModel.facilityLevels, optionsValue: 'kmflCode', optionsText: 'name'">
+
+                                                </select>
+                                            </div>
 
 
                                         </div>
@@ -479,14 +476,13 @@
                                     <div class="panel-body">
 
                                         <div class="form-group">
-                                            <label for="exampleFormControlSelect1">Commodity Name</label>
-                                            <select class="form-control" id="exampleFormControlSelect1">
-                                                <option>1</option>
-                                                <option>2</option>
-                                                <option>3</option>
-                                                <option>4</option>
-                                                <option>5</option>
-                                            </select>
+                                            <label for="kemsa-commodity">Commodity Name</label>
+                                            <div id="kemsa-commodity">
+                                                <!--<select style="display:none"  multiple>-->
+                                                <select id="kemsa-commodity-list" multiple data-bind="options: $root.kemsaViewModel.commodity, optionsValue: 'name', optionsText: 'name'">
+
+                                                </select>
+                                            </div>
                                         </div>
 
                                     </div>
@@ -556,23 +552,18 @@
                                     <div class="panel-body">
                                         <div class="form-group">
                                             <label for="exampleFormControlSelect1">Cadre Groups</label>
-                                            <select class="form-control" id="exampleFormControlSelect1">
-                                                <option>1</option>
-                                                <option>2</option>
-                                                <option>3</option>
-                                                <option>4</option>
-                                                <option>5</option>
-                                            </select>
+                                            <div id="cadre-group">
+                                                <select id="cadre-group-list" multiple data-bind="options: $root.ihrisViewModel.cadreGroup, optionsValue: 'name', optionsText: 'name'">
 
+                                                </select>
+                                            </div>
 
                                             <label for="exampleFormControlSelect1">Cadre</label>
-                                            <select class="form-control" id="exampleFormControlSelect1">
-                                                <option>1</option>
-                                                <option>2</option>
-                                                <option>3</option>
-                                                <option>4</option>
-                                                <option>5</option>
-                                            </select>
+                                            <div id="cadre">
+                                                <select id="cadre-list" multiple data-bind="options: $root.ihrisViewModel.cadre, optionsValue: 'name', optionsText: 'name'">
+
+                                                </select>
+                                            </div>
 
                                         </div>
                                     </div>
@@ -643,6 +634,9 @@
         <!--<script src="../dist/js/dsl/model/Dhis.js"></script>-->
         <script src="../dist/js/dsl/viewmodel/Dhis.js"></script>
         <script src="../dist/js/dsl/viewmodel/Location.js"></script>
+        <script src="../dist/js/dsl/viewmodel/kmfl.js" type="text/javascript"></script>
+        <script src="../dist/js/dsl/viewmodel/kemsa.js" type="text/javascript"></script>
+        <script src="../dist/js/dsl/viewmodel/ihris.js" type="text/javascript"></script>
         <script src="../dist/js/dsl/main.js"></script>
 
         <link href="../vendor/jquery/multi-select/jquery.dropdown.min.css" rel="stylesheet" type="text/css"/>

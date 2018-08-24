@@ -7,10 +7,10 @@
 
     <cache name="dslCache" 
            maxEntriesLocalHeap="10000"
-           maxEntriesLocalDisk="1000" 
+           maxEntriesLocalDisk="10000" 
            eternal="false" 
            diskSpoolBufferSizeMB="20"
-           timeToIdleSeconds="300" timeToLiveSeconds="600"
+           timeToIdleSeconds="2000000" timeToLiveSeconds="2000000"
            memoryStoreEvictionPolicy="LFU" 
            transactionalMode="off">
         <persistence strategy="localTempSwap" />
