@@ -8,6 +8,10 @@ package com.healthit.dslservice.dao;
 import com.healthit.dslservice.DslException;
 import com.healthit.dslservice.dto.KephLevel;
 import com.healthit.dslservice.dto.adminstrationlevel.Facility;
+import com.healthit.dslservice.dto.kmfl.FacilityLevel;
+import com.healthit.dslservice.dto.kmfl.FacilityType;
+import com.healthit.dslservice.message.Message;
+import com.healthit.dslservice.message.MessageType;
 import com.healthit.dslservice.util.CacheKeys;
 import com.healthit.dslservice.util.Database;
 import com.healthit.dslservice.util.DslCache;
@@ -28,12 +32,16 @@ public class FacilityDao {
     final static Logger log = Logger.getLogger(FacilityDao.class);
     private String getALlFacilties = "Select id,name,code as kmflcode,kephlevel_sk, owner_sk as owner_id, ward_id, sub_county_id "
             + "from facilities_facility";
+    
+    private String getFacilityLevels = "SELECT kephlevel_sk as id,name  FROM public.facilities_kephlevel";
+    
+    private String getFacilityTypes = "SELECT facilitytype_sk as id,name  FROM public.facilities_facilitytype";
 
     Cache cache = DslCache.getCache();
 
     public List<Facility> getFacilities() throws DslException {
         List<Facility> facilityList = new ArrayList();
-        
+
         log.info("Fetching facilities");
         Element ele = cache.get(CacheKeys.facilityList);
         String output = (ele == null ? null : ele.getObjectValue().toString());
@@ -58,18 +66,104 @@ public class FacilityDao {
 
             } catch (SQLException ex) {
                 log.error(ex);
+                Message msg=new Message();
+                msg.setMessageType(MessageType.SQL_QUERY_ERROR);
+                msg.setMesageContent(ex.getMessage());
+                throw new DslException(msg);
             } finally {
                 db.CloseConnection();
             }
             long endTime = System.nanoTime();
-            log.info("Time taken to fetch data "+(endTime - startTime)/1000000);
+            log.info("Time taken to fetch data " + (endTime - startTime) / 1000000);
         } else {
             long startTime = System.nanoTime();
-            facilityList=(List<Facility>) ele.getObjectValue();
+            facilityList = (List<Facility>) ele.getObjectValue();
             long endTime = System.nanoTime();
-            log.info("Time taken to fetch data from cache "+(endTime - startTime)/1000000);
+            log.info("Time taken to fetch data from cache " + (endTime - startTime) / 1000000);
         }
         return facilityList;
     }
 
+    public List<FacilityLevel> getFacilitiesLevel() throws DslException {
+        List<FacilityLevel> facilityLevelList = new ArrayList();
+
+        log.info("Fetching facilities level");
+        Element ele = cache.get(CacheKeys.facilityLevel);
+        String output = (ele == null ? null : ele.getObjectValue().toString());
+        //log.info("Element from cache " + output);
+        if (ele == null) {
+            long startTime = System.nanoTime();
+            Database db = new Database();
+            ResultSet rs = db.executeQuery(getFacilityLevels);
+            try {
+                while (rs.next()) {
+                    FacilityLevel facilityLevel = new FacilityLevel();
+                    facilityLevel.setId(rs.getString("id"));
+                    facilityLevel.setName(rs.getString("name"));
+                    facilityLevelList.add(facilityLevel);
+                }
+                cache.put(new Element(CacheKeys.facilityLevel, facilityLevelList));
+
+            } catch (SQLException ex) {
+                log.error(ex);
+                Message msg=new Message();
+                msg.setMessageType(MessageType.SQL_QUERY_ERROR);
+                msg.setMesageContent(ex.getMessage());
+                throw new DslException(msg);
+            } finally {
+                db.CloseConnection();
+            }
+            long endTime = System.nanoTime();
+            log.info("Time taken to fetch data " + (endTime - startTime) / 1000000);
+        } else {
+            long startTime = System.nanoTime();
+            facilityLevelList = (List<FacilityLevel>) ele.getObjectValue();
+            long endTime = System.nanoTime();
+            log.info("Time taken to fetch data from cache " + (endTime - startTime) / 1000000);
+        }
+        return facilityLevelList;
+    }
+    
+    
+    public List<FacilityType> getFacilitiesType() throws DslException {
+        List<FacilityType> facilityTypeList = new ArrayList();
+
+        log.info("Fetching facilities types");
+        Element ele = cache.get(CacheKeys.facilityType);
+        String output = (ele == null ? null : ele.getObjectValue().toString());
+        //log.info("Element from cache " + output);
+        if (ele == null) {
+            long startTime = System.nanoTime();
+            Database db = new Database();
+            ResultSet rs = db.executeQuery(getFacilityTypes);
+            try {
+                while (rs.next()) {
+                    FacilityType facilityType = new FacilityType();
+                    facilityType.setId(rs.getString("id"));
+                    facilityType.setName(rs.getString("name"));
+                    facilityTypeList.add(facilityType);
+                }
+                cache.put(new Element(CacheKeys.facilityType, facilityTypeList));
+
+            } catch (SQLException ex) {
+                log.error(ex);
+                Message msg=new Message();
+                msg.setMessageType(MessageType.SQL_QUERY_ERROR);
+                msg.setMesageContent(ex.getMessage());
+                throw new DslException(msg);
+                
+            } finally {
+                db.CloseConnection();
+            }
+            long endTime = System.nanoTime();
+            log.info("Time taken to fetch data " + (endTime - startTime) / 1000000);
+        } else {
+            long startTime = System.nanoTime();
+            facilityTypeList = (List<FacilityType>) ele.getObjectValue();
+            long endTime = System.nanoTime();
+            log.info("Time taken to fetch data from cache " + (endTime - startTime) / 1000000);
+        }
+        return facilityTypeList;
+    }
+    
 }

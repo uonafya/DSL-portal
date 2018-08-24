@@ -8,6 +8,8 @@ package com.healthit.dslweb.resources;
 import com.healthit.dslservice.DslException;
 import com.healthit.dslservice.dao.FacilityDao;
 import com.healthit.dslservice.dto.adminstrationlevel.Facility;
+import com.healthit.dslservice.dto.kmfl.FacilityLevel;
+import com.healthit.dslservice.dto.kmfl.FacilityType;
 import com.healthit.dslservice.message.Message;
 import java.util.List;
 import java.util.logging.Level;
@@ -58,8 +60,8 @@ public class Kmfl {
     public ResponseEntity<?> getAllFacilityLevels() {
         try {
             FacilityDao facilityDao=new FacilityDao();
-            List<Facility> facilityList = facilityDao.getFacilities();
-            return new ResponseEntity<List>(facilityList, HttpStatus.OK);
+            List<FacilityLevel> facilityLevel = facilityDao.getFacilitiesLevel();
+            return new ResponseEntity<List>(facilityLevel, HttpStatus.OK);
         } catch (DslException ex) {
             return new ResponseEntity<Message>(ex.getMsg(), HttpStatus.INTERNAL_SERVER_ERROR);
         }
@@ -71,7 +73,7 @@ public class Kmfl {
     public ResponseEntity<?> getAllFacilityTypes() {
         try {
             FacilityDao facilityDao=new FacilityDao();
-            List<Facility> facilityList = facilityDao.getFacilities();
+            List<FacilityType> facilityList = facilityDao.getFacilitiesType();
             return new ResponseEntity<List>(facilityList, HttpStatus.OK);
         } catch (DslException ex) {
             return new ResponseEntity<Message>(ex.getMsg(), HttpStatus.INTERNAL_SERVER_ERROR);
