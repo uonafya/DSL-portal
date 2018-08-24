@@ -7,12 +7,15 @@ package com.healthit.dslservice.dao;
 
 import com.healthit.dslservice.DslException;
 import com.healthit.dslservice.Filter;
+import static com.healthit.dslservice.dao.FacilityDao.log;
 import static com.healthit.dslservice.dao.IhrisDao.log;
 import com.healthit.dslservice.dto.KephLevel;
 import com.healthit.dslservice.dto.adminstrationlevel.Facility;
 import com.healthit.dslservice.dto.dhis.Indicator;
 import com.healthit.dslservice.dto.ihris.CadreAllocation;
+import com.healthit.dslservice.util.CacheKeys;
 import com.healthit.dslservice.util.Database;
+import com.healthit.dslservice.util.DslCache;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -20,6 +23,8 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import net.sf.ehcache.Cache;
+import net.sf.ehcache.Element;
 import org.apache.log4j.Logger;
 import org.springframework.stereotype.Component;
 
@@ -39,6 +44,8 @@ public class DhisDao {
 
     private String getIndicatorNames = "select DISTINCT(\"Indicator name\") as indicatorName from vw_mohdsl_dhis where code is not null";
     private String getIndicatorGroups = "select DISTINCT(\"Group name\") as indicatorGroup from vw_mohdsl_dhis where code is not null";
+
+    Cache cache = DslCache.getCache();
 
     public List<Indicator> getIndicators(
             List<String> idicatorName,
@@ -129,38 +136,59 @@ public class DhisDao {
 
     public List<Map<String, String>> getIndicatorNames() throws DslException {
         List<Map<String, String>> indicatorNames = new ArrayList();
-        Database db = new Database();
-        ResultSet rs = db.executeQuery(getIndicatorNames);
-        log.info("Fetching indicator Names");
-        try {
-            while (rs.next()) {
-                Map<String, String> indicatorName = new HashMap();
-                indicatorName.put("name", rs.getString("indicatorName"));  // put("name",rs.getString("indicatorName"))
-                indicatorNames.add(indicatorName);
+        Element ele = cache.get(CacheKeys.indicatorName);
+
+        if (ele == null) {
+            Database db = new Database();
+            ResultSet rs = db.executeQuery(getIndicatorNames);
+            log.info("Fetching indicator Names");
+            try {
+                while (rs.next()) {
+                    Map<String, String> indicatorName = new HashMap();
+                    indicatorName.put("name", rs.getString("indicatorName"));  // put("name",rs.getString("indicatorName"))
+                    indicatorNames.add(indicatorName);
+                }
+                cache.put(new Element(CacheKeys.indicatorName, indicatorNames));
+            } catch (SQLException ex) {
+                log.error(ex);
+            } finally {
+                db.CloseConnection();
             }
-        } catch (SQLException ex) {
-            log.error(ex);
-        } finally {
-            db.CloseConnection();
+        } else {
+            long startTime = System.nanoTime();
+            indicatorNames = (List<Map<String, String>>) ele.getObjectValue();
+            long endTime = System.nanoTime();
+            log.info("Time taken to fetch data from cache " + (endTime - startTime) / 1000000);
         }
         return indicatorNames;
     }
 
     public List<Map<String, String>> getIndicatorGroups() throws DslException {
         List<Map<String, String>> indicatorNames = new ArrayList();
-        Database db = new Database();
-        ResultSet rs = db.executeQuery(getIndicatorGroups);
-        log.info("Fetching indicator groups");
-        try {
-            while (rs.next()) {
-                Map<String, String> indicatorGroupName = new HashMap();
-                indicatorGroupName.put("name", rs.getString("indicatorGroup"));
-                indicatorNames.add(indicatorGroupName);
+
+        Element ele = cache.get(CacheKeys.indicatorGroup);
+        
+        if (ele == null) {
+            Database db = new Database();
+            ResultSet rs = db.executeQuery(getIndicatorGroups);
+            log.info("Fetching indicator groups");
+            try {
+                while (rs.next()) {
+                    Map<String, String> indicatorGroupName = new HashMap();
+                    indicatorGroupName.put("name", rs.getString("indicatorGroup"));
+                    indicatorNames.add(indicatorGroupName);
+                }
+                cache.put(new Element(CacheKeys.indicatorGroup, indicatorNames));
+            } catch (SQLException ex) {
+                log.error(ex);
+            } finally {
+                db.CloseConnection();
             }
-        } catch (SQLException ex) {
-            log.error(ex);
-        } finally {
-            db.CloseConnection();
+        }else {
+            long startTime = System.nanoTime();
+            indicatorNames = (List<Map<String, String>>) ele.getObjectValue();
+            long endTime = System.nanoTime();
+            log.info("Time taken to fetch data from cache " + (endTime - startTime) / 1000000);
         }
         return indicatorNames;
     }
