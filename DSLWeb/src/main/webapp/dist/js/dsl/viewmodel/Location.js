@@ -37,10 +37,11 @@ $(document).ready(function () {
         success: function (data, textStatus, jqXHR) {
             //alert("fetch indicators succes");\
             console.log("wards");
-            $.each(data, function (index, objValue) {
-                var ward=new Ward(objValue.name);
-                locationViewModel.ward.push(ward); 
-            });
+            locationViewModel.ward(data);
+//            $.each(data, function (index, objValue) {
+//                var ward=new Ward(objValue.name);
+//                locationViewModel.ward.push(ward); 
+//            });
             $('#wardList').dropdown({});
         },
         error: function (response, request) {
@@ -59,10 +60,11 @@ $(document).ready(function () {
         encode: true,
         success: function (data, textStatus, jqXHR) {
             console.log("constituencies");
-            $.each(data, function (index, objValue) {
-                var constituency=new Constituency(objValue.name); 
-                locationViewModel.contituency.push(constituency); 
-            });           
+            locationViewModel.contituency(data);
+//            $.each(data, function (index, objValue) {
+//                var constituency=new Constituency(objValue.name); 
+//                locationViewModel.contituency.push(constituency); 
+//            });           
             $('#constituencyList').dropdown({});
         },
         error: function (response, request) {
@@ -82,10 +84,11 @@ $(document).ready(function () {
         encode: true,
         success: function (data, textStatus, jqXHR) {
             console.log("counties");
-            $.each(data, function (index, objValue) {             
-                var county=new County(objValue.name);
-                locationViewModel.county.push(county);               
-            });
+            locationViewModel.county(data);
+//            $.each(data, function (index, objValue) {             
+//                var county=new County(objValue.name);
+//                locationViewModel.county.push(county);               
+//            });
             $('#countyList').dropdown({});
         },
         error: function (response, request) {

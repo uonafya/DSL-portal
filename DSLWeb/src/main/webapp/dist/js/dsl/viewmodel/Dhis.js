@@ -29,13 +29,14 @@ $(document).ready(function () {
         success: function (data, textStatus, jqXHR) {
             //alert("fetch indicators succes");\
             console.log("indicator_group");
-            $.each(data, function (index, objValue) {
-                modelData = data;
-                //dhisViewModel.indicatorGroups.push(objValue);
-                var name=new IndicatorGroupName(objValue.name);
-                dhisViewModel.indicatorGroups.push(name);
-                
-            });
+            dhisViewModel.indicatorGroups(data);
+//            $.each(data, function (index, objValue) {
+//                modelData = data;
+//                //dhisViewModel.indicatorGroups.push(objValue);
+//                var name=new IndicatorGroupName(objValue.name);
+//                dhisViewModel.indicatorGroups.push(name);
+//                
+//            });
             $('#IndicatorGroupNames').dropdown({});
         },
         error: function (response, request) {
@@ -57,15 +58,16 @@ $(document).ready(function () {
         success: function (data, textStatus, jqXHR) {
             //alert("fetch indicators succes");\
             console.log("indicator_name");
-            $.each(data, function (index, objValue) {
-                modelData = data;
-                //dhisViewModel.indicatorNames.push(objValue);
-                var name=new IndicatorName(objValue.name);
-                dhisViewModel.indicatorNames.push(name);
-                  // var item = new ItemViewModel(json[i]);
-                  // self.items.push(item);
-             
-            });
+            dhisViewModel.indicatorNames(data);
+//            $.each(data, function (index, objValue) {
+//                modelData = data;
+//                //dhisViewModel.indicatorNames.push(objValue);
+//                var name=new IndicatorName(objValue.name);
+//                dhisViewModel.indicatorNames.push(name);
+//                  // var item = new ItemViewModel(json[i]);
+//                  // self.items.push(item);
+//             
+//            });
              $('#IndicatorNames').dropdown({});
         },
         error: function (response, request) {
@@ -86,11 +88,11 @@ $(document).ready(function () {
         success: function (data, textStatus, jqXHR) {
             //alert("fetch indicators succes");\
             console.log("kpi");
-            $.each(data, function (index, objValue) {
-                modelData = data;
-                var content = objValue;
-                // console.log(objValue);
-            });
+//            $.each(data, function (index, objValue) {
+//                modelData = data;
+//                var content = objValue;
+//                // console.log(objValue);
+//            });
         },
         error: function (response, request) {
             //alert("fetch indicators failed");
