@@ -15,4 +15,12 @@ public class CacheKeys {
     public static String facilityType="FACILITYTYPES";
     public static String indicatorName="INDICATORNAMES";
     public static String indicatorGroup="INDICATORGROUP";
+    public static String cadreGroups="CADREGROUPS";
+    public static String cadres="CADRES";
+    public static String counties="COUNTIES";
+    public static String wards="WARDS";
+    public static String constituencies="CONSTITUENCIES";
+    public static String indicatorGroupTable="INDICATORGROUPTable";
+    
+
 }

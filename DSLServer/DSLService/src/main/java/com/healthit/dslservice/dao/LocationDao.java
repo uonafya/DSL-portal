@@ -6,16 +6,22 @@
 package com.healthit.dslservice.dao;
 
 import com.healthit.dslservice.DslException;
+import static com.healthit.dslservice.dao.IhrisDao.log;
 import com.healthit.dslservice.dto.adminstrationlevel.Constituency;
 import com.healthit.dslservice.dto.adminstrationlevel.County;
 import com.healthit.dslservice.dto.adminstrationlevel.SubCounty;
 import com.healthit.dslservice.dto.adminstrationlevel.Ward;
+import com.healthit.dslservice.dto.ihris.CadreGroup;
 import com.healthit.dslservice.dto.kemsa.Commodity;
+import com.healthit.dslservice.util.CacheKeys;
 import com.healthit.dslservice.util.Database;
+import com.healthit.dslservice.util.DslCache;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
+import net.sf.ehcache.Cache;
+import net.sf.ehcache.Element;
 import org.apache.log4j.Logger;
 
 /**
@@ -24,74 +30,101 @@ import org.apache.log4j.Logger;
  */
 public class LocationDao {
 
+    Cache cache = DslCache.getCache();
+
     final static Logger log = Logger.getLogger(FacilityDao.class);
     private String getALlWards = "Select id, name ,constituency_id from common_ward order by name desc";
 
     private String getAllConstituencies = "Select id, name ,county_id from common_constituency order by name desc";
 
-     private String getAllCounties = "Select id, name from common_county order by name desc";
-
-    
+    private String getAllCounties = "Select id, name from common_county order by name desc";
 
     public List<Ward> getALlWards() throws DslException {
+
         List<Ward> wardList = new ArrayList();
-        Database db =new Database();
-        ResultSet rs = db.executeQuery(getALlWards);
-        log.info("Fetching getWards");
-        try {
-            while (rs.next()) {
-                Ward ward = new Ward();
-                ward.setId(rs.getString("id"));
-                ward.setName(rs.getString("name"));
-                ward.setConstituencyId(rs.getString("constituency_id"));
-                wardList.add(ward);
+        Element ele = cache.get(CacheKeys.wards);
+        if (ele == null) {
+            Database db = new Database();
+            ResultSet rs = db.executeQuery(getALlWards);
+            log.info("Fetching getWards");
+            try {
+                while (rs.next()) {
+                    Ward ward = new Ward();
+                    ward.setId(rs.getString("id"));
+                    ward.setName(rs.getString("name"));
+                    ward.setConstituencyId(rs.getString("constituency_id"));
+                    wardList.add(ward);
+                }
+                cache.put(new Element(CacheKeys.wards, wardList));
+            } catch (SQLException ex) {
+                log.error(ex);
+            } finally {
+                db.CloseConnection();
             }
-        } catch (SQLException ex) {
-            log.error(ex);
-        }finally{
-            db.CloseConnection();
+        } else {
+            long startTime = System.nanoTime();
+            wardList = (List<Ward>) ele.getObjectValue();
+            long endTime = System.nanoTime();
+            log.info("Time taken to fetch data from cache " + (endTime - startTime) / 1000000);
         }
         return wardList;
     }
 
-   
     public List<County> getCounties() throws DslException {
-         List<County> countyList = new ArrayList();
-         Database db =new Database();
-        ResultSet rs = db.executeQuery(getAllCounties);
-        log.info("Fetching Counties");
-        try {
-            while (rs.next()) {
-                County county = new County();
-                county.setId(rs.getString("id"));
-                county.setName(rs.getString("name"));
-                countyList.add(county);
+        List<County> countyList = new ArrayList();
+        Element ele = cache.get(CacheKeys.counties);
+        if (ele == null) {
+            Database db = new Database();
+            ResultSet rs = db.executeQuery(getAllCounties);
+            log.info("Fetching Counties");
+            try {
+                while (rs.next()) {
+                    County county = new County();
+                    county.setId(rs.getString("id"));
+                    county.setName(rs.getString("name"));
+                    countyList.add(county);
+                }
+                cache.put(new Element(CacheKeys.counties, countyList));
+            } catch (SQLException ex) {
+                log.error(ex);
+            } finally {
+                db.CloseConnection();
             }
-        } catch (SQLException ex) {
-            log.error(ex);
-        }finally{
-            db.CloseConnection();
+        } else {
+            long startTime = System.nanoTime();
+            countyList = (List<County>) ele.getObjectValue();
+            long endTime = System.nanoTime();
+            log.info("Time taken to fetch data from cache " + (endTime - startTime) / 1000000);
         }
         return countyList;
     }
 
     public List<Constituency> getConstituencies() throws DslException {
         List<Constituency> constituencyList = new ArrayList();
-        Database db =new Database();
-        ResultSet rs = db.executeQuery(getAllConstituencies);
-        log.info("Fetching Constituencies");
-        try {
-            while (rs.next()) {
-                Constituency constituency = new Constituency();
-                constituency.setId(rs.getString("id"));
-                constituency.setName(rs.getString("name"));
-                constituency.setCountyId(rs.getString("county_id"));
-                constituencyList.add(constituency);
+        Element ele = cache.get(CacheKeys.constituencies);
+        if (ele == null) {
+            Database db = new Database();
+            ResultSet rs = db.executeQuery(getAllConstituencies);
+            log.info("Fetching Constituencies");
+            try {
+                while (rs.next()) {
+                    Constituency constituency = new Constituency();
+                    constituency.setId(rs.getString("id"));
+                    constituency.setName(rs.getString("name"));
+                    constituency.setCountyId(rs.getString("county_id"));
+                    constituencyList.add(constituency);
+                }
+                cache.put(new Element(CacheKeys.constituencies, constituencyList));
+            } catch (SQLException ex) {
+                log.error(ex);
+            } finally {
+                db.CloseConnection();
             }
-        } catch (SQLException ex) {
-            log.error(ex);
-        }finally{
-            db.CloseConnection();
+        } else {
+            long startTime = System.nanoTime();
+            constituencyList = (List<Constituency>) ele.getObjectValue();
+            long endTime = System.nanoTime();
+            log.info("Time taken to fetch data from cache " + (endTime - startTime) / 1000000);
         }
         return constituencyList;
     }
