@@ -1,20 +1,20 @@
-var IndicatorName= function(name){
-    var self=this;
-    self.name=ko.observable(name);
-           
+var IndicatorName = function (name) {
+    var self = this;
+    self.name = ko.observable(name);
+
 };
 
-var IndicatorGroupName= function(name){
-    var self=this;
-    self.name=ko.observable(name);
-           
+var IndicatorGroupName = function (name) {
+    var self = this;
+    self.name = ko.observable(name);
+
 };
 
-var dhisViewModel={
+var dhisViewModel = {
     indicatorNames: ko.observableArray(),
-    indicatorGroups :  ko.observableArray(),
-    chosenIndicatorGroups :  ko.observableArray(),
-    chosenIndicatorNames :  ko.observableArray()
+    indicatorGroups: ko.observableArray(),
+    chosenIndicatorGroups: ko.observableArray(),
+    chosenIndicatorNames: ko.observableArray()
 };
 
 $(document).ready(function () {
@@ -28,8 +28,8 @@ $(document).ready(function () {
         encode: true,
         success: function (data, textStatus, jqXHR) {
             //alert("fetch indicators succes");\
-            console.log("indicator_group");
-            dhisViewModel.indicatorGroups(data);
+        //    console.log("indicator_group");
+            //           dhisViewModel.indicatorGroups(data);
 //            $.each(data, function (index, objValue) {
 //                modelData = data;
 //                //dhisViewModel.indicatorGroups.push(objValue);
@@ -37,17 +37,29 @@ $(document).ready(function () {
 //                dhisViewModel.indicatorGroups.push(name);
 //                
 //            });
-            $('#IndicatorGroupNames').dropdown({});
+            var indicatorGroupNames=$('#IndicatorGroupNames').dropdown({
+                data: data,
+                input: '<input type="text" maxLength="20" placeholder="Search">',
+                searchNoData: '<li style="color:#ddd">No Results</li>',
+                choice: function () {
+                    indicatorGroupEvent(arguments[1]);
+                    console.log(arguments[1]);
+                }
+            });
+             $.each(data, function (index, objValue) {
+
+            });
+        //    console.log(data);
         },
         error: function (response, request) {
             //alert("fetch indicators failed");
             //alert(this.url);
-            console.log("got an error fetching indicator_group");
+        //    console.log("got an error fetching indicator_group");
             var parsed_data = JSON.parse(response.responseText);
         }
 
     });
-    
+
     //Fetch indicator names
     $.ajax({
         type: 'GET', // define the type of HTTP verb we want to use
@@ -57,8 +69,8 @@ $(document).ready(function () {
         encode: true,
         success: function (data, textStatus, jqXHR) {
             //alert("fetch indicators succes");\
-            console.log("indicator_name");
-            dhisViewModel.indicatorNames(data);
+        //    console.log("indicator_name");
+            //         dhisViewModel.indicatorNames(data);
 //            $.each(data, function (index, objValue) {
 //                modelData = data;
 //                //dhisViewModel.indicatorNames.push(objValue);
@@ -68,16 +80,20 @@ $(document).ready(function () {
 //                  // self.items.push(item);
 //             
 //            });
-             $('#IndicatorNames').dropdown({});
+            $('#IndicatorNames').dropdown({
+                data: data,
+                input: '<input type="text" maxLength="20" placeholder="Search">',
+                searchNoData: '<li style="color:#ddd">No Results</li>'
+            });
         },
         error: function (response, request) {
-            
-            console.log("got an error fetching indicator_name");
+
+        //    console.log("got an error fetching indicator_name");
             var parsed_data = JSON.parse(response.responseText);
         }
-        
+
     });
-    
+
     //fetch key performance idicators
     $.ajax({
         type: 'GET', // define the type of HTTP verb we want to use
@@ -87,7 +103,7 @@ $(document).ready(function () {
         encode: true,
         success: function (data, textStatus, jqXHR) {
             //alert("fetch indicators succes");\
-            console.log("kpi");
+        //    console.log("kpi");
 //            $.each(data, function (index, objValue) {
 //                modelData = data;
 //                var content = objValue;
@@ -97,7 +113,7 @@ $(document).ready(function () {
         error: function (response, request) {
             //alert("fetch indicators failed");
             //alert(this.url);
-            console.log("got an error  fetching kpi");
+         //   console.log("got an error  fetching kpi");
             var parsed_data = JSON.parse(response.responseText);
 
         }

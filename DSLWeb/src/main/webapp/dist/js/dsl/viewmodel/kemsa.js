@@ -24,8 +24,8 @@ $(document).ready(function () {
         encode: true,
         success: function (data, textStatus, jqXHR) {
             //alert("fetch indicators succes");\
-            console.log("commodities");
-            kemsaViewModel.commodity(data);
+        //    console.log("commodities");
+   //         kemsaViewModel.commodity(data);
            // kmlfViewModel.facilities.push(facility);
 //            $.each(data, function (index, objValue) {
 //                console.log("facilities "+index);
@@ -40,10 +40,14 @@ $(document).ready(function () {
 //                        );
 //                kmlfViewModel.facilities.push(facility);
 //            });
-            $('#kemsa-commodity').dropdown({});
+            $('#kemsa-commodity').dropdown({
+                data: data,
+                input: '<input type="text" maxLength="20" placeholder="Search">',
+                searchNoData: '<li style="color:#ddd">No Results</li>'
+            });
         },
         error: function (response, request) {
-            console.log("got an error fetching commodities");
+          //  console.log("got an error fetching commodities");
             var parsed_data = JSON.parse(response.responseText);
         }
 

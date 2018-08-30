@@ -38,8 +38,8 @@ $(document).ready(function () {
         encode: true,
         success: function (data, textStatus, jqXHR) {
             //alert("fetch indicators succes");\
-            console.log("cadregroups");
-            ihrisViewModel.cadreGroup(data);
+         //   console.log("cadregroups");
+       //     ihrisViewModel.cadreGroup(data);
            // kmlfViewModel.facilities.push(facility);
 //            $.each(data, function (index, objValue) {
 //                console.log("facilities "+index);
@@ -54,10 +54,14 @@ $(document).ready(function () {
 //                        );
 //                kmlfViewModel.facilities.push(facility);
 //            });
-            $('#cadre-group').dropdown({});
+            $('#cadre-group').dropdown({
+                data: data,
+                input: '<input type="text" maxLength="20" placeholder="Search">',
+                searchNoData: '<li style="color:#ddd">No Results</li>'
+            });
         },
         error: function (response, request) {
-            console.log("got an error fetching cadregroups");
+         //   console.log("got an error fetching cadregroups");
             var parsed_data = JSON.parse(response.responseText);
         }
 
@@ -73,8 +77,8 @@ $(document).ready(function () {
         encode: true,
         success: function (data, textStatus, jqXHR) {
             //alert("fetch indicators succes");\
-            console.log("cadres");
-            ihrisViewModel.cadre(data);
+         //   console.log("cadres");
+     //       ihrisViewModel.cadre(data);
            // kmlfViewModel.facilities.push(facility);
 //            $.each(data, function (index, objValue) {
 //                console.log("facilities "+index);
@@ -89,10 +93,14 @@ $(document).ready(function () {
 //                        );
 //                kmlfViewModel.facilities.push(facility);
 //            });
-            $('#cadre').dropdown({});
+            $('#cadre').dropdown({
+                data: data,
+                input: '<input type="text" maxLength="20" placeholder="Search">',
+                searchNoData: '<li style="color:#ddd">No Results</li>'
+            });
         },
         error: function (response, request) {
-            console.log("got an error fetching cadres");
+        //    console.log("got an error fetching cadres");
             var parsed_data = JSON.parse(response.responseText);
         }
 
@@ -108,9 +116,9 @@ $(document).ready(function () {
         encode: true,
         success: function (data, textStatus, jqXHR) {
             //alert("fetch indicators succes");\
-            console.log("cadre allocations");
-            console.log(data);
-            ihrisViewModel.cadreAllocation(data);
+        //    console.log("cadre allocations");
+       //     console.log(data);
+    //        ihrisViewModel.cadreAllocation(data);
            // kmlfViewModel.facilities.push(facility);
 //            $.each(data, function (index, objValue) {
 //                console.log("facilities "+index);
@@ -125,10 +133,12 @@ $(document).ready(function () {
 //                        );
 //                kmlfViewModel.facilities.push(facility);
 //            });
-//            $('#kemsa-commodity').dropdown({});
+//            $('#kemsa-commodity').dropdown({
+//              data: data
+//            });
         },
         error: function (response, request) {
-            console.log("got an error fetching cadre allocations");
+          //  console.log("got an error fetching cadre allocations");
             var parsed_data = JSON.parse(response.responseText);
         }
 
