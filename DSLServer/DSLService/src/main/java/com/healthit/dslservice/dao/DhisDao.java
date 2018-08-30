@@ -42,9 +42,11 @@ public class DhisDao {
             + "from vw_mohdsl_dhis where code is not null "
     );
 
-    private String getIndicatorNames = "select DISTINCT(\"Indicator name\") as indicatorName from vw_mohdsl_dhis where code is not null";
-    private String getIndicatorGroups = "select DISTINCT(\"Group name\") as indicatorGroup from vw_mohdsl_dhis where code is not null";
-
+    private String getIndicatorNames = "select DISTINCT \"Indicator name\" as indicatorName,\"Group name\" as indicatorGroup from vw_mohdsl_dhis where code is not null order by indicatorName";
+    private String getIndicatorGroups = "select DISTINCT(\"Group name\") as indicatorGroup from vw_mohdsl_dhis where code is not null order by indicatorGroup";
+    
+    private Map<String,String> groupTable=new HashMap();
+    
     Cache cache = DslCache.getCache();
 
     public List<Indicator> getIndicators(
@@ -113,7 +115,7 @@ public class DhisDao {
         List<Indicator> indicatorList = new ArrayList();
         Database db = new Database();
         ResultSet rs = db.executeQuery(getALlFaciltiesBuilder.toString());
-        log.info("Fetching facilities");
+        log.info("Fetching ndicators");
         try {
             while (rs.next()) {
                 Indicator indicator = new Indicator();
@@ -143,9 +145,20 @@ public class DhisDao {
             ResultSet rs = db.executeQuery(getIndicatorNames);
             log.info("Fetching indicator Names");
             try {
+                int count=1;
+                
+                //populate groupTable if empty
+                if(groupTable.isEmpty()){
+                     Element indicatorGroupTableEle = cache.get(CacheKeys.indicatorGroupTable);
+                     groupTable = (Map<String,String>) indicatorGroupTableEle.getObjectValue();
+                     if(groupTable.isEmpty()){
+                         getIndicatorGroups();
+                     }
+                }
                 while (rs.next()) {
                     Map<String, String> indicatorName = new HashMap();
                     indicatorName.put("name", rs.getString("indicatorName"));  // put("name",rs.getString("indicatorName"))
+                    indicatorName.put("id", groupTable.get(rs.getString("indicatorGroup")));
                     indicatorNames.add(indicatorName);
                 }
                 cache.put(new Element(CacheKeys.indicatorName, indicatorNames));
@@ -173,12 +186,17 @@ public class DhisDao {
             ResultSet rs = db.executeQuery(getIndicatorGroups);
             log.info("Fetching indicator groups");
             try {
+                int count=1;
                 while (rs.next()) {
                     Map<String, String> indicatorGroupName = new HashMap();
+                    groupTable.put(rs.getString("indicatorGroup"), Integer.toString(count));
+                    count+=1;
                     indicatorGroupName.put("name", rs.getString("indicatorGroup"));
+                    indicatorGroupName.put("id", Integer.toString(count));
                     indicatorNames.add(indicatorGroupName);
                 }
                 cache.put(new Element(CacheKeys.indicatorGroup, indicatorNames));
+                cache.put(new Element(CacheKeys.indicatorGroupTable, groupTable));
             } catch (SQLException ex) {
                 log.error(ex);
             } finally {
