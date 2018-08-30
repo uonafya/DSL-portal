@@ -158,8 +158,10 @@ public class DhisDao {
                 while (rs.next()) {
                     Map<String, String> indicatorName = new HashMap();
                     indicatorName.put("name", rs.getString("indicatorName"));  // put("name",rs.getString("indicatorName"))
-                    indicatorName.put("id", groupTable.get(rs.getString("indicatorGroup")));
+                    indicatorName.put("id", Integer.toString(count));
+                    indicatorName.put("groupId", groupTable.get(rs.getString("indicatorGroup")));
                     indicatorNames.add(indicatorName);
+                    count+=1;
                 }
                 cache.put(new Element(CacheKeys.indicatorName, indicatorNames));
             } catch (SQLException ex) {
