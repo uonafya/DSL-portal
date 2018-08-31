@@ -41,9 +41,9 @@ $(document).ready(function () {
         encode: true,
         success: function (data, textStatus, jqXHR) {
             //alert("fetch indicators succes");\
-           // console.log("facilities");
-            //kmlfViewModel.facilities(data);
-           // kmlfViewModel.facilities.push(facility);
+            // console.log("facilities");
+            kmlfViewModel.facilities(data);
+            // kmlfViewModel.facilities.push(facility);
 //            $.each(data, function (index, objValue) {
 //                console.log("facilities "+index);
 //                var facility = new Facility(
@@ -57,12 +57,17 @@ $(document).ready(function () {
 //                        );
 //                kmlfViewModel.facilities.push(facility);
 //            });
-            $('#facilities').dropdown({
+            var facilityNameEvent = new FacilityNameEvent();
+            kmlfViewModel.facilityNamesDropDown = $('#facilities').dropdown({
                 data: data,
                 input: '<input type="text" maxLength="20" placeholder="Search">',
-                searchNoData: '<li style="color:#ddd">No Results</li>'
-            });
-           // console.log(data);
+                searchNoData: '<li style="color:#ddd">No Results</li>',
+                choice: function () {
+                    facilityNameEvent.loadFacilityNameData(arguments[1]);
+                    //console.log(arguments[1]);
+                }
+            }).data('dropdown');
+            // console.log(data);
         },
         error: function (response, request) {
             console.log("got an error fetching facilities");
@@ -80,20 +85,26 @@ $(document).ready(function () {
         encode: true,
         success: function (data, textStatus, jqXHR) {
             //alert("fetch indicators succes");\
-         //   console.log("facility-type");
-           // kmlfViewModel.facilityTypes(data);
+            //   console.log("facility-type");
+            kmlfViewModel.facilityTypes(data);
 //            $.each(data, function (index, objValue) {
 //                var facilityType = new FacilityType(objValue.id, objValue.name);
 //                kmlfViewModel.facilityTypes.push(facilityType);
 //            });
-            $('#facility-types').dropdown({
+
+            var facilityTypeEvent = new FacilityTypeEvent();
+            kmlfViewModel.facilityTypesDropDown = $('#facility-types').dropdown({
                 data: data,
                 input: '<input type="text" maxLength="20" placeholder="Search">',
-                searchNoData: '<li style="color:#ddd">No Results</li>'
-            });
+                searchNoData: '<li style="color:#ddd">No Results</li>',
+                choice: function () {
+                    facilityTypeEvent.loadFacilityTypeData(arguments[1]);
+                    //console.log(arguments[1]);
+                }
+            }).data('dropdown');
         },
         error: function (response, request) {
-           // console.log("got an error fetching facility-type");
+            // console.log("got an error fetching facility-type");
             var parsed_data = JSON.parse(response.responseText);
         }
 
@@ -107,20 +118,25 @@ $(document).ready(function () {
         encode: true,
         success: function (data, textStatus, jqXHR) {
             //alert("fetch indicators succes");\
-          //  console.log("facility levels");
-           // kmlfViewModel.facilityLevels(data);
+            //  console.log("facility levels");
+            // kmlfViewModel.facilityLevels(data);
 //            $.each(data, function (index, objValue) {
 //                var facilityLevel = new FacilityLevel(objValue.id,objValue.name);
 //                kmlfViewModel.facilityLevels.push(facilityLevel);
 //            });
-            $('#facility-levels').dropdown({
+            var facilityLevelEvent = new FacilityLevelEvent();
+            kmlfViewModel.facilityTypesDropDown = $('#facility-levels').dropdown({
                 data: data,
                 input: '<input type="text" maxLength="20" placeholder="Search">',
-                searchNoData: '<li style="color:#ddd">No Results</li>'
-            });
+                searchNoData: '<li style="color:#ddd">No Results</li>',
+                choice: function () {
+                    facilityLevelEvent.loadFacilityLevelData(arguments[1]);
+                    //console.log(arguments[1]);
+                }
+            }).data('dropdown');
         },
         error: function (response, request) {
-           // console.log("got an error fetching facility-levels");
+            // console.log("got an error fetching facility-levels");
             var parsed_data = JSON.parse(response.responseText);
         }
 

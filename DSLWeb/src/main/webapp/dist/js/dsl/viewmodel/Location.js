@@ -36,20 +36,25 @@ $(document).ready(function () {
         encode: true,
         success: function (data, textStatus, jqXHR) {
             //alert("fetch indicators succes");\
-        //    console.log("wards");
+            //    console.log("wards");
             //       locationViewModel.ward(data);
 //            $.each(data, function (index, objValue) {
 //                var ward=new Ward(objValue.name);
 //                locationViewModel.ward.push(ward); 
 //            });
-            $('#wardList').dropdown({
+            var wardEvent = new WardEvent();
+            locationViewModel.wardDropDown = $('#wardList').dropdown({
                 data: data,
                 input: '<input type="text" maxLength="20" placeholder="Search">',
-                searchNoData: '<li style="color:#ddd">No Results</li>'
-            });
+                searchNoData: '<li style="color:#ddd">No Results</li>',
+                choice: function () {
+                    wardEvent.loadWardData(arguments[1]);
+                    //console.log(arguments[1]);
+                }
+            }).data('dropdown');
         },
         error: function (response, request) {
-        //    console.log("got an error fetching wards");
+            //    console.log("got an error fetching wards");
             var parsed_data = JSON.parse(response.responseText);
         }
 
@@ -63,21 +68,26 @@ $(document).ready(function () {
         dataType: 'json', // what type of data do we expect back from the server
         encode: true,
         success: function (data, textStatus, jqXHR) {
-         //   console.log("constituencies");
+            //   console.log("constituencies");
             //      locationViewModel.contituency(data);
 //            $.each(data, function (index, objValue) {
 //                var constituency=new Constituency(objValue.name); 
 //                locationViewModel.contituency.push(constituency); 
 //            });           
-            $('#constituencyList').dropdown({
+            var constituencyEvent = new ConstituencyEvent();
+            locationViewModel.constituencyDropDown = $('#constituencyList').dropdown({
                 data: data,
                 input: '<input type="text" maxLength="20" placeholder="Search">',
-                searchNoData: '<li style="color:#ddd">No Results</li>'
-            });
+                searchNoData: '<li style="color:#ddd">No Results</li>',
+                choice: function () {
+                    constituencyEvent.loadConstituencyData(arguments[1]);
+                    //console.log(arguments[1]);
+                }
+            }).data('dropdown');
         },
         error: function (response, request) {
 
-          //  console.log("got an error fetching constituencies");
+            //  console.log("got an error fetching constituencies");
             var parsed_data = JSON.parse(response.responseText);
         }
 
@@ -91,20 +101,25 @@ $(document).ready(function () {
         dataType: 'json', // what type of data do we expect back from the server
         encode: true,
         success: function (data, textStatus, jqXHR) {
-         //   console.log("counties");
+            //   console.log("counties");
             //     locationViewModel.county(data);
 //            $.each(data, function (index, objValue) {             
 //                var county=new County(objValue.name);
 //                locationViewModel.county.push(county);               
 //            });
-            $('#countyList').dropdown({
+            var countyEvent = new CountyEvent();
+            locationViewModel.countyDropDown = $('#countyList').dropdown({
                 data: data,
                 input: '<input type="text" maxLength="20" placeholder="Search">',
-                searchNoData: '<li style="color:#ddd">No Results</li>'
-            });
+                searchNoData: '<li style="color:#ddd">No Results</li>',
+                choice: function () {
+                    countyEvent.loadCountyData(arguments[1]);
+                    //console.log(arguments[1]);
+                }
+            }).data('dropdown');
         },
         error: function (response, request) {
-          //  console.log("got an error fetching constituencies");
+            //  console.log("got an error fetching constituencies");
             var parsed_data = JSON.parse(response.responseText);
         }
 

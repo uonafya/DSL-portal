@@ -17,7 +17,6 @@ var dhisViewModel = {
     chosenIndicatorNames: ko.observableArray(),
 };
 
-var dt;
 $(document).ready(function () {
 
     //Fetch indicator groups

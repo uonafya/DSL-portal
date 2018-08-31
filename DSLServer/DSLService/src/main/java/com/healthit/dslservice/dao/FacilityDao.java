@@ -55,7 +55,7 @@ public class FacilityDao {
                     Facility facility = new Facility();
                     facility.setWardId(rs.getString("ward_id"));
                     facility.setFacilityOwner(rs.getString("owner_id"));
-                    facility.setId(rs.getString("id"));
+                    facility.setId(rs.getString("kmflcode"));
                     KephLevel l = KephLevel.getKephLevel(Integer.parseInt(rs.getString("kephlevel_sk")));
                     facility.setKephLevel(l);
                     facility.setName(rs.getString("name"));
