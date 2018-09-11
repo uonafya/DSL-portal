@@ -97,7 +97,6 @@ var FacilityLevelEvent = function () {
 
                 }
             };
-
 };
 
 
@@ -145,6 +144,35 @@ var ConstituencyEvent = function () {
             console.log(this.selectedConstituencies);
         } else {
             delete this.selectedConstituencies[clickedItem['id']];
+        }
+    };
+};
+
+
+var CadreGroupEvent = function () {
+    this.selectedCadreGroups = {},
+    this.loadCadreGroupData = function (clickedItem) {
+        var data = ihrisViewModel.cadreGroup();
+        if (clickedItem['selected']) {
+            this.selectedCadreGroups[clickedItem['id']] = clickedItem['name'];
+
+            console.log(this.selectedCadreGroups);
+
+        } else {
+            delete this.selectedCadreGroups[clickedItem['id']];
+        }
+    };
+};
+
+var CadreEvent = function () {
+    this.selectedCadres = {},
+    this.loadCadreData = function (clickedItem) {
+        var data = ihrisViewModel.cadre();
+        if (clickedItem['selected']) {
+            this.selectedCadres[clickedItem['id']] = clickedItem['name'];
+            console.log(this.selectedCadres);
+        } else {
+            delete this.selectedCadres[clickedItem['id']];
         }
     };
 };

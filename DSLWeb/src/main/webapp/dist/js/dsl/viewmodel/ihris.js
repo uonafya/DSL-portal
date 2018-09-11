@@ -54,11 +54,16 @@ $(document).ready(function () {
 //                        );
 //                kmlfViewModel.facilities.push(facility);
 //            });
+            var cadreGroupEvent = new CadreGroupEvent();
             $('#cadre-group').dropdown({
                 data: data,
                 input: '<input type="text" maxLength="20" placeholder="Search">',
-                searchNoData: '<li style="color:#ddd">No Results</li>'
-            });
+                searchNoData: '<li style="color:#ddd">No Results</li>',
+                choice: function () {
+                    cadreGroupEvent.loadCadreGroupData(arguments[1]);
+                    //console.log(arguments[1]);
+                }
+            }).data('dropdown');
         },
         error: function (response, request) {
          //   console.log("got an error fetching cadregroups");
@@ -93,11 +98,16 @@ $(document).ready(function () {
 //                        );
 //                kmlfViewModel.facilities.push(facility);
 //            });
+            var cadreEvent = new CadreEvent();
             $('#cadre').dropdown({
                 data: data,
                 input: '<input type="text" maxLength="20" placeholder="Search">',
-                searchNoData: '<li style="color:#ddd">No Results</li>'
-            });
+                searchNoData: '<li style="color:#ddd">No Results</li>',
+                choice: function () {
+                    cadreEvent.loadCadreData(arguments[1]);
+                    //console.log(arguments[1]);
+                }
+            }).data('dropdown');
         },
         error: function (response, request) {
         //    console.log("got an error fetching cadres");
