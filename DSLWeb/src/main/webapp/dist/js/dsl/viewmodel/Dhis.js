@@ -38,14 +38,14 @@ $(document).ready(function () {
 //                
 //            });
 
-            var k = new IndicatorGroupEvent();
+            
             dhisViewModel.indicatorGroupNamesDropDown = $('#IndicatorGroupNames').dropdown({
                 data: data,
                 input: '<input type="text" maxLength="20" placeholder="Search">',
                 searchNoData: '<li style="color:#ddd">No Results</li>',
                 choice: function () {
 
-                    k.loadGroupData(arguments[1]);
+                    indicatorGroupEvent.loadGroupData(arguments[1]);
                     //console.log(arguments[1]);
                 }
             }).data('dropdown');
@@ -84,7 +84,7 @@ $(document).ready(function () {
 //                  // self.items.push(item);
 //             
 //            });
-            var indicatorNameEvent = new IndicatorNameEvent();
+            
             dhisViewModel.indicatorNamesDropDown =$('#IndicatorNames').dropdown({
                 data: data,
                 input: '<input type="text" maxLength="20" placeholder="Search">',

@@ -57,7 +57,7 @@ $(document).ready(function () {
 //                        );
 //                kmlfViewModel.facilities.push(facility);
 //            });
-            var facilityNameEvent = new FacilityNameEvent();
+            
             kmlfViewModel.facilityNamesDropDown = $('#facilities').dropdown({
                 data: data,
                 input: '<input type="text" maxLength="20" placeholder="Search">',
@@ -92,7 +92,7 @@ $(document).ready(function () {
 //                kmlfViewModel.facilityTypes.push(facilityType);
 //            });
 
-            var facilityTypeEvent = new FacilityTypeEvent();
+            
             kmlfViewModel.facilityTypesDropDown = $('#facility-types').dropdown({
                 data: data,
                 input: '<input type="text" maxLength="20" placeholder="Search">',
@@ -124,7 +124,7 @@ $(document).ready(function () {
 //                var facilityLevel = new FacilityLevel(objValue.id,objValue.name);
 //                kmlfViewModel.facilityLevels.push(facilityLevel);
 //            });
-            var facilityLevelEvent = new FacilityLevelEvent();
+            
             kmlfViewModel.facilityTypesDropDown = $('#facility-levels').dropdown({
                 data: data,
                 input: '<input type="text" maxLength="20" placeholder="Search">',
