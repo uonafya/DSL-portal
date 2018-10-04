@@ -57,7 +57,7 @@ $(document).ready(function () {
 //                        );
 //                kmlfViewModel.facilities.push(facility);
 //            });
-            
+
             kmlfViewModel.facilityNamesDropDown = $('#facilities').dropdown({
                 data: data,
                 input: '<input type="text" maxLength="20" placeholder="Search">',
@@ -91,17 +91,22 @@ $(document).ready(function () {
 //                var facilityType = new FacilityType(objValue.id, objValue.name);
 //                kmlfViewModel.facilityTypes.push(facilityType);
 //            });
-
             
-            kmlfViewModel.facilityTypesDropDown = $('#facility-types').dropdown({
-                data: data,
-                input: '<input type="text" maxLength="20" placeholder="Search">',
-                searchNoData: '<li style="color:#ddd">No Results</li>',
-                choice: function () {
-                    facilityTypeEvent.loadFacilityTypeData(arguments[1]);
-                    //console.log(arguments[1]);
-                }
-            }).data('dropdown');
+            $.each(data, function (index, objValue) {
+                var elementToAppend = '<a href="#" name="'+objValue.id+'" class="list-group-item"><strong>'+objValue.name+'</strong><input class="pull-right" type="checkbox"></a>';
+                $(".facility-type").append(elementToAppend);
+            });
+
+//            
+//            kmlfViewModel.facilityTypesDropDown = $('#facility-types').dropdown({
+//                data: data,
+//                input: '<input type="text" maxLength="20" placeholder="Search">',
+//                searchNoData: '<li style="color:#ddd">No Results</li>',
+//                choice: function () {
+//                    facilityTypeEvent.loadFacilityTypeData(arguments[1]);
+//                    //console.log(arguments[1]);
+//                }
+//            }).data('dropdown');
         },
         error: function (response, request) {
             // console.log("got an error fetching facility-type");
@@ -124,16 +129,20 @@ $(document).ready(function () {
 //                var facilityLevel = new FacilityLevel(objValue.id,objValue.name);
 //                kmlfViewModel.facilityLevels.push(facilityLevel);
 //            });
+             $.each(data, function (index, objValue) {
+                var elementToAppend = '<a href="#" name="'+objValue.id+'" class="list-group-item"><strong>'+objValue.name+'</strong><input class="pull-right" type="checkbox"></a>';
+                $(".facility-keph-level").append(elementToAppend);
+            });
             
-            kmlfViewModel.facilityTypesDropDown = $('#facility-levels').dropdown({
-                data: data,
-                input: '<input type="text" maxLength="20" placeholder="Search">',
-                searchNoData: '<li style="color:#ddd">No Results</li>',
-                choice: function () {
-                    facilityLevelEvent.loadFacilityLevelData(arguments[1]);
-                    //console.log(arguments[1]);
-                }
-            }).data('dropdown');
+//            kmlfViewModel.facilityTypesDropDown = $('#facility-levels').dropdown({
+//                data: data,
+//                input: '<input type="text" maxLength="20" placeholder="Search">',
+//                searchNoData: '<li style="color:#ddd">No Results</li>',
+//                choice: function () {
+//                    facilityLevelEvent.loadFacilityLevelData(arguments[1]);
+//                    //console.log(arguments[1]);
+//                }
+//            }).data('dropdown');
         },
         error: function (response, request) {
             // console.log("got an error fetching facility-levels");

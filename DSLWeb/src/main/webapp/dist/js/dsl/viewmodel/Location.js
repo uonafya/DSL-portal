@@ -42,16 +42,21 @@ $(document).ready(function () {
 //                var ward=new Ward(objValue.name);
 //                locationViewModel.ward.push(ward); 
 //            });
-            var wardEvent = new WardEvent();
-            locationViewModel.wardDropDown = $('#wardList').dropdown({
-                data: data,
-                input: '<input type="text" maxLength="20" placeholder="Search">',
-                searchNoData: '<li style="color:#ddd">No Results</li>',
-                choice: function () {
-                    wardEvent.loadWardData(arguments[1]);
-                    //console.log(arguments[1]);
-                }
-            }).data('dropdown');
+            
+            $.each(data, function (index, objValue) {
+                var elementToAppend = '<a href="#" name="' + objValue.id + '" class="list-group-item"><strong>' + objValue.name + '</strong><input class="pull-right" type="checkbox"></a>';
+                $(".ward-list").append(elementToAppend);
+            });
+//            var wardEvent = new WardEvent();
+//            locationViewModel.wardDropDown = $('#wardList').dropdown({
+//                data: data,
+//                input: '<input type="text" maxLength="20" placeholder="Search">',
+//                searchNoData: '<li style="color:#ddd">No Results</li>',
+//                choice: function () {
+//                    wardEvent.loadWardData(arguments[1]);
+//                    //console.log(arguments[1]);
+//                }
+//            }).data('dropdown');
         },
         error: function (response, request) {
             //    console.log("got an error fetching wards");
@@ -73,17 +78,23 @@ $(document).ready(function () {
 //            $.each(data, function (index, objValue) {
 //                var constituency=new Constituency(objValue.name); 
 //                locationViewModel.contituency.push(constituency); 
-//            });           
-            var constituencyEvent = new ConstituencyEvent();
-            locationViewModel.constituencyDropDown = $('#constituencyList').dropdown({
-                data: data,
-                input: '<input type="text" maxLength="20" placeholder="Search">',
-                searchNoData: '<li style="color:#ddd">No Results</li>',
-                choice: function () {
-                    constituencyEvent.loadConstituencyData(arguments[1]);
-                    //console.log(arguments[1]);
-                }
-            }).data('dropdown');
+//            }); 
+            
+            $.each(data, function (index, objValue) {
+                var elementToAppend = '<a href="#" name="' + objValue.id + '" class="list-group-item"><strong>' + objValue.name + '</strong><input class="pull-right" type="checkbox"></a>';
+                $(".constituency-list").append(elementToAppend);
+            });
+
+//            var constituencyEvent = new ConstituencyEvent();
+//            locationViewModel.constituencyDropDown = $('#constituencyList').dropdown({
+//                data: data,
+//                input: '<input type="text" maxLength="20" placeholder="Search">',
+//                searchNoData: '<li style="color:#ddd">No Results</li>',
+//                choice: function () {
+//                    constituencyEvent.loadConstituencyData(arguments[1]);
+//                    //console.log(arguments[1]);
+//                }
+//            }).data('dropdown');
         },
         error: function (response, request) {
 
@@ -107,16 +118,21 @@ $(document).ready(function () {
 //                var county=new County(objValue.name);
 //                locationViewModel.county.push(county);               
 //            });
-            var countyEvent = new CountyEvent();
-            locationViewModel.countyDropDown = $('#countyList').dropdown({
-                data: data,
-                input: '<input type="text" maxLength="20" placeholder="Search">',
-                searchNoData: '<li style="color:#ddd">No Results</li>',
-                choice: function () {
-                    countyEvent.loadCountyData(arguments[1]);
-                    //console.log(arguments[1]);
-                }
-            }).data('dropdown');
+            
+            $.each(data, function (index, objValue) {
+                var elementToAppend = '<a href="#" name="' + objValue.id + '" class="list-group-item"><strong>' + objValue.name + '</strong><input class="pull-right" type="checkbox"></a>';
+                $(".county-list").append(elementToAppend);
+            });
+//            var countyEvent = new CountyEvent();
+//            locationViewModel.countyDropDown = $('#countyList').dropdown({
+//                data: data,
+//                input: '<input type="text" maxLength="20" placeholder="Search">',
+//                searchNoData: '<li style="color:#ddd">No Results</li>',
+//                choice: function () {
+//                    countyEvent.loadCountyData(arguments[1]);
+//                    //console.log(arguments[1]);
+//                }
+//            }).data('dropdown');
         },
         error: function (response, request) {
             //  console.log("got an error fetching constituencies");

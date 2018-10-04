@@ -109,6 +109,29 @@
             /* Show the dropdown menu (use JS to add this class to the .dropdown-content container when the user clicks on the dropdown button) */
             .show {display:block;}
             .pvtTotal, .pvtTotalLabel, .pvtGrandTotal {display: none;}
+            .filter-label{
+                display: inline-block;
+            }
+            .v-center {
+                min-height:200px;
+                display: flex;
+                justify-content:center;
+                flex-flow: column wrap;
+            }
+            .pick-list {
+                margin: 0px;
+                display: none;
+            }
+            .pick-list div:nth-child(2), .pick-list div:nth-child(4) {
+                padding-left:  0px; padding-right:  0px;
+            }
+            .list-picker-group {
+                overflow-y: auto;height: 300px; font-size: 10px;
+                overflow-x: hidden;
+            }
+            .list-picker-group a {
+                font-family: Georgia, serif;font-size: 11px;
+            }
 
         </style>
 
@@ -124,7 +147,7 @@
 
 
             <div style="width: 100%; height: 100% ;overflow: hidden;display: flex; flex-direction: row; flex-wrap: nowrap;margin-top: 20px;">
-                <div style="flex-shrink: 0; width: 300px" class="categories">
+                <div style="flex-shrink: 0; width: 432px;overflow-y: auto;" class="categories">
                     <!-- Side bar -->
                     <div class="div-side-cover">
 
@@ -163,32 +186,15 @@
 
                                         <div class="form-group">
                                             <label for="IndicatorGroupNames">Indicator Group</label>
-
                                             <div id="IndicatorGroupNames">
-                                                <!--                                                    <select id="indicator-group-names" multiple data-bind="options: $root.dhisViewModel.indicatorGroups, optionsValue: 'name', optionsText: 'name'">
-                                                
-                                                                                                    </select>-->
+
                                                 <select  style="display:none"  id="indicator-group-names" 
                                                          multiple></select>                                                   
                                             </div>
-
                                             <label for="IndicatorNames">Indicator Name</label>
-
-                                            <!--                                            <select id="IndicatorNames" class="form-control" multiple="multiple"
-                                                                                                data-bind="options: $root.dhisViewModel.indicatorNames, optionsValue: 'name', optionsText: 'name',
-                                                                                                                    selectedOptions: $root.dhisViewModel.chosenIndicatorNames, 
-                                                                                                                                    multiselect: {includeSelectAllOption: true }">
-                                                                                        </select>-->
-
                                             <div id="IndicatorNames">
-                                                <!--<select style="display:none"  multiple>-->
-                                                <!--                                                <select id="indicator-names" multiple data-bind="options: $root.dhisViewModel.indicatorNames, optionsValue: 'name', optionsText: 'name'">
-                                                
-                                                                                                </select>-->
-
                                                 <select  style="display:none"  id="indicator-names" 
                                                          multiple></select>
-
                                             </div>
 
                                         </div>
@@ -207,40 +213,99 @@
 
                                 <div id="collapseTwo" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingTwo">
                                     <div class="panel-body">
-                                        <div class="form-group">
-                                            <label for="facilities">Facility Name</label>
-                                            <div id="facilities">
-                                                <select  style="display:none"  id="facilities-list"
-                                                         multiple></select>
-                                                <!--                                                <select id="facilities-list" multiple data-bind="options: $root.kmlfViewModel.facilities, optionsValue: 'kmflCode', optionsText: 'name'">
-                                                
-                                                                                                </select>-->
-                                            </div>
+                                        <!--<div class="form-group">-->
 
-                                            <label for="facility-types">Facility Type</label>
-                                            <div id="facility-types">
-                                                <!--<select style="display:none"  multiple>-->
-                                                <!--                                                <select id="facility-types-list" multiple data-bind="options: $root.kmlfViewModel.facilityTypes, optionsValue: 'kmflCode', optionsText: 'name'">
-                                                
-                                                                                                </select>-->
+                                        <label class="radio-inline">
+                                            <input type="radio" name="optradio" checked>Sum
+                                        </label>
+                                        <label class="radio-inline">
+                                            <input type="radio" name="optradio">Average
+                                        </label>
+                                        <label class="radio-inline">
+                                            <input type="radio" name="optradio">None
+                                        </label>
+                                        <hr/>
+                                        <h4 style="text-align: right">Filter Levels</h4>
+                                        <hr/>
+                                        <label style="border-bottom: 1px solid black;" class="filter-label">Facility Type</label>
+                                        <div style="border-top: 1px solid #ebebe0;">
+                                            <div class="hide-select-list" style="float:right;"><i style="color:#cc0000" class="far fa-window-maximize"></i></div>
+                                            <div style="float:right;"> max </div>
+                                            <div style="clear: both;">
 
-                                                <select  style="display:none"  id="facility-types-list" 
-                                                         multiple></select>
+                                                <div class="row pick-list">
+                                                    <br/>
+                                                    <div class="col-sm-5">
+                                                        <div class="list-group list-picker-group facility-type">
+                                                            <a href="#"  class="list-group-item active">List 1 <input title="toggle all" class="all pull-right" type="checkbox"></a>
 
-                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <!--                                                     $(this).parents().eq(0).siblings(0).
+                                                                                                         $(this).nextAll('div').eq(0).children('.hide-select-list').trigger( "click" );-->
+                                                    <div style="padding:  0px;" class="col-md-2 v-center">
+                                                        <button title="Send to list 2" class="btn btn-default center-block add"><i class="glyphicon glyphicon-chevron-right"></i></button>
+                                                        <button title="Send to list 1" class="btn btn-default center-block remove"><i class="glyphicon glyphicon-chevron-left"></i></button>
+                                                    </div>
+                                                    <div  class="col-sm-5">
+                                                        <div class="list-group list-picker-group" id="list2">
+                                                            <a href="#" class="list-group-item active">List 2 <input title="toggle all" class="all pull-right" type="checkbox"></a>
 
-                                            <label for="facility-levels">Facility Level</label>
-                                            <div id="facility-levels">
-                                                <!--<select style="display:none"  multiple>-->
-                                                <!--                                                <select id="facility-levels-list" multiple data-bind="options: $root.kmlfViewModel.facilityLevels, optionsValue: 'kmflCode', optionsText: 'name'">
-                                                
-                                                                                                </select>-->
-
-                                                <select  style="display:none"  id="facility-levels-list" 
-                                                         multiple></select>
-
+                                                        </div>
+                                                    </div>
+                                                </div>
                                             </div>
                                         </div>
+
+                                        <label style="border-bottom: 1px solid black;" class="filter-label">Facility Keph Level</label>
+                                        <div style="border-top: 1px solid #ebebe0;">
+                                            <div class="hide-select-list" style="float:right;"><i style="color:#cc0000" class="far fa-window-maximize"></i></div>
+                                            <div style="float:right;"> max </div>
+                                            <div style="clear: both;">
+
+                                                <div class="row pick-list">
+                                                    <br/>
+                                                    <div class="col-sm-5">
+                                                        <div class="list-group list-picker-group facility-keph-level">
+                                                            <a href="#"  class="list-group-item active">List 1 <input title="toggle all" class="all pull-right" type="checkbox"></a>
+
+                                                        </div>
+                                                    </div>
+                                                    <div style="padding:  0px;" class="col-md-2 v-center">
+                                                        <button title="Send to list 2" class="btn btn-default center-block add"><i class="glyphicon glyphicon-chevron-right"></i></button>
+                                                        <button title="Send to list 1" class="btn btn-default center-block remove"><i class="glyphicon glyphicon-chevron-left"></i></button>
+                                                    </div>
+                                                    <div  class="col-sm-5">
+                                                        <div class="list-group list-picker-group" >
+                                                            <a href="#" class="list-group-item active">List 2 <input title="toggle all" class="all pull-right" type="checkbox"></a>
+
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+
+
+                                        <div class="location-org-units"></div>
+
+
+                                        <!--                                            <label for="facilities">Facility Name</label>
+                                                                                    <div id="facilities">
+                                                                                        <select  style="display:none"  id="facilities-list"
+                                                                                                 multiple></select>
+                                                                                    </div>
+                                                                                    <label for="facility-types">Facility Type</label>
+                                                                                    <div id="facility-types">
+                                                                                        <select  style="display:none"  id="facility-types-list" 
+                                                                                                 multiple></select>
+                                                                                    </div>
+                                        
+                                                                                    <label for="facility-levels">Facility Level</label>
+                                                                                    <div id="facility-levels">
+                                                                                        <select  style="display:none"  id="facility-levels-list" 
+                                                                                                 multiple></select>
+                                                                                    </div>-->
+                                        <!--</div>-->
                                     </div>
 
                                 </div>
@@ -253,23 +318,57 @@
                                         </h4>
                                     </div>
                                     <div id="collapseThree" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingThree">
+                                        
                                         <div class="panel-body">
+                                        <!--<div class="form-group">-->
 
-                                            <div class="form-group">
-                                                <label for="kemsa-commodity">Commodity Name</label>
-                                                <div id="kemsa-commodity">
-                                                    <!--<select style="display:none"  multiple>-->
-                                                    <!--                                                <select id="kemsa-commodity-list" multiple data-bind="options: $root.kemsaViewModel.commodity, optionsValue: 'name', optionsText: 'name'">
-                                                    
-                                                                                                    </select>
-                                                    -->
-                                                    <select style="display:none" id="kemsa-commodity-list" 
-                                                            multiple></select>
+                                        <label class="radio-inline">
+                                            <input type="radio" name="optradio" checked>Sum
+                                        </label>
+                                        <label class="radio-inline">
+                                            <input type="radio" name="optradio">Average
+                                        </label>
+                                        <label class="radio-inline">
+                                            <input type="radio" name="optradio">None
+                                        </label>
+                                        <hr/>
+                                        <h4 style="text-align: right">Filter Levels</h4>
+                                        <hr/>
+                                        <label style="border-bottom: 1px solid black;" class="filter-label">Commodity Type</label>
+                                        <div style="border-top: 1px solid #ebebe0;">
+                                            <div class="hide-select-list" style="float:right;"><i style="color:#cc0000" class="far fa-window-maximize"></i></div>
+                                            <div style="float:right;"> max </div>
+                                            <div style="clear: both;">
 
+                                                <div class="row pick-list">
+                                                    <br/>
+                                                    <div class="col-sm-5">
+                                                        <div class="list-group list-picker-group facility-type">
+                                                            <a href="#"  class="list-group-item active">List 1 <input title="toggle all" class="all pull-right" type="checkbox"></a>
+
+                                                        </div>
+                                                    </div>
+                                                    <!--                                                     $(this).parents().eq(0).siblings(0).
+                                                                                                         $(this).nextAll('div').eq(0).children('.hide-select-list').trigger( "click" );-->
+                                                    <div style="padding:  0px;" class="col-md-2 v-center">
+                                                        <button title="Send to list 2" class="btn btn-default center-block add"><i class="glyphicon glyphicon-chevron-right"></i></button>
+                                                        <button title="Send to list 1" class="btn btn-default center-block remove"><i class="glyphicon glyphicon-chevron-left"></i></button>
+                                                    </div>
+                                                    <div  class="col-sm-5">
+                                                        <div class="list-group list-picker-group" id="list2">
+                                                            <a href="#" class="list-group-item active">List 2 <input title="toggle all" class="all pull-right" type="checkbox"></a>
+
+                                                        </div>
+                                                    </div>
                                                 </div>
                                             </div>
-
                                         </div>
+                                        
+                                        <div class="location-org-units"></div>
+
+                                    </div>
+
+                                        
                                     </div>
                                 </div>
 
@@ -399,7 +498,7 @@
                         <li class="active">
                             <a data-toggle="tab" href="#table">Table</a></li>
                         <li><a data-toggle="tab" href="#pivot">Pivot</a></li>
-                        
+
                     </ul>
 
                     <div class="tab-content">
@@ -542,12 +641,12 @@
                             </div>
                         </div>
                         <div id="pivot" class="tab-pane fade">
-                             <!-- pivot table -->
+                            <!-- pivot table -->
                             <div id="output" style="margin: 30px;"></div>
                         </div>
-                        
+
                     </div>
-                    
+
                     <!-- /end content area -->
                 </div>
                 <!-- /#page-wrapper -->
@@ -580,11 +679,31 @@
                             $.get('include/templates.html', function (templates) {
                                 // Fetch the <script /> block from the loaded external
                                 // template file which contains our greetings template.
-                                var template = $(templates).filter('#must-nav-bar').html();
-                                $('#must-nav').append(Mustache.render(template));
+                                var templateNavBar = $(templates).filter('#must-nav-bar').html();
+                                $('#must-nav').append(Mustache.render(templateNavBar));
+                                var templateOrgUnits = $(templates).filter('#location-org-units').html();
+                                $('.location-org-units').append(Mustache.render(templateOrgUnits));
                             });
 
                             ko.applyBindings(viewModel);
+
+                            $('body').on('click', '.filter-label', function (e) {
+                                $(this).nextAll('div').eq(0).children('.hide-select-list').trigger("click");
+                            });
+
+                            $('body').on('click', '.hide-select-list', function (e) {
+                                $(this).nextAll().eq(1).children('.pick-list').toggle(400);
+                                var text = $(this).next().html();
+                                if (text == 'max') {
+                                    $(this).next().html("min");
+//                                    $(this).next().css("background-color", "red");
+                                } else {
+                                    $(this).next().html("max");
+//                                    $(this).next().css("background-color", "blue");
+                                }
+
+                            });
+
 
                             // $('.demo').dropdown({});
                             //$('#couty-list').multiselect();
@@ -599,11 +718,11 @@
             <script type="text/javascript" src="../vendor/knockout/knockout-3.4.2.js"></script>
             <!--<script src="../dist/js/dsl/model/Dhis.js"></script>-->
             <script src="../dist/js/dsl/common/data-loader.js" type="text/javascript"></script>
-            <script src="../dist/js/dsl/viewmodel/Dhis.js"></script>
+            <!--<script src="../dist/js/dsl/viewmodel/Dhis.js"></script>-->
             <script src="../dist/js/dsl/viewmodel/Location.js"></script>
             <script src="../dist/js/dsl/viewmodel/kmfl.js" type="text/javascript"></script>
-            <script src="../dist/js/dsl/viewmodel/kemsa.js" type="text/javascript"></script>
-            <script src="../dist/js/dsl/viewmodel/ihris.js" type="text/javascript"></script>
+            <!--                        <script src="../dist/js/dsl/viewmodel/kemsa.js" type="text/javascript"></script>
+                                    <script src="../dist/js/dsl/viewmodel/ihris.js" type="text/javascript"></script>-->
             <script src="../dist/js/dsl/main.js"></script>
 
             <!-- pivot -->
@@ -612,7 +731,7 @@
             <!--<script src="../vendor/jquery/multi-select/jquery.dropdown.min.js" type="text/javascript"></script>-->
             <script src="../vendor/jquery/multi-select/jquery.dropdown.min.js" type="text/javascript"></script>
             <!--<script src="../vendor/jquery/multi-select/tt.js" type="text/javascript"></script>-->
-            
+
             <!-- Charting -->
             <link href="../vendor/c3/c3.min.css" rel="stylesheet" type="text/css"/>
             <script src="../vendor/d3/d3.min.js" type="text/javascript"></script>
@@ -627,13 +746,13 @@
             <script>
                         $(document).ready(function () {
 
-                            var dataTable=$('#example').DataTable({
+                            var dataTable = $('#example').DataTable({
                                 "columnDefs": [{
                                         "visible": false,
                                         "targets": -1
                                     }]
                             });
-                          //  dataTable.destroy();
+                            //  dataTable.destroy();
                             ko.applyBindings(viewModel);
 
                             // $('.demo').dropdown({});
