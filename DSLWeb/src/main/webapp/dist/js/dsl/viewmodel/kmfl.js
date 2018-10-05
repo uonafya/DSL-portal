@@ -84,29 +84,13 @@ $(document).ready(function () {
         dataType: 'json', // what type of data do we expect back from the server
         encode: true,
         success: function (data, textStatus, jqXHR) {
-            //alert("fetch indicators succes");\
-            //   console.log("facility-type");
+            
             kmlfViewModel.facilityTypes(data);
-//            $.each(data, function (index, objValue) {
-//                var facilityType = new FacilityType(objValue.id, objValue.name);
-//                kmlfViewModel.facilityTypes.push(facilityType);
-//            });
             
             $.each(data, function (index, objValue) {
                 var elementToAppend = '<a href="#" name="'+objValue.id+'" class="list-group-item"><strong>'+objValue.name+'</strong><input class="pull-right" type="checkbox"></a>';
                 $(".facility-type").append(elementToAppend);
             });
-
-//            
-//            kmlfViewModel.facilityTypesDropDown = $('#facility-types').dropdown({
-//                data: data,
-//                input: '<input type="text" maxLength="20" placeholder="Search">',
-//                searchNoData: '<li style="color:#ddd">No Results</li>',
-//                choice: function () {
-//                    facilityTypeEvent.loadFacilityTypeData(arguments[1]);
-//                    //console.log(arguments[1]);
-//                }
-//            }).data('dropdown');
         },
         error: function (response, request) {
             // console.log("got an error fetching facility-type");

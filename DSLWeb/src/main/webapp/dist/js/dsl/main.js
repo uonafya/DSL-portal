@@ -8,7 +8,7 @@ var viewModel = {
 };
 
 $(document).ready(function () {
-    $('.add').click(function () {
+    $('body').on('click', '.add', function (e) {
         var that = this;
         $('.all').prop("checked", false);
         var myDomElement = $(that).parents().eq(0).prev().children('.list-picker-group');
@@ -26,7 +26,7 @@ $(document).ready(function () {
         }
     });
 
-    $('.remove').click(function () {
+    $('body').on('click', '.remove', function (e) {
         var that = this;
         $('.all').prop("checked", false);
         var myDomElement = $(that).parents().eq(0).next().children('.list-picker-group');
@@ -40,7 +40,7 @@ $(document).ready(function () {
     });
 
     /* toggle all checkboxes in group */
-    $('.all').click(function (e) {
+    $('body').on('click', '.all', function (e) {
         e.stopPropagation();
         var $this = $(this);
         if ($this.is(":checked")) {

@@ -23,31 +23,15 @@ $(document).ready(function () {
         dataType: 'json', // what type of data do we expect back from the server
         encode: true,
         success: function (data, textStatus, jqXHR) {
-            //alert("fetch indicators succes");\
-        //    console.log("commodities");
-   //         kemsaViewModel.commodity(data);
-           // kmlfViewModel.facilities.push(facility);
-//            $.each(data, function (index, objValue) {
-//                console.log("facilities "+index);
-//                var facility = new Facility(
-//                        objValue.id,
-//                        objValue.name,
-//                        objValue.kmflcode,
-//                        objValue.kephlevel_sk,
-//                        objValue.owner_id,
-//                        objValue.ward_id,
-//                        objValue.sub_county_id
-//                        );
-//                kmlfViewModel.facilities.push(facility);
-//            });
-            $('#kemsa-commodity').dropdown({
-                data: data,
-                input: '<input type="text" maxLength="20" placeholder="Search">',
-                searchNoData: '<li style="color:#ddd">No Results</li>'
+            console.log("the data");
+            console.log(data);
+            $.each(data, function (index, objValue) {
+                var elementToAppend = '<a href="#" name="' + objValue.id + '" class="list-group-item"><strong>' + objValue.name + '</strong><input class="pull-right" type="checkbox"></a>';
+                $(".facility-type").append(elementToAppend);
             });
         },
         error: function (response, request) {
-          //  console.log("got an error fetching commodities");
+            //  console.log("got an error fetching commodities");
             var parsed_data = JSON.parse(response.responseText);
         }
 
