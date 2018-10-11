@@ -88,7 +88,8 @@ $(document).ready(function () {
             kmlfViewModel.facilityTypes(data);
             
             $.each(data, function (index, objValue) {
-                var elementToAppend = '<a href="#" name="'+objValue.id+'" class="list-group-item"><strong>'+objValue.name+'</strong><input class="pull-right" type="checkbox"></a>';
+                var elementToAppend = '<a href="#"  class="list-group-item"><strong>'+objValue.name+'</strong>\n\
+                                        <input data-id="'+objValue.id+'" data-name="'+objValue.name+'" class="pull-right" type="checkbox"></a>';
                 $(".facility-type").append(elementToAppend);
             });
         },
@@ -106,27 +107,13 @@ $(document).ready(function () {
         dataType: 'json', // what type of data do we expect back from the server
         encode: true,
         success: function (data, textStatus, jqXHR) {
-            //alert("fetch indicators succes");\
-            //  console.log("facility levels");
-            // kmlfViewModel.facilityLevels(data);
-//            $.each(data, function (index, objValue) {
-//                var facilityLevel = new FacilityLevel(objValue.id,objValue.name);
-//                kmlfViewModel.facilityLevels.push(facilityLevel);
-//            });
+
              $.each(data, function (index, objValue) {
-                var elementToAppend = '<a href="#" name="'+objValue.id+'" class="list-group-item"><strong>'+objValue.name+'</strong><input class="pull-right" type="checkbox"></a>';
+                var elementToAppend = '<a href="#"  class="list-group-item"><strong>'+objValue.name+'</strong>\n\
+                                       <input data-id="'+objValue.id+'" data-name="'+objValue.name+'" class="pull-right" type="checkbox"></a>';
                 $(".facility-keph-level").append(elementToAppend);
             });
-            
-//            kmlfViewModel.facilityTypesDropDown = $('#facility-levels').dropdown({
-//                data: data,
-//                input: '<input type="text" maxLength="20" placeholder="Search">',
-//                searchNoData: '<li style="color:#ddd">No Results</li>',
-//                choice: function () {
-//                    facilityLevelEvent.loadFacilityLevelData(arguments[1]);
-//                    //console.log(arguments[1]);
-//                }
-//            }).data('dropdown');
+
         },
         error: function (response, request) {
             // console.log("got an error fetching facility-levels");
@@ -136,4 +123,17 @@ $(document).ready(function () {
     });
 
 
+//    kmfl ui hooks    
+//
+     //radio buttons events
+    $("input[name='optradiofacility']").click(function () {
+        var radioValue = $("input[name='optradiofacility']:checked").val();
+        alert(radioValue);
+        if (radioValue) {
+            selectedFacilityRadio.selectedRadioBtn=radioValue;
+            
+        }
+
+    });
+    
 });

@@ -30,10 +30,10 @@ $(document).ready(function () {
 
 //            dhisViewModel.indicatorGroups(data);
 //            indicatorGroupEvent.loadGroupData(arguments[1]);
-            console.log("indcator gorup");
-            console.log(data);
+
             $.each(data, function (index, objValue) {
-                var elementToAppend = '<a href="#" name="' + objValue.id + '" class="list-group-item"><strong>' + objValue.name + '</strong><input class="pull-right" type="checkbox"></a>';
+                var elementToAppend = '<a href="#" class="list-group-item"><strong>' + objValue.name + '</strong>\n\
+                                        <input data-id="' + objValue.id + '" class="pull-right" type="checkbox"></a>';
                 $(".indicator-group-list").append(elementToAppend);
             });
 
@@ -56,19 +56,16 @@ $(document).ready(function () {
         encode: true,
         success: function (data, textStatus, jqXHR) {
 
-//            dhisViewModel.indicatorNames(data);
-//            indicatorNameEvent.loadNameData(arguments[1]);
-            console.log("indcator");
-            console.log(data);
             $.each(data, function (index, objValue) {
-                var elementToAppend = '<a href="#" name="' + objValue.id + '" class="list-group-item"><strong>' + objValue.name + '</strong><input class="pull-right" type="checkbox"></a>';
+                var elementToAppend = '<a href="#" class="list-group-item"><strong>' + objValue.name + '</strong>\n\
+                                        <input data-id="' + objValue.id + '" data-group-id="' + objValue.groupId + '" data-name="' + objValue.name + '" class="pull-right" type="checkbox"></a>';
                 $(".indicator-name-list").append(elementToAppend);
             });
         },
         error: function (response, request) {
 
             //    console.log("got an error fetching indicator_name");
-            var parsed_data = JSON.parse(response.responseText);
+            var parsed_data = response.responseText;
         }
 
     });
@@ -98,6 +95,20 @@ $(document).ready(function () {
         }
 
     });
+
+
+//    dhis ui hooks
+
+    //radio buttons events
+    $("input[name='optradioindicator']").click(function () {
+        var radioValue = $("input[name='optradioindicator']:checked").val();
+
+        if (radioValue) {
+            selectedIndicatorRadio.selectedRadioBtn=radioValue
+        }
+
+    });
+
 
 
 });

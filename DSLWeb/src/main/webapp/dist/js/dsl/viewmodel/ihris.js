@@ -39,7 +39,8 @@ $(document).ready(function () {
         success: function (data, textStatus, jqXHR) {
             
             $.each(data, function (index, objValue) {
-                var elementToAppend = '<a href="#" name="' + objValue.id + '" class="list-group-item"><strong>' + objValue.name + '</strong><input class="pull-right" type="checkbox"></a>';
+                var elementToAppend = '<a href="#" class="list-group-item"><strong>' + objValue.name + '</strong>\n\
+                                       <input data-id="' + objValue.id + '" data-name="' + objValue.name + '" class="pull-right" type="checkbox"></a>';
                 $(".cadre-group-list").append(elementToAppend);
             });
         },
@@ -64,7 +65,8 @@ $(document).ready(function () {
 //            cadreEvent.loadCadreData(arguments[1]);
             
             $.each(data, function (index, objValue) {
-                var elementToAppend = '<a href="#" name="' + objValue.id + '" class="list-group-item"><strong>' + objValue.name + '</strong><input class="pull-right" type="checkbox"></a>';
+                var elementToAppend = '<a href="#" class="list-group-item"><strong>' + objValue.name + '</strong>\n\
+                                       <input data-id="' + objValue.id + '" data-name="' + objValue.name + '" data-group-id="' + objValue.cadreGroupId + '" class="pull-right" type="checkbox"></a>';
                 $(".cadre-list").append(elementToAppend);
             });
         },
@@ -91,5 +93,19 @@ $(document).ready(function () {
         }
 
     });
+    
+    
+     //    ihris ui hooks    
+//
+     //radio buttons events
+    $("input[name='optradiohresource']").click(function () {
+        var radioValue = $("input[name='optradiohresource']:checked").val();
+        if (radioValue) {
+            selectedHumanResourceRadio.selectedRadioBtn=radioValue;
+        }
+
+    });
+    
+    
 
 });
