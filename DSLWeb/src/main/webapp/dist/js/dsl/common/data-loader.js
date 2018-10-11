@@ -139,7 +139,7 @@ var CountyEvent = function () {
                 var myDomElement;
                 var constituencyItems;
                 if (type == 'add') {
-                    
+
                     myDomElement = $(".constituency-list");
                     constituencyItems = $(myDomElement).find("input");
 
@@ -154,7 +154,7 @@ var CountyEvent = function () {
                     });
                     $(".constituency-list-action").children(".add").trigger("click");
                 } else {
-                    
+
                     myDomElement = $(".constituency-selected-list");
                     constituencyItems = $(myDomElement).find("input");
                     $.each(selectedItems, function (index, selectedObjValue) {
@@ -190,7 +190,6 @@ var WardEvent = function () {
                     $.each(selectedItems, function (index, selectedObjValue) {
                         var id = $(selectedObjValue).attr("data-id");
                         delete that.selectedWards[id];
-                        console.log(that.selectedWards);
                     });
 
                 }
@@ -339,6 +338,29 @@ var constituencyEvent = new ConstituencyEvent();
 var selectedCommodityRadio = new SelectedCommodityRadio();
 
 var updateData = function () {
+    var startDate = $('#start-period').val();
+    var endDate = $('#end-period').val();
+
+    if (!(startDate)) {
+        var alrt = $("#global-danger-alert");
+        alrt.find('.alert-msg').text("please ensure the start date is filled").css("font-weight", "Bold");
+
+        if (alrt.css('display') === 'none') {
+            alrt.fadeIn(1000).delay(10000).fadeOut(2000);
+        }
+        return;
+    }
+
+    if (!(endDate)) {
+        var alrt = $("#global-danger-alert");
+        alrt.find('.alert-msg').text("please ensure the end date is filled").css("font-weight", "Bold");
+
+        if (alrt.css('display') === 'none') {
+            alrt.fadeIn(1000).delay(10000).fadeOut(2000);
+        }
+        return;
+    }
+
     var selectedIndicatorNames = indicatorNameEvent.selectedNames;
     var selectedIndicatorGroupNames = indicatorGroupEvent.selectedGroups;
 

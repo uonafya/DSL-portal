@@ -128,7 +128,6 @@ $(document).ready(function () {
      //radio buttons events
     $("input[name='optradiofacility']").click(function () {
         var radioValue = $("input[name='optradiofacility']:checked").val();
-        alert(radioValue);
         if (radioValue) {
             selectedFacilityRadio.selectedRadioBtn=radioValue;
             

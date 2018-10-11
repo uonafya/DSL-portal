@@ -87,8 +87,7 @@ $(document).ready(function () {
 //            });
         },
         error: function (response, request) {
-            //alert("fetch indicators failed");
-            //alert(this.url);
+
             //   console.log("got an error  fetching kpi");
             var parsed_data = JSON.parse(response.responseText);
 
