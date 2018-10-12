@@ -337,58 +337,158 @@ var constituencyEvent = new ConstituencyEvent();
 //Kemsa
 var selectedCommodityRadio = new SelectedCommodityRadio();
 
-var updateData = function () {
+
+
+function displayErrorAlert(msg) {
+    var alrt = $("#global-danger-alert");
+    alrt.find('.alert-msg').text(msg).css("font-weight", "Bold");
+
+    if (alrt.css('display') === 'none') {
+        alrt.fadeIn(1000).delay(10000).fadeOut(2000);
+    }
+}
+
+function validateDateInput() {
     var startDate = $('#start-period').val();
     var endDate = $('#end-period').val();
 
     if (!(startDate)) {
-        var alrt = $("#global-danger-alert");
-        alrt.find('.alert-msg').text("please ensure the start date is filled").css("font-weight", "Bold");
-
-        if (alrt.css('display') === 'none') {
-            alrt.fadeIn(1000).delay(10000).fadeOut(2000);
-        }
-        return;
+        displayErrorAlert("please ensure the start period is filled");
+        return false;
     }
-
     if (!(endDate)) {
-        var alrt = $("#global-danger-alert");
-        alrt.find('.alert-msg').text("please ensure the end date is filled").css("font-weight", "Bold");
+        displayErrorAlert("please ensure the end period is filled");
+        return false;
+    }
+    return true;
+}
 
-        if (alrt.css('display') === 'none') {
-            alrt.fadeIn(1000).delay(10000).fadeOut(2000);
+function isFacilitiesSelected() {
+
+    if (selectedFacilityRadio.selectedRadioBtn == 'none') {
+        return false;
+    } else {
+        if (jQuery.isEmptyObject(facilityTypeEvent.selectedFacilityType) &&
+                jQuery.isEmptyObject(facilityLevelEvent.selectedFacilityLevel)) {
+            return false;
+        } else
+            return true;
+    }
+}
+
+function isLocalitySelected() {
+    if (jQuery.isEmptyObject(wardEvent.selectedWards) &&
+            jQuery.isEmptyObject(countyEvent.selectedCounties) &&
+            jQuery.isEmptyObject(constituencyEvent.selectedConstituencies)) {
+
+        return false;
+    } else
+        return true;
+}
+
+var updateData = function () {
+
+    if (!validateDateInput())
+        return;
+
+    var isAnyParametersSelected = false;
+    var queryParametersList = [];
+
+    //dhis indicators
+    var selectedIndicatorNames = indicatorNameEvent.selectedNames;
+    var selectedIndicatRadio = selectedIndicatorRadio.selectedRadioBtn;
+
+    if (selectedIndicatRadio != 'none' && selectedIndicatRadio != '' && !jQuery.isEmptyObject(selectedIndicatorNames)) {
+        var indicatorValuesToQuery = {};
+        indicatorValuesToQuery['what'] = "indicator:" + selectedIndicatRadio;
+        indicatorValuesToQuery['filter'] = {'indicator': selectedIndicatorNames};
+        queryParametersList.push(indicatorValuesToQuery);
+        isAnyParametersSelected = true;
+    }
+
+    //facility
+    var selectedFacilRadio = selectedFacilityRadio.selectedRadioBtn;
+
+    if (selectedFacilRadio != 'none' && selectedFacilRadio != '') {
+        var facilityValuesToQuery = {};
+        facilityValuesToQuery['what'] = "facility:" + selectedFacilRadio;
+        facilityValuesToQuery['filter'] = {};
+
+        var selectedFacilTypes = facilityTypeEvent.selectedFacilityType;
+        if (!jQuery.isEmptyObject(selectedFacilTypes)) {
+
+            facilityValuesToQuery['filter']['facility_type'] = selectedFacilTypes;
         }
+        var selectedFacilityLevels = facilityLevelEvent.selectedFacilityLevel;
+        if (!jQuery.isEmptyObject(selectedFacilityLevels)) {
+
+            facilityValuesToQuery['filter']['facility_keph_level'] = selectedFacilityLevels;
+        }
+
+        queryParametersList.push(facilityValuesToQuery);
+        isAnyParametersSelected = true;
+    }
+
+    //kemsa commodities
+
+    var selectedCommodtyRadio = selectedCommodityRadio.selectedRadioBtn;
+    if (!isFacilitiesSelected() && !isLocalitySelected() && selectedCommodtyRadio != 'none' && selectedCommodtyRadio != '') {
+
+        displayErrorAlert("please ensure you choose a locality or facilities selection");
+        return false;
+    } else {
+        if (selectedCommodtyRadio != 'none' && selectedCommodtyRadio != '') {
+            var commodityValuesToQuery = {};
+            commodityValuesToQuery['what'] = "commodity:" + selectedCommodtyRadio;
+            queryParametersList.push(commodityValuesToQuery);
+            isAnyParametersSelected = true;
+        }
+
+    }
+
+    //ihris 
+    var selectedHumanResrceRadio = selectedHumanResourceRadio.selectedRadioBtn;
+
+    if (selectedHumanResrceRadio != 'none' && selectedHumanResrceRadio != '') {
+        var humanResourceValuesToQuery = {};
+        humanResourceValuesToQuery['what'] = "human_resource:" + selectedHumanResrceRadio;
+        humanResourceValuesToQuery['filter'] = {};
+
+        var selectedCadreTypes = cadreEvent.selectedCadres;
+        if (!jQuery.isEmptyObject(selectedCadreTypes)) {
+
+            humanResourceValuesToQuery['filter']['cadre'] = selectedCadreTypes;
+        }
+
+        queryParametersList.push(humanResourceValuesToQuery);
+        isAnyParametersSelected = true;
+    }
+
+    //locality 
+    if (isLocalitySelected) {
+        var localityValuesToQuery = {};
+        localityValuesToQuery['what'] = "locality:" + "ward";
+        localityValuesToQuery['filter'] = {};
+
+        var selectedWads = wardEvent.selectedWards;
+        if (!jQuery.isEmptyObject(selectedCadreTypes)) {
+
+            localityValuesToQuery['filter']['ward'] = selectedWads;
+        }
+
+        queryParametersList.push(localityValuesToQuery);
+    }
+
+
+    if (!isAnyParametersSelected) {
+        displayErrorAlert("please ensure you choose values from the side-menu to display");
+        console.log("terminating");
         return;
     }
+    console.log(queryParametersList);
 
-    var selectedIndicatorNames = indicatorNameEvent.selectedNames;
-    var selectedIndicatorGroupNames = indicatorGroupEvent.selectedGroups;
 
-    var valuesToQuery = [];
 
-    if (jQuery.isEmptyObject(selectedIndicatorGroupNames)) {
-        var parameter = {'name': 'Indicator name', 'table': 'vw_mohdsl_dhis'}
-        var valuesToFilterBy = [];
-        $.each(selectedIndicatorNames, function (index, objValueIndicatorNames) {
-            valuesToFilterBy.push(objValueIndicatorNames.name);
-        });
-        parameter['filter_by'] = valuesToFilterBy;
-    } else {
-
-        var parameter = {'name': 'Indicator name', 'table': 'dim_dhis_indicatorgroup'}
-        var valuesToFilterBy = [];
-
-        valuesToQuery["Indicator name"] = [];
-        valuesToQuery["Indicator name"] = []
-        $.each(selectedIndicatorNames, function (index, objValueIndicatorNames) {
-            $.each(dhisViewModel.indicatorGroups(), function (index, objValue) {
-                if (objValue.id == objValueIndicatorNames.groupId) {
-                }
-            });
-        });
-    }
-
-    facilityLevelEvent.selectedFacilityLevel;
 
     var sum = $.pivotUtilities.aggregatorTemplates.sum;
     var numberFormat = $.pivotUtilities.numberFormat;

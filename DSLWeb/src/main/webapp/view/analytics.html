@@ -146,7 +146,7 @@
             <div id="must-nav"></div>
 
             <div style="display: none;" id="global-danger-alert" class="alert alert-danger alert-dismissible">
-                <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+                <a href="#" class="close" onclick="$('.alert').hide()" aria-label="close">&times;</a>
                 <span class="alert-msg"><strong></strong></span>
             </div>
 
@@ -195,7 +195,7 @@
                                         </label>
 
                                         <label class="radio-inline">
-                                            <input type="radio" value="none" name="optradioindicator">None
+                                            <input type="radio" value="none" name="optradioindicator" checked="checked">None
                                         </label>
                                         <hr/>
                                         <h4 style="text-align: right">Filter Levels</h4>
@@ -287,7 +287,7 @@
                                             <input type="radio" value="filter" name="optradiofacility">Use as filter
                                         </label>
                                         <label class="radio-inline">
-                                            <input type="radio" value="none" name="optradiofacility">None
+                                            <input type="radio" value="none" name="optradiofacility" checked="checked">None
                                         </label>
                                         <hr/>
                                         <h4 style="text-align: right">Filter Levels</h4>
@@ -376,7 +376,7 @@
                                             <input type="radio" value="average" name="optradiocommodity">Average
                                         </label>
                                         <label class="radio-inline">
-                                            <input type="radio" value="none" name="optradiocommodity">None
+                                            <input type="radio" value="none" name="optradiocommodity" checked="checked">None
                                         </label>
                                         <hr/>
                                         <!--                                        <h4 style="text-align: right">Filter Levels</h4>
@@ -410,7 +410,7 @@
                                             <input type="radio" value="average" name="optradiohresource">Average
                                         </label>
                                         <label class="radio-inline">
-                                            <input type="radio" value="none" name="optradiohresource">None
+                                            <input type="radio" value="none" name="optradiohresource" checked="checked">None
                                         </label>
                                         <hr/>
                                         <h4 style="text-align: right">Filter Levels</h4>
