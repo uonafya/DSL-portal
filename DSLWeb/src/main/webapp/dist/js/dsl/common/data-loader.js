@@ -132,45 +132,114 @@ var SelectedFacilityRadio = function () {
 
 //Region(locality)  events hooks
 
+var SelectedCountyRadio = function () {
+    this.selectedRadioBtn = "";
+};
+
+var SelectedCountituencyRadio = function () {
+    this.selectedRadioBtn = "";
+};
+
+var selectedCountyRadio = new SelectedCountyRadio();
+var selectedCountituencyRadio = new SelectedCountituencyRadio();
+
 var CountyEvent = function () {
     this.selectedCounties = {},
             this.loadCountyData = function (selectedItems, type, clickedItem) {
-
-                var myDomElement;
-                var constituencyItems;
-                if (type == 'add') {
-
-                    myDomElement = $(".constituency-list");
-                    constituencyItems = $(myDomElement).find("input");
-
-                    $.each(selectedItems, function (index, selectedObjValue) {
-                        $.each(constituencyItems, function (index, objValue) {
-                            if ($(selectedObjValue).attr("data-id") == $(objValue).attr("data-county-id")) {
-                                $(objValue).trigger("click");
-                            }
-
-                        });
-
-                    });
-                    $(".constituency-list-action").children(".add").trigger("click");
+                var selectedRdio = selectedCountyRadio.selectedRadioBtn;
+                
+                if (selectedRdio == 'cascade-constituency') {
+                    selectedCountituencyRadio.selectedRadioBtn = "none";
+                    addSelectedCounties(selectedItems, type, clickedItem);
+                } else if (selectedRdio == 'cascade-all') {
+                    selectedCountituencyRadio.selectedRadioBtn = "cascade-wards";
+                    addSelectedCounties(selectedItems, type, clickedItem);
                 } else {
 
-                    myDomElement = $(".constituency-selected-list");
-                    constituencyItems = $(myDomElement).find("input");
-                    $.each(selectedItems, function (index, selectedObjValue) {
-                        $.each(constituencyItems, function (index, objValue) {
-                            if ($(selectedObjValue).attr("data-id") == $(objValue).attr("data-county-id")) {
-                                $(objValue).trigger("click");
-                            }
-
-                        });
-
-                    });
-                    $(".constituency-list-action").children(".remove").trigger("click");
                 }
 
             };
 
+};
+
+function addSelectedCounties(selectedItems, type, clickedItem) {
+    var myDomElement;
+    var constituencyItems;
+    if (type == 'add') {
+        myDomElement = $(".constituency-list");
+        constituencyItems = $(myDomElement).find("input");
+
+        $.each(selectedItems, function (index, selectedObjValue) {
+            $.each(constituencyItems, function (index, objValue) {
+                if ($(selectedObjValue).attr("data-id") == $(objValue).attr("data-county-id")) {
+                    $(objValue).trigger("click");
+                }
+
+            });
+
+        });
+        $(".constituency-list-action").children(".add").trigger("click");
+    } else {
+        myDomElement = $(".constituency-selected-list");
+        constituencyItems = $(myDomElement).find("input");
+        $.each(selectedItems, function (index, selectedObjValue) {
+            $.each(constituencyItems, function (index, objValue) {
+                if ($(selectedObjValue).attr("data-id") == $(objValue).attr("data-county-id")) {
+                    $(objValue).trigger("click");
+                }
+
+            });
+
+        });
+        $(".constituency-list-action").children(".remove").trigger("click");
+    }
+}
+
+var ConstituencyEvent = function () {
+    this.selectedConstituencies = {},
+            this.loadConstituencyData = function (selectedItems, type, clickedItem) {
+
+                var selectedRdio = selectedCountyRadio.selectedRadioBtn;
+                if (selectedRdio == 'cascade-all') {
+                    var wardtems;
+                    var myDomElement;
+                    if (type == 'add') {
+                        myDomElement = $(".ward-list");
+                        wardtems = $(myDomElement).find("input");
+
+                        $.each(selectedItems, function (index, selectedObjValue) {
+                            $.each(wardtems, function (index, objValue) {
+
+                                if ($(selectedObjValue).attr("data-id") == $(objValue).attr("data-constituency-id")) {
+                                    $(objValue).trigger("click");
+                                }
+
+                            });
+
+                        });
+                        $(".ward-list-action").children(".add").trigger("click");
+                    } else {
+                        myDomElement = $(".ward-selected-list");
+                        wardtems = $(myDomElement).find("input");
+                        $.each(selectedItems, function (index, selectedObjValue) {
+                            $.each(wardtems, function (index, objValue) {
+
+                                if ($(selectedObjValue).attr("data-id") == $(objValue).attr("data-constituency-id")) {
+                                    $(objValue).trigger("click");
+                                }
+
+                            });
+
+                        });
+                        $(".ward-list-action").children(".remove").trigger("click");
+                    }
+                } else {
+
+                }
+
+
+
+            };
 };
 
 var WardEvent = function () {
@@ -197,45 +266,6 @@ var WardEvent = function () {
             };
 };
 
-var ConstituencyEvent = function () {
-    this.selectedConstituencies = {},
-            this.loadConstituencyData = function (selectedItems, type, clickedItem) {
-
-                var myDomElement;
-                var wardtems;
-                if (type == 'add') {
-                    myDomElement = $(".ward-list");
-                    wardtems = $(myDomElement).find("input");
-
-                    $.each(selectedItems, function (index, selectedObjValue) {
-                        $.each(wardtems, function (index, objValue) {
-
-                            if ($(selectedObjValue).attr("data-id") == $(objValue).attr("data-constituency-id")) {
-                                $(objValue).trigger("click");
-                            }
-
-                        });
-
-                    });
-                    $(".ward-list-action").children(".add").trigger("click");
-                } else {
-                    myDomElement = $(".ward-selected-list");
-                    wardtems = $(myDomElement).find("input");
-                    $.each(selectedItems, function (index, selectedObjValue) {
-                        $.each(wardtems, function (index, objValue) {
-
-                            if ($(selectedObjValue).attr("data-id") == $(objValue).attr("data-constituency-id")) {
-                                $(objValue).trigger("click");
-                            }
-
-                        });
-
-                    });
-                    $(".ward-list-action").children(".remove").trigger("click");
-                }
-
-            };
-};
 
 //human resource events hooks
 var CadreGroupEvent = function () {
@@ -333,6 +363,8 @@ var selectedHumanResourceRadio = new SelectedHumanResourceRadio();
 var wardEvent = new WardEvent();
 var countyEvent = new CountyEvent();
 var constituencyEvent = new ConstituencyEvent();
+
+
 
 //Kemsa
 var selectedCommodityRadio = new SelectedCommodityRadio();

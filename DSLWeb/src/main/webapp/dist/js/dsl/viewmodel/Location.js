@@ -42,7 +42,7 @@ $(document).ready(function () {
 //                var ward=new Ward(objValue.name);
 //                locationViewModel.ward.push(ward); 
 //            });
-            
+
             $.each(data, function (index, objValue) {
                 var elementToAppend = '<a href="#" class="list-group-item"><strong>' + objValue.name + '</strong>\n\
                         <input data-constituency-id="' + objValue.constituencyId + '"constituencyId data-id="' + objValue.id + '" data-name="' + objValue.name + '" class="pull-right" type="checkbox"></a>';
@@ -74,9 +74,9 @@ $(document).ready(function () {
         dataType: 'json', // what type of data do we expect back from the server
         encode: true,
         success: function (data, textStatus, jqXHR) {
-            
+
             $.each(data, function (index, objValue) {
-               
+
                 var elementToAppend = '<a href="#" class="list-group-item"><strong>' + objValue.name + '</strong>\n\
                 <input data-id="' + objValue.id + '" data-name="' + objValue.name + '" data-county-id="' + objValue.countyId + '" class="pull-right" type="checkbox"></a>';
                 $(".constituency-list").append(elementToAppend);
@@ -98,7 +98,7 @@ $(document).ready(function () {
         dataType: 'json', // what type of data do we expect back from the server
         encode: true,
         success: function (data, textStatus, jqXHR) {
-          
+
             $.each(data, function (index, objValue) {
                 var elementToAppend = '<a href="#" class="list-group-item"><strong>' + objValue.name + '</strong>\n\
                                 <input data-id="' + objValue.id + '" data-name="' + objValue.name + '"  class="pull-right" type="checkbox"></a>';
@@ -108,6 +108,27 @@ $(document).ready(function () {
         error: function (response, request) {
             //  console.log("got an error fetching constituencies");
             var parsed_data = JSON.parse(response.responseText);
+        }
+
+    });
+
+
+    //radio buttons events
+    $('body').on('click', 'input[name="optradioconstituency"]', function (e) {
+        var radioValue = $("input[name='optradioconstituency']:checked").val();
+
+        if (radioValue) {
+            selectedCountituencyRadio.selectedRadioBtn = radioValue;
+        }
+
+    });
+
+    //radio buttons events
+    $('body').on('click', 'input[name="optradiocounties"]', function (e) {
+        var radioValue = $("input[name='optradiocounties']:checked").val();
+
+        if (radioValue) {
+            selectedCountyRadio.selectedRadioBtn = radioValue;
         }
 
     });
