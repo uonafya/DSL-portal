@@ -199,8 +199,9 @@ var ConstituencyEvent = function () {
     this.selectedConstituencies = {},
             this.loadConstituencyData = function (selectedItems, type, clickedItem) {
 
-                var selectedRdio = selectedCountyRadio.selectedRadioBtn;
-                if (selectedRdio == 'cascade-all') {
+                var selectedRdio = selectedCountituencyRadio.selectedRadioBtn;
+                alert(selectedRdio);
+                if (selectedRdio == 'cascade-wards') {
                     var wardtems;
                     var myDomElement;
                     if (type == 'add') {
@@ -236,8 +237,6 @@ var ConstituencyEvent = function () {
                 } else {
 
                 }
-
-
 
             };
 };
