@@ -30,7 +30,7 @@ public class Database {
     private final String url = "jdbc:postgresql://41.89.93.180:5432/mohdsl";
     private final String user = "dsl";
     private final String password = "dsl2017";
-    final static Logger log = Logger.getLogger(Database.class);
+    final static Logger log = Logger.getLogger(Database.class.getCanonicalName());
     private Message msg=null;
     
     private Boolean connect() throws DslException {

@@ -33,7 +33,7 @@ public class IhrisDao {
     Cache cache = DslCache.getCache();
 
     private String getALlCadreGroup = "Select cadreid,cadrename from dim_ihris_cadre";
-    private String getALlCadre = "Select dataelementid as id,dataelementname as cadrename, cadreid as cadre_group_id from dim_ihris_dataelement";
+    private String getALlCadre = "Select uid as id,dataelementname as cadrename, cadreid as cadre_group_id from dim_ihris_dataelement";
     private String getCadreAllocation = "Select dataelementid as cadreid,periodid,mflcode,value from fact_ihris_datavalue where periodid is not null";
 
     public List<CadreAllocation> getCadreAllocation() throws DslException {

@@ -154,10 +154,9 @@ var CountyEvent = function () {
                 } else if (selectedRdio == 'cascade-all') {
                     selectedCountituencyRadio.selectedRadioBtn = "cascade-wards";
                     addSelectedCounties(selectedItems, type, clickedItem);
-                } else {
-
-                }
-
+                } 
+                
+                
             };
 
 };
@@ -234,9 +233,7 @@ var ConstituencyEvent = function () {
                         });
                         $(".ward-list-action").children(".remove").trigger("click");
                     }
-                } else {
-
-                }
+                } 
 
             };
 };
@@ -264,7 +261,6 @@ var WardEvent = function () {
 
             };
 };
-
 
 //human resource events hooks
 var CadreGroupEvent = function () {
@@ -363,12 +359,8 @@ var wardEvent = new WardEvent();
 var countyEvent = new CountyEvent();
 var constituencyEvent = new ConstituencyEvent();
 
-
-
 //Kemsa
 var selectedCommodityRadio = new SelectedCommodityRadio();
-
-
 
 function displayErrorAlert(msg) {
     var alrt = $("#global-danger-alert");
@@ -415,6 +407,30 @@ function isLocalitySelected() {
         return false;
     } else
         return true;
+}
+
+
+
+function sendQueryParamatersToServer(qParameters){
+    console.log("again "+qParameters);
+    //Send  query parameter to server to retrieve database resultset
+    $.ajax({
+        type: 'POST', // define the type of HTTP verb we want to use
+        url: '/DSLWeb/api/processquery', // the url from server we that we want to use
+        dataType: 'json', // what type of data do we expect back from the server
+        encode: true,
+        data: qParameters,
+        success: function (data, textStatus, jqXHR) {
+            
+            console.log("All went well");
+        },
+        error: function (response, request) {
+            //   console.log("got an error fetching cadregroups");
+            var parsed_data = JSON.parse(response.responseText);
+        }
+
+    });
+
 }
 
 var updateData = function () {
@@ -502,7 +518,7 @@ var updateData = function () {
         localityValuesToQuery['filter'] = {};
 
         var selectedWads = wardEvent.selectedWards;
-        if (!jQuery.isEmptyObject(selectedCadreTypes)) {
+        if (!jQuery.isEmptyObject(selectedWads)) {
 
             localityValuesToQuery['filter']['ward'] = selectedWads;
         }
@@ -517,8 +533,28 @@ var updateData = function () {
         return;
     }
     console.log(queryParametersList);
+    var queryToSubmit={"query":queryParametersList};
+    var x=JSON.stringify(queryToSubmit);
+     $.ajax({
+        type: 'POST', // define the type of HTTP verb we want to use
+        url: '/DSLWeb/api/processquery', // the url from server we that we want to use
+        dataType: 'json', // what type of data do we expect back from the server
+        contentType: 'application/json; charset=utf-8',
+        encode: true,
+        data: x,
+        success: function (data, textStatus, jqXHR) {
+            
+            console.log("All went well");
+        },
+        error: function (response, request) {
+            //   console.log("got an error fetching cadregroups");
+            var parsed_data = JSON.parse(response.responseText);
+        }
 
-
+    });
+    
+    
+//    sendQueryParamatersToServer(queryParametersList);
 
 
     var sum = $.pivotUtilities.aggregatorTemplates.sum;
