@@ -8,7 +8,6 @@ import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -53,15 +52,72 @@ public class QueryInterpreter {
         Map<String, List<Object>> results = runSqlQuery(finalQuery);
         return results;
     }
+    /**
+     *  Add columns names to the returned dataset
+     * @param columnsCount
+     * @param rsMetaData
+     * @param reslts
+     * @param colmns
+     * @return
+     * @throws SQLException 
+     */
+    private List<Map<String, String>> addColumnsHeaders(
+            int columnsCount,
+            ResultSetMetaData rsMetaData,
+            String[][] reslts,
+            List<Map<String, String>> colmns) throws SQLException {
+        for (int x = 1; x <= columnsCount; x++) {
+            log.debug("column name " + rsMetaData.getColumnName(x));
+            reslts[x - 1][0] = rsMetaData.getColumnName(x);
+            Map<String, String> colum = new HashMap();
+            colum.put("title", rsMetaData.getColumnName(x));
+            colmns.add(colum);
+        }
+        return colmns;
+    }
+
+    /**
+     *  Build the dataset/data body and populates with values gotten from the database
+     * @param rs
+     * @param columnsCount
+     * @param rsMetaData
+     * @param wrapperMap
+     * @param reslts
+     * @return
+     * @throws SQLException 
+     */
+    private Map<String, List<Object>> buildDataSet(
+            ResultSet rs,
+            int columnsCount,
+            ResultSetMetaData rsMetaData,
+            Map<String, List<Object>> wrapperMap,
+            String[][] reslts) throws SQLException {
+        List<List> reslts1 = new ArrayList();
+        int rowIndex = 1; //initialize to 1 because first row occupied by column headers
+        log.info("Getting resultset rows data");
+        String colType;
+        while (rs.next()) {
+            rowIndex = rowIndex + 1;
+            List<String> resultRow = new ArrayList();
+            for (int x = 1; x <= columnsCount; x++) {
+                colType = rsMetaData.getColumnTypeName(x);
+                log.info("Column type " + (rowIndex - 1));
+                reslts[x - 1][rowIndex - 1] = rs.getObject(x).toString();
+                resultRow.add(rs.getObject(x).toString());
+            }
+            reslts1.add(resultRow);
+            wrapperMap.put("data", (List<Object>) (Object) reslts1);
+        }
+        return wrapperMap;
+    }
 
     private Map<String, List<Object>> runSqlQuery(String sqlQuery) {
-        Map<String, String[][]> queryResults = new HashMap();
+
         Database db = new Database();
         List<List> reslts1 = null;
         Map<String, List<Object>> wrapperMap = null;
         try {
             String[][] reslts;
-            reslts1 = new ArrayList();
             wrapperMap = new HashMap();
             Map<String, Object> results = db.executeQueryWithColumnCount(sqlQuery);
             ResultSet rs = (ResultSet) results.get("resultset");
@@ -75,30 +131,10 @@ public class QueryInterpreter {
             //add columns heads
             log.info("Getting columns headers");
             List<Map<String, String>> colmns = new ArrayList();
-            for (int x = 1; x <= columnsCount; x++) {
-                log.debug("column name " + rsMetaData.getColumnName(x));
-                reslts[x - 1][0] = rsMetaData.getColumnName(x);
-                Map<String, String> colum = new HashMap();
-                colum.put("title", rsMetaData.getColumnName(x));
-                colmns.add(colum);
-            }
+            colmns = addColumnsHeaders(columnsCount, rsMetaData, reslts, colmns);
             wrapperMap.put("columns", (List<Object>) (Object) colmns);
-            int rowIndex = 1; //initialize to 1 because first row occupied by column headers
-            log.info("Getting resultset rows data");
-            String colType;
-            while (rs.next()) {
-                rowIndex = rowIndex + 1;
-                List<String> resultRow = new ArrayList();
-                for (int x = 1; x <= columnsCount; x++) {
-                    colType = rsMetaData.getColumnTypeName(x);
-                    log.info("Column type " + (rowIndex - 1));
-                    reslts[x - 1][rowIndex - 1] = rs.getObject(x).toString();
-                    resultRow.add(rs.getObject(x).toString());
-                }
-                reslts1.add(resultRow);
-                wrapperMap.put("data", (List<Object>) (Object) reslts1);
-            }
-            queryResults.put("query_results", reslts);
+            wrapperMap = buildDataSet(rs, columnsCount, rsMetaData, wrapperMap, reslts);
+
         } catch (DslException | SQLException ex) {
             log.error(ex);
         } finally {
@@ -282,7 +318,6 @@ public class QueryInterpreter {
             String alias = (String) _queriesToRun.get(x).get("alias"); //current query alias
             String previousSubqueryJAlias = (String) _queriesToRun.get(x - 1).get("alias"); //previous query alias
             List<String[]> joinValues = getJoinValuesAttributes(_queriesToRun, x);
-
             finalQueryToRun = createJoinOnSqlSegment(finalQueryToRun, x, joinValues.get(0), joinValues.get(1), alias, previousSubqueryJAlias);
         }
         log.info("Final query " + finalQueryToRun.toString());
