@@ -26,7 +26,11 @@ public class PropertiesLoader {
             if (propertyFile == null) {
                 log.debug("properties file object null, loading to memory");
                 propertyFile = new Properties();
-                InputStream s = Properties.class.getResourceAsStream(propertyFileName);
+                //InputStream s = Properties.class.getResourceAsStream("query_matcher.properties");
+                InputStream s =  PropertiesLoader.class.getClassLoader().getResourceAsStream(propertyFileName);
+                String p;
+                if (s==null) p="is null"; else p="not null";
+                log.debug("Stream status "+p);
                 propertyFile.load(s);
                 s.close();
             }

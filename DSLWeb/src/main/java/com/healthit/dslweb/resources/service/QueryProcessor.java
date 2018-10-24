@@ -5,7 +5,10 @@
  */
 package com.healthit.dslweb.resources.service;
 
+import static com.healthit.dslservice.util.strings.DataTypeConverter.getJSONFromMap;
 import com.healthit.dslweb.service.QueryInterpreter;
+import java.util.List;
+import java.util.Map;
 import static javax.ws.rs.client.Entity.json;
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -33,9 +36,10 @@ public class QueryProcessor {
         QueryInterpreter queryInterpreterObj = new QueryInterpreter();
         JSONObject jsonObj = new JSONObject(pBody);
         JSONArray array = jsonObj.getJSONArray("query");
-        queryInterpreterObj.interpretQuery(array);
-
-        return new ResponseEntity<String>("query generated ok", HttpStatus.OK);
+        Map<String,List<Object>> rsults = queryInterpreterObj.interpretQuery(array);
+        String queryResults = getJSONFromMap(rsults);
+        System.out.println("yesssss " + queryResults);
+        return new ResponseEntity<String>(queryResults, HttpStatus.OK);
     }
 
 }

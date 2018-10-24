@@ -147,16 +147,16 @@ var CountyEvent = function () {
     this.selectedCounties = {},
             this.loadCountyData = function (selectedItems, type, clickedItem) {
                 var selectedRdio = selectedCountyRadio.selectedRadioBtn;
-                
+
                 if (selectedRdio == 'cascade-constituency') {
                     selectedCountituencyRadio.selectedRadioBtn = "none";
                     addSelectedCounties(selectedItems, type, clickedItem);
                 } else if (selectedRdio == 'cascade-all') {
                     selectedCountituencyRadio.selectedRadioBtn = "cascade-wards";
                     addSelectedCounties(selectedItems, type, clickedItem);
-                } 
-                
-                
+                }
+
+
             };
 
 };
@@ -233,7 +233,7 @@ var ConstituencyEvent = function () {
                         });
                         $(".ward-list-action").children(".remove").trigger("click");
                     }
-                } 
+                }
 
             };
 };
@@ -411,8 +411,8 @@ function isLocalitySelected() {
 
 
 
-function sendQueryParamatersToServer(qParameters){
-    console.log("again "+qParameters);
+function sendQueryParamatersToServer(qParameters) {
+    console.log("again " + qParameters);
     //Send  query parameter to server to retrieve database resultset
     $.ajax({
         type: 'POST', // define the type of HTTP verb we want to use
@@ -421,7 +421,7 @@ function sendQueryParamatersToServer(qParameters){
         encode: true,
         data: qParameters,
         success: function (data, textStatus, jqXHR) {
-            
+
             console.log("All went well");
         },
         error: function (response, request) {
@@ -433,11 +433,28 @@ function sendQueryParamatersToServer(qParameters){
 
 }
 
-var updateData = function () {
+var table = null;
+function populateAnalyticsTable(data) {
+    
+    if ($.fn.dataTable.isDataTable('#analytics-table')) {
+        table.destroy();
+        table = populate(data);
+    } else {
+        table = populate(data);
+    }
+}
 
+function populate(data) {
+    var table = $('#analytics-table').DataTable({
+        data: data.data,
+        columns: data.columns
+    });
+    return table;
+}
+
+var updateData = function () {
     if (!validateDateInput())
         return;
-
     var isAnyParametersSelected = false;
     var queryParametersList = [];
 
@@ -533,9 +550,10 @@ var updateData = function () {
         return;
     }
     console.log(queryParametersList);
-    var queryToSubmit={"query":queryParametersList};
-    var x=JSON.stringify(queryToSubmit);
-     $.ajax({
+    var queryToSubmit = {"query": queryParametersList};
+    var x = JSON.stringify(queryToSubmit);
+    //    sendQueryParamatersToServer(queryParametersList);
+    $.ajax({
         type: 'POST', // define the type of HTTP verb we want to use
         url: '/DSLWeb/api/processquery', // the url from server we that we want to use
         dataType: 'json', // what type of data do we expect back from the server
@@ -543,8 +561,10 @@ var updateData = function () {
         encode: true,
         data: x,
         success: function (data, textStatus, jqXHR) {
-            
-            console.log("All went well");
+
+            console.log("All went well ");
+            console.log(data);
+            populateAnalyticsTable(data);
         },
         error: function (response, request) {
             //   console.log("got an error fetching cadregroups");
@@ -552,9 +572,9 @@ var updateData = function () {
         }
 
     });
-    
-    
-//    sendQueryParamatersToServer(queryParametersList);
+
+
+
 
 
     var sum = $.pivotUtilities.aggregatorTemplates.sum;

@@ -22,7 +22,7 @@ import org.junit.Test;
 public class DatabaseTest {
    // MethodName_StateUnderTest_ExpectedBehavior
     
-   @Test
+   //@Test
    public void testDatabaseConnection() {
        try {
            //  assertEquals(message,messageUtil.printMessage());
@@ -33,7 +33,7 @@ public class DatabaseTest {
        }
    } 
    
-   @Test
+   //@Test
    public void testDatabaseQuery(){
        try {
            Database db =new Database();

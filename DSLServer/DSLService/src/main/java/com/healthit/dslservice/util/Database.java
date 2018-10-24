@@ -14,6 +14,10 @@ import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Statement;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.logging.Level;
 import org.apache.log4j.Logger;
 import org.apache.log4j.PropertyConfigurator;
@@ -31,8 +35,8 @@ public class Database {
     private final String user = "dsl";
     private final String password = "dsl2017";
     final static Logger log = Logger.getLogger(Database.class.getCanonicalName());
-    private Message msg=null;
-    
+    private Message msg = null;
+
     private Boolean connect() throws DslException {
         Boolean isConneced = false;
         try {
@@ -44,12 +48,12 @@ public class Database {
                 log.info("Connected to the PostgreSQL server successfully.");
             } catch (SQLException e) {
                 log.error(e.getMessage());
-                msg=new Message();
+                msg = new Message();
                 msg.setMessageType(MessageType.DB_CONNECTION_ERROR);
                 msg.setMesageContent(e.getMessage());
                 throw new DslException(msg);
             }
-            isConneced=true;
+            isConneced = true;
         } catch (ClassNotFoundException ex) {
             log.error(ex);
         }
@@ -63,12 +67,39 @@ public class Database {
         connect();
         try {
             ps = conn.prepareStatement(sql);
-            log.info("Excecuting query: " + sql);
             rs = ps.executeQuery();
         } catch (SQLException ex) {
             log.error(ex);
         }
         return rs;
+    }
+
+    /**
+     * Gets the resultset with movaable cursor for column count
+     *
+     * @param sql
+     * @return list with resultset and rows count
+     * @throws DslException
+     */
+    public Map<String, Object> executeQueryWithColumnCount(String sql) throws DslException {
+        Map<String, Object> reslts = new HashMap();
+        PreparedStatement ps;
+        ResultSet rs = null;
+        connect();
+        try {
+
+            Statement s = conn.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE,
+                    ResultSet.CONCUR_READ_ONLY);
+            rs = s.executeQuery(sql);
+            rs.last();
+            int count = rs.getRow();
+            rs.beforeFirst();
+            reslts.put("resultset", rs);
+            reslts.put("columncount", count);
+        } catch (SQLException ex) {
+            log.error(ex);
+        }
+        return reslts;
     }
 
     public void CloseConnection() {
