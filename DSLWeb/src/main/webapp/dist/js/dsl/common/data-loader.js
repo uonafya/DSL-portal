@@ -426,18 +426,26 @@ function sendQueryParamatersToServer(qParameters) {
         },
         error: function (response, request) {
             //   console.log("got an error fetching cadregroups");
-            var parsed_data = JSON.parse(response.responseText);
+            var parsed_data = response.responseText;
         }
 
     });
 
 }
 
+
+
 var table = null;
 function populateAnalyticsTable(data) {
-    
+    console.log("populating");
     if ($.fn.dataTable.isDataTable('#analytics-table')) {
-        table.destroy();
+        try {
+            console.log("destroying");
+            table.destroy();
+            console.log("destroying 2");
+        } catch (err) {
+            console.log(err);
+        }
         table = populate(data);
     } else {
         table = populate(data);
@@ -445,11 +453,13 @@ function populateAnalyticsTable(data) {
 }
 
 function populate(data) {
-    var table = $('#analytics-table').DataTable({
+    $('#analytics-table').empty();
+    table = $('#analytics-table').DataTable({
         data: data.data,
         columns: data.columns
     });
     return table;
+
 }
 
 var updateData = function () {
@@ -568,7 +578,7 @@ var updateData = function () {
         },
         error: function (response, request) {
             //   console.log("got an error fetching cadregroups");
-            var parsed_data = JSON.parse(response.responseText);
+            var parsed_data = response.responseText;
         }
 
     });

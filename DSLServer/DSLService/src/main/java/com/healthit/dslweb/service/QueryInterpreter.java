@@ -8,6 +8,7 @@ import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -36,9 +37,10 @@ public class QueryInterpreter {
      * @return generated sql string to run
      */
     public Map<String, List<Object>> interpretQuery(JSONArray array) {
-
-        JSONObject jsoObj;
+        array = injectLocalityFilterLevel(array);
+        log.info("the modified query " + array.toString());
         List<Map<String, Object>> queriesToRun = new ArrayList();
+        JSONObject jsoObj;
         for (Object o : array) {
             jsoObj = (JSONObject) o;
             //System.out.println("----------------------------------mojo object " + jsoObj);
@@ -52,14 +54,52 @@ public class QueryInterpreter {
         Map<String, List<Object>> results = runSqlQuery(finalQuery);
         return results;
     }
+
     /**
-     *  Add columns names to the returned dataset
+     * Adds the locality admin level to the query name(used for retrieving
+     * actual query from file), eg ward, ward:contituency,
+     * ward:contituency:county
+     *
+     * @param array
+     * @return
+     */
+    private JSONArray injectLocalityFilterLevel(JSONArray array) {
+        JSONArray arrayReplace = array;
+        for (Object o : array) {
+            JSONObject jsoObj = (JSONObject) o;
+            String[] queryNamesFromUI = jsoObj.getString("what").split(":");
+            if (Arrays.asList(queryNamesFromUI).contains("locality")) {
+                arrayReplace = new JSONArray();
+                for (Object obj : array) {
+                    JSONObject jsoObj2 = (JSONObject) obj;
+                    String[] queryFetchValues = jsoObj2.getString("what").split(":");
+                    if (!Arrays.asList(queryFetchValues).contains("locality")) {
+                        JSONObject jsonObj = new JSONObject();
+                        String whatReplaced = jsoObj2.getString("what") + jsoObj.getString("what").replace("locality", "");
+                        jsonObj.put("what", whatReplaced);
+                        try {
+                            jsonObj.put("filter", jsoObj2.getString("filter"));
+                        } catch (Exception e) {
+                            //pass
+                        }
+                        arrayReplace.put(jsonObj);
+                    }
+                }
+                return arrayReplace;
+            }
+        }
+        return arrayReplace;
+    }
+
+    /**
+     * Add columns names to the returned dataset
+     *
      * @param columnsCount
      * @param rsMetaData
      * @param reslts
      * @param colmns
      * @return
-     * @throws SQLException 
+     * @throws SQLException
      */
     private List<Map<String, String>> addColumnsHeaders(
             int columnsCount,
@@ -77,14 +117,16 @@ public class QueryInterpreter {
     }
 
     /**
-     *  Build the dataset/data body and populates with values gotten from the database
+     * Build the dataset/data body and populates with values gotten from the
+     * database
+     *
      * @param rs
      * @param columnsCount
      * @param rsMetaData
      * @param wrapperMap
      * @param reslts
      * @return
-     * @throws SQLException 
+     * @throws SQLException
      */
     private Map<String, List<Object>> buildDataSet(
             ResultSet rs,
@@ -101,7 +143,6 @@ public class QueryInterpreter {
             List<String> resultRow = new ArrayList();
             for (int x = 1; x <= columnsCount; x++) {
                 colType = rsMetaData.getColumnTypeName(x);
-                log.info("Column type " + (rowIndex - 1));
                 reslts[x - 1][rowIndex - 1] = rs.getObject(x).toString();
                 resultRow.add(rs.getObject(x).toString());
             }
@@ -112,7 +153,6 @@ public class QueryInterpreter {
     }
 
     private Map<String, List<Object>> runSqlQuery(String sqlQuery) {
-
         Database db = new Database();
         List<List> reslts1 = null;
         Map<String, List<Object>> wrapperMap = null;
@@ -127,7 +167,6 @@ public class QueryInterpreter {
             int columnsCount = rsMetaData.getColumnCount();
             log.info("total column count from results " + columnsCount);
             reslts = new String[columnsCount][rowsCount + 1];
-
             //add columns heads
             log.info("Getting columns headers");
             List<Map<String, String>> colmns = new ArrayList();
@@ -144,7 +183,7 @@ public class QueryInterpreter {
     }
 
     /**
-     * Generates table aliases and gets the final query
+     * Generates table finalJoinValues and gets the final query
      *
      * @param queriesToRun list of queries to run and their attribues including,
      * values to fetch, the join elements
@@ -153,7 +192,7 @@ public class QueryInterpreter {
     private String getQuery(List<Map<String, Object>> queriesToRun) {
         List<Map<String, Object>> _queriesToRun = queriesToRun;
         int queriesToRunListLength = queriesToRun.size() - 1;
-        log.info("Queries to run are: " + queriesToRunListLength + 1);
+        log.info("Queries to run are: " + (queriesToRunListLength + 1));
         String[] tableAliases = new String[queriesToRunListLength + 1];
         for (int x = 0; x <= queriesToRunListLength; x++) {
             String tableAliasName = RandomStringGenerator.getRandomString(10);
@@ -172,12 +211,11 @@ public class QueryInterpreter {
      * creates the select from part of the sql from passed attributes
      *
      * @param finalQueryToRun finalquery to run string builder
-     * @param _queriesToRun queries to run with aliases
+     * @param _queriesToRun queries to run with finalJoinValues
      * @param queriesToRunListLength number of queries that need to be run
      * @return
      */
     private StringBuilder createSelectSqlSegment(StringBuilder finalQueryToRun, List<Map<String, Object>> _queriesToRun, int queriesToRunListLength) {
-
         boolean isFirstFetchValue = true;
         for (int x = 0; x <= queriesToRunListLength; x++) {
             //   append fetch values
@@ -196,7 +234,19 @@ public class QueryInterpreter {
                         finalQueryToRun.append("," + alias + "." + fetchValues[y] + " ");
                     }
                 }
+
             }
+        }
+        finalQueryToRun = addJoinValuesToSelectSegment(_queriesToRun, finalQueryToRun);
+        return finalQueryToRun;
+    }
+
+    private StringBuilder addJoinValuesToSelectSegment(List<Map<String, Object>> _queriesToRun, StringBuilder finalQueryToRun) {
+        List<String[]> sqlJoinValues = getJoinValues(_queriesToRun, 0);
+        String alias = (String) _queriesToRun.get(0).get("alias");
+        log.debug("the join length " + sqlJoinValues.size());
+        for (int x = 0; x <= sqlJoinValues.get(1).length - 1; x++) {
+            finalQueryToRun.append("," + alias + "." + sqlJoinValues.get(1)[x] + " ");
         }
         return finalQueryToRun;
     }
@@ -206,7 +256,7 @@ public class QueryInterpreter {
      * @param finalQueryToRun String builder object for stiching different parts
      * of the final query
      * @param _queriesToRun list of queries to run and their attribues
-     * including, values to fetch, the join elements and aliases
+     * including, values to fetch, the join elements and finalJoinValues
      * @param loopIndex index indicating current subquery in context
      * @return
      */
@@ -222,7 +272,7 @@ public class QueryInterpreter {
      * @param finalQueryToRun String builder object for stiching different parts
      * of the final query
      * @param _queriesToRun list of queries to run and their attribues
-     * including, values to fetch, the join elements and aliases
+     * including, values to fetch, the join elements and finalJoinValues
      * @param loopIndex index indicating current subquery in context
      * @return
      */
@@ -237,21 +287,24 @@ public class QueryInterpreter {
     /**
      *
      * @param _queriesToRun list of queries to run and their attribues
-     * including, values to fetch, the join elements and aliases
+     * including, values to fetch, the join elements and finalJoinValues
      * @param loopIndex index indicating current subquery in context
      * @return
      */
-    private List<String[]> getJoinValuesAttributes(List<Map<String, Object>> _queriesToRun, int loopIndex) {
-        List<String[]> aliases = new ArrayList();
+    private List<String[]> getJoinValues(List<Map<String, Object>> _queriesToRun, int loopIndex) {
+        List<String[]> finalJoinValues = new ArrayList();
         String joinVals = (String) _queriesToRun.get(loopIndex).get("joins");
         String[] joinValues = joinVals.replace("[", "").replace("]", "").replace("'", "").split(",");
-
-        String _previousSubqueryJoinValues = (String) _queriesToRun.get(loopIndex - 1).get("joins");
-        String[] previousSubqueryJoinValues = _previousSubqueryJoinValues.replace("[", "").replace("]", "").replace("'", "").split(",");
-        aliases.add(previousSubqueryJoinValues);
-        aliases.add(joinValues);
-        return aliases;
-
+        String[] previousSubqueryJoinValues = null;
+        try {
+            String _previousSubqueryJoinValues = (String) _queriesToRun.get(loopIndex - 1).get("joins");
+            previousSubqueryJoinValues = _previousSubqueryJoinValues.replace("[", "").replace("]", "").replace("'", "").split(",");
+        } catch (Exception e) {
+            //pass
+        }
+        finalJoinValues.add(previousSubqueryJoinValues);
+        finalJoinValues.add(joinValues);
+        return finalJoinValues;
     }
 
     /**
@@ -295,7 +348,7 @@ public class QueryInterpreter {
     /**
      *
      * @param queriesToRun list of queries to run and their attribues including,
-     * values to fetch, the join elements and aliases
+     * values to fetch, the join elements and finalJoinValues
      * @param queriesToRunLength the number of independent queries to perform
      * joins
      * @return runnable sql string
@@ -317,7 +370,7 @@ public class QueryInterpreter {
             finalQueryToRun = createJoinSqlSegment(finalQueryToRun, _queriesToRun, x);
             String alias = (String) _queriesToRun.get(x).get("alias"); //current query alias
             String previousSubqueryJAlias = (String) _queriesToRun.get(x - 1).get("alias"); //previous query alias
-            List<String[]> joinValues = getJoinValuesAttributes(_queriesToRun, x);
+            List<String[]> joinValues = getJoinValues(_queriesToRun, x);
             finalQueryToRun = createJoinOnSqlSegment(finalQueryToRun, x, joinValues.get(0), joinValues.get(1), alias, previousSubqueryJAlias);
         }
         log.info("Final query " + finalQueryToRun.toString());
@@ -331,40 +384,56 @@ public class QueryInterpreter {
      */
     private Map<String, Object> getQueryToRun(String queryName) {
         log.info("Fetching query to run, passed name: " + queryName);
-        String[] qName = queryName.split(":");
+        String[] queryNamesFromUI = queryName.split(":");
         PropertiesLoader propLoader = new PropertiesLoader();
         Properties prop = propLoader.getPropertiesFile(queriesMatcherFile, "query_matcher.properties");
-        Set<Object> keys = propLoader.getAllKeys(prop);
+        Set<Object> queryMatcherPropsKeys = propLoader.getAllKeys(prop);
         Map<String, Object> queriesToAttributes = null;
-        if (qName[0] == "locality") {
-            return queriesToAttributes;
-        }
-        for (Object k : keys) {
+
+        for (Object k : queryMatcherPropsKeys) {
             String key = (String) k;
-            boolean queryNameMatch = true;
-            for (int x = 0; x <= qName.length; x++) {
-                if (key.contains(qName[0])) {
-                    continue;
-                } else {
-                    queryNameMatch = false;
-                    break;
-                }
-            }
+            String[] queryMatcherPropKeyParts = key.split("-");
+            boolean queryNameMatch = checkMatchingQueryName(queryNamesFromUI, queryMatcherPropKeyParts);
+
             if (queryNameMatch == true) {
-                String queryAttributes = prop.getProperty(key); //get the properties file of the query and the key(name)
-                String[] qAttributes = queryAttributes.split(":");
-                Properties queryFile = null;
-                prop = propLoader.getPropertiesFile(queryFile, qAttributes[1]);
-                log.info("Third parameter " + qAttributes[2]);
-                queriesToAttributes = new HashMap();
-                queriesToAttributes.put("querySring", prop.getProperty(qAttributes[0])); // the sql query
-                log.debug("The join parameters are " + qAttributes[2]);
-                queriesToAttributes.put("joins", qAttributes[2]); //columns that can be used to join to other queries
-                queriesToAttributes.put("fetchValues", qAttributes[3]); //values that can be pulled from this query
-                return queriesToAttributes; //return query to run
+                return getQueryAndItsAttributesFromFile(prop, key);
             }
         }
         return queriesToAttributes;
+    }
+
+    private Map<String, Object> getQueryAndItsAttributesFromFile(Properties prop, String propertyFileKey) {
+        PropertiesLoader propLoader = new PropertiesLoader();
+        String queryAttributes = prop.getProperty(propertyFileKey); //get the properties file of the query and the key(name)
+        String[] qAttributes = queryAttributes.split(":");
+        Properties queryFile = null;
+        prop = propLoader.getPropertiesFile(queryFile, qAttributes[1]);
+        log.info("Third parameter " + qAttributes[2]);
+        Map<String, Object> queriesToAttributes = new HashMap();
+        queriesToAttributes.put("querySring", prop.getProperty(qAttributes[0])); // the sql query
+        log.debug("The join parameters are " + qAttributes[2]);
+        queriesToAttributes.put("joins", qAttributes[2]); //columns that can be used to join to other queries
+        queriesToAttributes.put("fetchValues", qAttributes[3]); //values that can be pulled from this query
+        return queriesToAttributes; //return query to run
+    }
+
+    private boolean checkMatchingQueryName(String[] queryNamesFromUI, String[] queryMatcherPropKey) {
+        boolean queryNameMatch = true;
+        log.info("Query names to match " + Arrays.toString(queryNamesFromUI) + " and  " + Arrays.toString(queryMatcherPropKey) + " length: " + queryNamesFromUI.length + " " + queryMatcherPropKey.length);
+
+        if (queryNamesFromUI.length != queryMatcherPropKey.length) {
+            return false; //if not of same length then contents of ui string and query_matcher are not the same
+        }
+        for (int x = 0; x <= queryNamesFromUI.length - 1; x++) {
+            if (Arrays.asList(queryMatcherPropKey).contains(queryNamesFromUI[x])) {
+                continue;
+            } else {
+                queryNameMatch = false;
+                break;
+            }
+        }
+        log.info("Did query strings match: " + queryNameMatch);
+        return queryNameMatch;
     }
 
 }

@@ -5,7 +5,6 @@
  */
 package com.healthit.dslweb.resources.service;
 
-import static com.healthit.dslservice.util.strings.DataTypeConverter.getJSONFromMap;
 import com.healthit.dslweb.service.QueryInterpreter;
 import java.util.List;
 import java.util.Map;
@@ -22,6 +21,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.http.HttpEntity;
+import static com.healthit.dslservice.util.strings.DataTypeConverter.getJSONFromObject;
 
 /**
  *
@@ -37,7 +37,7 @@ public class QueryProcessor {
         JSONObject jsonObj = new JSONObject(pBody);
         JSONArray array = jsonObj.getJSONArray("query");
         Map<String,List<Object>> rsults = queryInterpreterObj.interpretQuery(array);
-        String queryResults = getJSONFromMap(rsults);
+        String queryResults = getJSONFromObject(rsults);
         System.out.println("yesssss " + queryResults);
         return new ResponseEntity<String>(queryResults, HttpStatus.OK);
     }

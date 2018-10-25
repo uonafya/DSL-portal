@@ -15,7 +15,7 @@ import org.codehaus.jackson.JsonGenerator;
  */
 public class DataTypeConverter {
 
-    public static String getJSONFromMap( Object inputMap) {
+    public static String getJSONFromObject( Object inputMap) {
         Gson gson = new Gson();
         String json = gson.toJson(inputMap);
         return json;
