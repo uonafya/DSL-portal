@@ -38,7 +38,6 @@ public class QueryProcessor {
         JSONArray array = jsonObj.getJSONArray("query");
         Map<String,List<Object>> rsults = queryInterpreterObj.interpretQuery(array);
         String queryResults = getJSONFromObject(rsults);
-        System.out.println("yesssss " + queryResults);
         return new ResponseEntity<String>(queryResults, HttpStatus.OK);
     }
 

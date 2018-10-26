@@ -6,7 +6,6 @@
 package com.healthit.dslweb.resources;
 
 import com.healthit.dslservice.DslException;
-import com.healthit.dslservice.dao.FacilityDao;
 import com.healthit.dslservice.dao.LocationDao;
 import com.healthit.dslservice.dto.adminstrationlevel.Constituency;
 import com.healthit.dslservice.dto.adminstrationlevel.County;
@@ -14,8 +13,6 @@ import com.healthit.dslservice.dto.adminstrationlevel.Facility;
 import com.healthit.dslservice.dto.adminstrationlevel.Ward;
 import com.healthit.dslservice.message.Message;
 import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;

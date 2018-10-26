@@ -33,9 +33,9 @@ public class LocationDao {
     Cache cache = DslCache.getCache();
 
     final static Logger log = Logger.getLogger(FacilityDao.class);
-    private String getALlWards = "Select id, name ,constituency_id from common_ward order by name desc";
+    private String getALlWards = "Select ward_sk, name ,constituency_sk from common_ward order by name desc";
 
-    private String getAllConstituencies = "Select id, name ,county_id from common_constituency order by name desc";
+    private String getAllConstituencies = "Select constituency_sk, name ,county_id from common_constituency order by name desc";
 
     private String getAllCounties = "Select id, name from common_county order by name desc";
 
@@ -50,9 +50,9 @@ public class LocationDao {
             try {
                 while (rs.next()) {
                     Ward ward = new Ward();
-                    ward.setId(rs.getString("id"));
+                    ward.setId(rs.getString("ward_sk"));
                     ward.setName(rs.getString("name"));
-                    ward.setConstituencyId(rs.getString("constituency_id"));
+                    ward.setConstituencyId(rs.getString("constituency_sk"));
                     wardList.add(ward);
                 }
                 cache.put(new Element(CacheKeys.wards, wardList));
@@ -109,7 +109,7 @@ public class LocationDao {
             try {
                 while (rs.next()) {
                     Constituency constituency = new Constituency();
-                    constituency.setId(rs.getString("id"));
+                    constituency.setId(rs.getString("constituency_sk"));
                     constituency.setName(rs.getString("name"));
                     constituency.setCountyId(rs.getString("county_id"));
                     constituencyList.add(constituency);

@@ -35,29 +35,12 @@ $(document).ready(function () {
         dataType: 'json', // what type of data do we expect back from the server
         encode: true,
         success: function (data, textStatus, jqXHR) {
-            //alert("fetch indicators succes");\
-            //    console.log("wards");
-            //       locationViewModel.ward(data);
-//            $.each(data, function (index, objValue) {
-//                var ward=new Ward(objValue.name);
-//                locationViewModel.ward.push(ward); 
-//            });
-
+           
             $.each(data, function (index, objValue) {
                 var elementToAppend = '<a href="#" class="list-group-item"><strong>' + objValue.name + '</strong>\n\
-                        <input data-constituency-id="' + objValue.constituencyId + '"constituencyId data-id="' + objValue.id + '" data-name="' + objValue.name + '" class="pull-right" type="checkbox"></a>';
+                        <input data-constituency-id="' + objValue.constituencyId + '" data-id="' + objValue.id + '" data-name="' + objValue.name + '" class="pull-right" type="checkbox"></a>';
                 $(".ward-list").append(elementToAppend);
             });
-//            var wardEvent = new WardEvent();
-//            locationViewModel.wardDropDown = $('#wardList').dropdown({
-//                data: data,
-//                input: '<input type="text" maxLength="20" placeholder="Search">',
-//                searchNoData: '<li style="color:#ddd">No Results</li>',
-//                choice: function () {
-//                    wardEvent.loadWardData(arguments[1]);
-//                    //console.log(arguments[1]);
-//                }
-//            }).data('dropdown');
         },
         error: function (response, request) {
             //    console.log("got an error fetching wards");

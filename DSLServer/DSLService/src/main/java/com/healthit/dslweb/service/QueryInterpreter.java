@@ -1,6 +1,7 @@
 package com.healthit.dslweb.service;
 
 import com.healthit.dslservice.DslException;
+import com.healthit.dslservice.query.QueryParameterPopulator;
 import com.healthit.dslservice.util.Database;
 import com.healthit.dslservice.util.PropertiesLoader;
 import com.healthit.dslservice.util.strings.RandomStringGenerator;
@@ -11,6 +12,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Properties;
@@ -37,27 +39,97 @@ public class QueryInterpreter {
      * @return generated sql string to run
      */
     public Map<String, List<Object>> interpretQuery(JSONArray array) {
-        array = injectLocalityFilterLevel(array);
-        log.info("the modified query " + array.toString());
+        JSONArray _httpJsonArray = array; //original array placeholder
+        array = addFilterLevelsToMainQueryAttributes(array);
         List<Map<String, Object>> queriesToRun = new ArrayList();
         JSONObject jsoObj;
         for (Object o : array) {
             jsoObj = (JSONObject) o;
-            //System.out.println("----------------------------------mojo object " + jsoObj);
-            //System.out.println("----------------------------------filter " + jsoObj.getJSONObject("filter"));
             Map<String, Object> s = getQueryToRun(jsoObj.getString("what"));
             if (s != null) {
                 queriesToRun.add(s);
             }
         }
         String finalQuery = getQuery(queriesToRun);
+        log.info("calling query populator " + array.length());
+        finalQuery = populatorQueryParameters(finalQuery, _httpJsonArray);
         Map<String, List<Object>> results = runSqlQuery(finalQuery);
         return results;
     }
 
     /**
-     * Adds the locality admin level to the query name(used for retrieving
-     * actual query from file), eg ward, ward:contituency,
+     * Replace filter placeholders from sql queries
+     *
+     * @param finalQuery
+     * @param array original json array from the http request
+     * @return replace query with real filter values
+     */
+    private String populatorQueryParameters(String finalQuery, JSONArray array) {
+        log.debug("query parameter called populator");
+        for (Object o : array) {
+            JSONObject jsoObj = (JSONObject) o;
+            String[] queryNamesFromUI = jsoObj.getString("what").split(":");
+            log.debug("check if locality object in list");
+            if (Arrays.asList(queryNamesFromUI).contains("locality")) {
+                log.debug("locality object is in list");
+                JSONObject filters = jsoObj.getJSONObject("filter");
+                Map<String, String> parameterPlaceholder = getSqlParameterPlaceHolderToReplace(filters);
+                finalQuery = QueryParameterPopulator.populateLocalityParameters(finalQuery, jsoObj, parameterPlaceholder);
+            }
+        }
+        return finalQuery;
+    }
+
+    /**
+     *
+     * @param Obj the json object containg key and values used for filtering in
+     * the final sql
+     * @return the placeholder used in sql statement.
+     */
+    private Map<String, String> getSqlParameterPlaceHolderToReplace(JSONObject Obj) {
+        log.debug("getting list of query parameters mappers");
+        //get key to replace
+        String parameterPlaceholder = null;
+        Properties props = null;
+        PropertiesLoader propLoader = new PropertiesLoader();
+        props = propLoader.getPropertiesFile(props, "query_parameters_mapper.properties");
+        Set<Object> queryMatcherPropsKeys = propLoader.getAllKeys(props);
+        log.debug("Place holder keys "+queryMatcherPropsKeys.toString());
+        Map<String, String> parameterPlaceholders = new HashMap();
+        log.debug("The set "+Obj.toString());
+        for (Object k : queryMatcherPropsKeys) {
+            String key = (String) k;
+            log.debug("query parameters key from file "+key);
+            Iterator i = Obj.keys();
+            while (i.hasNext()) {
+                log.debug("filtering object has values ");
+                String x=(String) i.next();
+                log.debug("key twp "+x);
+                log.debug("key twp2 "+key);
+                if (key.equals( x)) {
+                    parameterPlaceholder = props.getProperty(key);
+                    parameterPlaceholders.put(key, parameterPlaceholder);
+                }
+            }
+        }
+        log.debug("Returned placeholder map "+parameterPlaceholders);
+        return parameterPlaceholders;
+    }
+
+    /**
+     * Faced(@see Faced design pattern) to filter level populator methods
+     *
+     * @param array
+     * @return
+     */
+    private JSONArray addFilterLevelsToMainQueryAttributes(JSONArray array) {
+        array = injectLocalityFilterLevel(array);
+        return array;
+    }
+
+    /**
+     * Adds the locality(administrative) level to the query name(used for
+     * retrieving actual query from file), eg ward, ward,contituency,
      * ward:contituency:county
      *
      * @param array
@@ -69,12 +141,16 @@ public class QueryInterpreter {
             JSONObject jsoObj = (JSONObject) o;
             String[] queryNamesFromUI = jsoObj.getString("what").split(":");
             if (Arrays.asList(queryNamesFromUI).contains("locality")) {
+                //we create a new json array without the locality filter object, rather we append then to the other objects in their filter objects
                 arrayReplace = new JSONArray();
                 for (Object obj : array) {
                     JSONObject jsoObj2 = (JSONObject) obj;
                     String[] queryFetchValues = jsoObj2.getString("what").split(":");
                     if (!Arrays.asList(queryFetchValues).contains("locality")) {
                         JSONObject jsonObj = new JSONObject();
+                        //jsoObj object in out loop object that contains all the locality filter attributes
+                        //jsoObj2 this is current json object with what needs to be queried from database, eg commodity county
+                        // replace("locality", "") ensures we dont add locality as name to the what(what to query- (name of query) saved on file) object
                         String whatReplaced = jsoObj2.getString("what") + jsoObj.getString("what").replace("locality", "");
                         jsonObj.put("what", whatReplaced);
                         try {

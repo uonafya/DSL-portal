@@ -195,66 +195,85 @@ function addSelectedCounties(selectedItems, type, clickedItem) {
 }
 
 var ConstituencyEvent = function () {
-    this.selectedConstituencies = {},
+    this.selectedConstituencies = [],
             this.loadConstituencyData = function (selectedItems, type, clickedItem) {
-
+                var that = this;
                 var selectedRdio = selectedCountituencyRadio.selectedRadioBtn;
-                alert(selectedRdio);
-                if (selectedRdio == 'cascade-wards') {
-                    var wardtems;
-                    var myDomElement;
-                    if (type == 'add') {
-                        myDomElement = $(".ward-list");
-                        wardtems = $(myDomElement).find("input");
 
-                        $.each(selectedItems, function (index, selectedObjValue) {
-                            $.each(wardtems, function (index, objValue) {
-
-                                if ($(selectedObjValue).attr("data-id") == $(objValue).attr("data-constituency-id")) {
-                                    $(objValue).trigger("click");
-                                }
-
-                            });
-
-                        });
-                        $(".ward-list-action").children(".add").trigger("click");
-                    } else {
-                        myDomElement = $(".ward-selected-list");
-                        wardtems = $(myDomElement).find("input");
-                        $.each(selectedItems, function (index, selectedObjValue) {
-                            $.each(wardtems, function (index, objValue) {
-
-                                if ($(selectedObjValue).attr("data-id") == $(objValue).attr("data-constituency-id")) {
-                                    $(objValue).trigger("click");
-                                }
-
-                            });
-
-                        });
-                        $(".ward-list-action").children(".remove").trigger("click");
-                    }
+                if (type == 'add') {
+                    addContituencyToList(selectedItems, that.selectedConstituencies);
+                } else {
+                    removeContituencyFromList(selectedItems, that.selectedConstituencies);
                 }
 
+                if (selectedRdio == 'cascade-wards') {
+                    if (type == 'add') {
+                        cascadeAddContituencyToWard(selectedItems);
+                    } else {
+                        cascadeRemoveContituencyToWard(selectedItems);
+                    }
+                }
             };
 };
 
+function cascadeAddContituencyToWard(selectedItems) {
+    var myDomElement = $(".ward-list");
+    var wardtems = $(myDomElement).find("input");
+    $.each(selectedItems, function (index, selectedObjValue) {
+        $.each(wardtems, function (index, objValue) {
+            if ($(selectedObjValue).attr("data-id") == $(objValue).attr("data-constituency-id")) {
+                $(objValue).trigger("click");
+            }
+        });
+    });
+    $(".ward-list-action").children(".add").trigger("click");
+}
+//removes wards under these contituencies
+function cascadeRemoveContituencyToWard(selectedItems) {
+    var myDomElement = $(".ward-selected-list");
+    var wardtems = $(myDomElement).find("input");
+    $.each(selectedItems, function (index, selectedObjValue) {
+        $.each(wardtems, function (index, objValue) {
+
+            if ($(selectedObjValue).attr("data-id") == $(objValue).attr("data-constituency-id")) {
+                $(objValue).trigger("click");
+            }
+        });
+    });
+    $(".ward-list-action").children(".remove").trigger("click");
+}
+
+
+function addContituencyToList(selectedItems, selectedConstituencies) {
+    $.each(selectedItems, function (index, selectedObjValue) {
+        var id = $(selectedObjValue).attr("data-id");
+        selectedConstituencies.push(id);
+    });
+}
+
+function removeContituencyFromList(selectedItems, selectedConstituencies) {
+    $.each(selectedItems, function (index, selectedObjValue) {
+        var id = $(selectedObjValue).attr("data-id");
+        delete selectedConstituencies[id];
+        selectedConstituencies.splice($.inArray(id, selectedConstituencies), 1);
+    });
+}
+
+
 var WardEvent = function () {
-    this.selectedWards = {},
+    this.selectedWards = [],
             this.loadWardData = function (selectedItems, type, clickedItem) {
 
                 var that = this;
                 if (type == 'add') {
                     $.each(selectedItems, function (index, selectedObjValue) {
-                        var name = $(selectedObjValue).attr("data-name");
                         var id = $(selectedObjValue).attr("data-id");
-                        var constituencyId = $(selectedObjValue).attr("data-constituency-id");
-                        that.selectedWards[id] = {'name': name, 'constituency-id': constituencyId};
-
+                        that.selectedWards.push(id);
                     });
                 } else {
                     $.each(selectedItems, function (index, selectedObjValue) {
                         var id = $(selectedObjValue).attr("data-id");
-                        delete that.selectedWards[id];
+                        that.selectedWards.splice($.inArray(id, that.selectedWards), 1);
                     });
 
                 }
@@ -434,7 +453,6 @@ function sendQueryParamatersToServer(qParameters) {
 }
 
 
-
 var table = null;
 function populateAnalyticsTable(data) {
     console.log("populating");
@@ -539,17 +557,31 @@ var updateData = function () {
     }
 
     //locality 
-    if (isLocalitySelected) {
+    if (isLocalitySelected()) {
         var localityValuesToQuery = {};
-        localityValuesToQuery['what'] = "locality:" + "ward";
+        localityValuesToQuery['what'] = 'locality:';
         localityValuesToQuery['filter'] = {};
+        var what = '';
 
+        var selectedConstituencies = constituencyEvent.selectedConstituencies;
+        console.log("The constituency "+selectedConstituencies);
+        if (!jQuery.isEmptyObject(selectedConstituencies)) {
+            if (what.length == 0)
+                what = what + 'constituency';
+            else
+                what = what + ':constituency';
+
+            localityValuesToQuery['filter']['constituency'] = selectedConstituencies;
+        }
         var selectedWads = wardEvent.selectedWards;
         if (!jQuery.isEmptyObject(selectedWads)) {
-
+            if (what.length == 0)
+                what = what + 'ward';
+            else
+                what = what + ':ward';
             localityValuesToQuery['filter']['ward'] = selectedWads;
         }
-
+        localityValuesToQuery['what'] = localityValuesToQuery['what']+what;
         queryParametersList.push(localityValuesToQuery);
     }
 
