@@ -144,24 +144,28 @@ var selectedCountyRadio = new SelectedCountyRadio();
 var selectedCountituencyRadio = new SelectedCountituencyRadio();
 
 var CountyEvent = function () {
-    this.selectedCounties = {},
+    this.selectedCounties = [],
             this.loadCountyData = function (selectedItems, type, clickedItem) {
+                var that=this;
                 var selectedRdio = selectedCountyRadio.selectedRadioBtn;
-
                 if (selectedRdio == 'cascade-constituency') {
                     selectedCountituencyRadio.selectedRadioBtn = "none";
-                    addSelectedCounties(selectedItems, type, clickedItem);
+                    cascadeSelectedCountiesToConstituency(selectedItems, type, clickedItem);
                 } else if (selectedRdio == 'cascade-all') {
                     selectedCountituencyRadio.selectedRadioBtn = "cascade-wards";
-                    addSelectedCounties(selectedItems, type, clickedItem);
+                    cascadeSelectedCountiesToConstituency(selectedItems, type, clickedItem);
+                }else{
+                    
                 }
-
-
+                if (type == 'add') {
+                    addCountiesToList(selectedItems, that.selectedCounties);
+                }else{
+                    removeCountiesFromList(selectedItems, that.selectedCounties);
+                }
             };
-
 };
 
-function addSelectedCounties(selectedItems, type, clickedItem) {
+function cascadeSelectedCountiesToConstituency(selectedItems, type, clickedItem) {
     var myDomElement;
     var constituencyItems;
     if (type == 'add') {
@@ -173,7 +177,6 @@ function addSelectedCounties(selectedItems, type, clickedItem) {
                 if ($(selectedObjValue).attr("data-id") == $(objValue).attr("data-county-id")) {
                     $(objValue).trigger("click");
                 }
-
             });
 
         });
@@ -188,11 +191,26 @@ function addSelectedCounties(selectedItems, type, clickedItem) {
                 }
 
             });
-
         });
         $(".constituency-list-action").children(".remove").trigger("click");
     }
 }
+
+function addCountiesToList(selectedItems, selectedCounties) {
+    $.each(selectedItems, function (index, selectedObjValue) {
+        var id = $(selectedObjValue).attr("data-id");
+        selectedCounties.push(id);
+    });
+}
+
+function removeCountiesFromList(selectedItems, selectedCounties) {
+    $.each(selectedItems, function (index, selectedObjValue) {
+        var id = $(selectedObjValue).attr("data-id");
+        delete selectedCounties[id];
+        selectedCounties.splice($.inArray(id, selectedCounties), 1);
+    });
+}
+
 
 var ConstituencyEvent = function () {
     this.selectedConstituencies = [],
@@ -429,7 +447,6 @@ function isLocalitySelected() {
 }
 
 
-
 function sendQueryParamatersToServer(qParameters) {
     console.log("again " + qParameters);
     //Send  query parameter to server to retrieve database resultset
@@ -556,15 +573,26 @@ var updateData = function () {
         isAnyParametersSelected = true;
     }
 
-    //locality 
+    //selected locality level loader
     if (isLocalitySelected()) {
         var localityValuesToQuery = {};
         localityValuesToQuery['what'] = 'locality:';
         localityValuesToQuery['filter'] = {};
         var what = '';
+        
+        var selectedCounties = countyEvent.selectedCounties;
+        console.log("The counties " + selectedCounties);
+        if (!jQuery.isEmptyObject(selectedCounties)) {
+            if (what.length == 0)
+                what = what + 'county';
+            else
+                what = what + ':county';
 
+            localityValuesToQuery['filter']['county'] = selectedCounties;
+        }
+        
         var selectedConstituencies = constituencyEvent.selectedConstituencies;
-        console.log("The constituency "+selectedConstituencies);
+        console.log("The constituency " + selectedConstituencies);
         if (!jQuery.isEmptyObject(selectedConstituencies)) {
             if (what.length == 0)
                 what = what + 'constituency';
@@ -581,7 +609,7 @@ var updateData = function () {
                 what = what + ':ward';
             localityValuesToQuery['filter']['ward'] = selectedWads;
         }
-        localityValuesToQuery['what'] = localityValuesToQuery['what']+what;
+        localityValuesToQuery['what'] = localityValuesToQuery['what'] + what;
         queryParametersList.push(localityValuesToQuery);
     }
 

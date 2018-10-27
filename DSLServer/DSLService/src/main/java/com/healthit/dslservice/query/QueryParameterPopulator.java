@@ -10,6 +10,7 @@ import org.apache.log4j.Logger;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.apache.commons.lang3.StringUtils;
+
 /**
  *
  * @author duncan
@@ -29,23 +30,42 @@ public class QueryParameterPopulator {
         log.debug("locality paramerter populator");
         JSONObject Obj = jsoObj.getJSONObject("filter");
         Iterator parameterPlaceholderKeys = parameterPlaceholder.keySet().iterator();
-        log.debug("palceholder keys "+parameterPlaceholder.toString());
+        log.debug("palceholder keys " + parameterPlaceholder.toString());
         while (parameterPlaceholderKeys.hasNext()) {
             String placeholderKey = (String) parameterPlaceholderKeys.next();
-            log.debug("The placeholder key "+placeholderKey);
+            log.debug("The placeholder key " + placeholderKey);
             JSONArray itemIdsToReplace = Obj.getJSONArray(placeholderKey);
             String placeHolder = parameterPlaceholder.get(placeholderKey);
-            log.debug("The placeholder "+placeholderKey);
-            List intList = Arrays.asList(itemIdsToReplace.toList());
-            log.debug("String with values for replacement "+intList.toString());
-            finalQuery = finalQuery.replaceAll(placeHolder, intList.toString().replaceAll("\\[", "").replaceAll("\\]", ""));
+            log.debug("The placeholder " + placeholderKey);
+            if (placeholderKey.equals("county")) {
+                List intList = Arrays.asList(itemIdsToReplace.toList());
+                finalQuery = populateListParameterValues(finalQuery, itemIdsToReplace, placeHolder);
+                log.debug("String with values for replacement " + intList.toString());
+            } else {
+                List intList = Arrays.asList(itemIdsToReplace.toList());
+                log.debug("String with values for replacement " + intList.toString());
+                finalQuery = finalQuery.replaceAll(placeHolder, intList.toString().replaceAll("\\[", "").replaceAll("\\]", ""));
+            }
         }
         log.debug("Query from locality populator " + finalQuery);
         return finalQuery;
 
     }
-    
-    public static String populateContituencyIds(String finalQuery) {
+
+    public static String populateListParameterValues(String finalQuery, JSONArray itemIdsToReplace, String placeHolder) {
+        StringBuilder itemList = new StringBuilder();
+        itemList.append('\'');
+        boolean isFirstValue = true;
+        for (int x = 0; x <= itemIdsToReplace.length() - 1; x++) {
+            if (isFirstValue) {
+                itemList.append(itemIdsToReplace.getString(x) + '\'');
+                isFirstValue = false;
+            } else {
+                itemList.append(",'"+itemIdsToReplace.getString(x) + '\'');
+            }
+        }
+        log.debug("the built list " + itemList.toString());
+        finalQuery = finalQuery.replaceAll(placeHolder, itemList.toString());
         return finalQuery;
     }
 
