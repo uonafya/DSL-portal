@@ -106,6 +106,14 @@ $(document).ready(function () {
 
     });
     
-    
+    //radio buttons events
+    $('body').on('click', 'input[name="optradiocadres"]', function (e) {
+        var radioValue = $("input[name='optradiocadres']:checked").val();
+
+        if (radioValue) {
+            selectedHumanResourceCascadeButton.selectedRadioBtn = radioValue;
+        }
+
+    });
 
 });

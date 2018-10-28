@@ -99,7 +99,7 @@ public class IhrisDao {
             try {
                 while (rs.next()) {
                     Cadre cadre = new Cadre();
-                    cadre.setId(Integer.toString(rs.getInt("id")));
+                    cadre.setId(rs.getString("id"));
                     cadre.setName(rs.getString("cadrename"));
                     cadre.setCadreGroupId(rs.getString("cadre_group_id"));
                     cadreList.add(cadre);

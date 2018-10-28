@@ -422,6 +422,16 @@
                                             <div style="clear: both;">
 
                                                 <div class="row pick-list">
+
+                                                    <label class="radio-inline">
+                                                        <input type="radio" value="cascade-all" name="optradiocadres">Cascade to cadres
+                                                    </label>
+                                                    
+                                                    <label class="radio-inline">
+                                                        <input type="radio" value="none" name="optradiocadres" checked>Do not Cascade to cadres
+                                                    </label>
+                                                    <hr/>
+                
                                                     <br/>
                                                     <div class="col-sm-5">
                                                         <div class="list-group list-picker-group cadre-group-list">
@@ -535,7 +545,7 @@
                             <br/>
                             <div>
                                 <table id="analytics-table" class="display" style="width:100%">
-                                   
+
                                 </table>
                             </div>
                         </div>
@@ -644,7 +654,7 @@
         <script>
                         $(document).ready(function () {
 
-                           
+
                             //  dataTable.destroy();
                             ko.applyBindings(viewModel);
 

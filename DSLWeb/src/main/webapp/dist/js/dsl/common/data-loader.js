@@ -146,7 +146,7 @@ var selectedCountituencyRadio = new SelectedCountituencyRadio();
 var CountyEvent = function () {
     this.selectedCounties = [],
             this.loadCountyData = function (selectedItems, type, clickedItem) {
-                var that=this;
+                var that = this;
                 var selectedRdio = selectedCountyRadio.selectedRadioBtn;
                 if (selectedRdio == 'cascade-constituency') {
                     selectedCountituencyRadio.selectedRadioBtn = "none";
@@ -154,12 +154,12 @@ var CountyEvent = function () {
                 } else if (selectedRdio == 'cascade-all') {
                     selectedCountituencyRadio.selectedRadioBtn = "cascade-wards";
                     cascadeSelectedCountiesToConstituency(selectedItems, type, clickedItem);
-                }else{
-                    
+                } else {
+
                 }
                 if (type == 'add') {
                     addCountiesToList(selectedItems, that.selectedCounties);
-                }else{
+                } else {
                     removeCountiesFromList(selectedItems, that.selectedCounties);
                 }
             };
@@ -299,46 +299,85 @@ var WardEvent = function () {
             };
 };
 
+//cadres
+var SelectedHumanResourceCascadeButton = function () {
+    this.selectedRadioBtn = "";
+};
+
+var selectedHumanResourceCascadeButton = new SelectedHumanResourceCascadeButton();
+
+
 //human resource events hooks
 var CadreGroupEvent = function () {
-    this.selectedCadreGroups = {},
+    this.selectedCadreGroups = [],
             this.loadCadreGroupData = function (selectedItems, type, clickedItem) {
-
-                var myDomElement;
-                var cadreItems;
+                var that=this;
                 if (type == 'add') {
-                    myDomElement = $(".cadre-list");
-                    cadreItems = $(myDomElement).find("input");
-
-                    $.each(selectedItems, function (index, selectedObjValue) {
-                        $.each(cadreItems, function (index, objValue) {
-
-                            if ($(selectedObjValue).attr("data-id") == $(objValue).attr("data-group-id")) {
-                                $(objValue).trigger("click");
-                            }
-
-                        });
-
-                    });
-                    $(".cadre-name-action").children(".add").trigger("click");
+                    addCadreGroupToList(selectedItems, that.selectedCadreGroups);
                 } else {
-                    myDomElement = $(".cadre-selected-list");
-                    cadreItems = $(myDomElement).find("input");
-                    $.each(selectedItems, function (index, selectedObjValue) {
-                        $.each(cadreItems, function (index, objValue) {
+                    removeCadreGroupToList(selectedItems, that.selectedCadreGroups);
+                }
 
-                            if ($(selectedObjValue).attr("data-id") == $(objValue).attr("data-group-id")) {
-                                $(objValue).trigger("click");
-                            }
-
-                        });
-
-                    });
-                    $(".cadre-name-action").children(".remove").trigger("click");
+                if (selectedHumanResourceCascadeButton.selectedRadioBtn == 'cascade-all') {
+                    if (type == 'add') {
+                        cascadeAddToCadre(selectedItems);
+                    } else {
+                        cascadeRemoveFromCadre(selectedItems);
+                    }
                 }
 
             };
 };
+
+
+function addCadreGroupToList(selectedItems, selectedCadreGroups) {
+    $.each(selectedItems, function (index, selectedObjValue) {
+        var id = $(selectedObjValue).attr("data-id");
+        selectedCadreGroups.push(id);
+    });
+}
+
+function removeCadreGroupToList(selectedItems, selectedCadreGroups) {
+    $.each(selectedItems, function (index, selectedObjValue) {
+        var id = $(selectedObjValue).attr("data-id");
+        delete selectedCadreGroups[id];
+        selectedCadreGroups.splice($.inArray(id, selectedCadreGroups), 1);
+    });
+}
+
+function cascadeAddToCadre(selectedItems) {
+    var myDomElement = $(".cadre-list");
+    var cadreItems = $(myDomElement).find("input");
+    $.each(selectedItems, function (index, selectedObjValue) {
+        $.each(cadreItems, function (index, objValue) {
+
+            if ($(selectedObjValue).attr("data-id") == $(objValue).attr("data-group-id")) {
+                $(objValue).trigger("click");
+            }
+
+        });
+
+    });
+    $(".cadre-name-action").children(".add").trigger("click");
+}
+
+function cascadeRemoveFromCadre(selectedItems) {
+
+    var myDomElement = $(".cadre-selected-list");
+    var cadreItems = $(myDomElement).find("input");
+    $.each(selectedItems, function (index, selectedObjValue) {
+        $.each(cadreItems, function (index, objValue) {
+
+            if ($(selectedObjValue).attr("data-id") == $(objValue).attr("data-group-id")) {
+                $(objValue).trigger("click");
+            }
+
+        });
+
+    });
+    $(".cadre-name-action").children(".remove").trigger("click");
+}
+
 
 var CadreEvent = function () {
     this.selectedCadres = {},
@@ -363,6 +402,7 @@ var CadreEvent = function () {
 
             };
 };
+
 
 var SelectedHumanResourceRadio = function () {
     this.selectedRadioBtn = "";
@@ -579,7 +619,7 @@ var updateData = function () {
         localityValuesToQuery['what'] = 'locality:';
         localityValuesToQuery['filter'] = {};
         var what = '';
-        
+
         var selectedCounties = countyEvent.selectedCounties;
         console.log("The counties " + selectedCounties);
         if (!jQuery.isEmptyObject(selectedCounties)) {
@@ -590,7 +630,7 @@ var updateData = function () {
 
             localityValuesToQuery['filter']['county'] = selectedCounties;
         }
-        
+
         var selectedConstituencies = constituencyEvent.selectedConstituencies;
         console.log("The constituency " + selectedConstituencies);
         if (!jQuery.isEmptyObject(selectedConstituencies)) {
