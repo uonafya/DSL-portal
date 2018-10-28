@@ -20,7 +20,7 @@ public class QueryParameterPopulator {
     final static Logger log = Logger.getLogger(QueryParameterPopulator.class.getCanonicalName());
 
     /**
-     *
+     * 
      * @param finalQuery
      * @param jsoObj json object with locality filter values
      * @param parameterPlaceholder
@@ -37,9 +37,9 @@ public class QueryParameterPopulator {
             JSONArray itemIdsToReplace = Obj.getJSONArray(placeholderKey);
             String placeHolder = parameterPlaceholder.get(placeholderKey);
             log.debug("The placeholder " + placeholderKey);
-            if (placeholderKey.equals("county")) {
+            if (placeholderKey.equals("county") || placeholderKey.equals("cadre")) {
                 List intList = Arrays.asList(itemIdsToReplace.toList());
-                finalQuery = populateListParameterValues(finalQuery, itemIdsToReplace, placeHolder);
+                finalQuery = populateStringParameterValues(finalQuery, itemIdsToReplace, placeHolder);
                 log.debug("String with values for replacement " + intList.toString());
             } else {
                 List intList = Arrays.asList(itemIdsToReplace.toList());
@@ -51,8 +51,14 @@ public class QueryParameterPopulator {
         return finalQuery;
 
     }
-
-    public static String populateListParameterValues(String finalQuery, JSONArray itemIdsToReplace, String placeHolder) {
+    /**
+     * Populates placeholders with a list of strings if the column type in database is a string value
+     * @param finalQuery
+     * @param itemIdsToReplace
+     * @param placeHolder
+     * @return 
+     */
+    public static String populateStringParameterValues(String finalQuery, JSONArray itemIdsToReplace, String placeHolder) {
         StringBuilder itemList = new StringBuilder();
         itemList.append('\'');
         boolean isFirstValue = true;

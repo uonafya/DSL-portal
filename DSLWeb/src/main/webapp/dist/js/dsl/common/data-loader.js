@@ -311,7 +311,7 @@ var selectedHumanResourceCascadeButton = new SelectedHumanResourceCascadeButton(
 var CadreGroupEvent = function () {
     this.selectedCadreGroups = [],
             this.loadCadreGroupData = function (selectedItems, type, clickedItem) {
-                var that=this;
+                var that = this;
                 if (type == 'add') {
                     addCadreGroupToList(selectedItems, that.selectedCadreGroups);
                 } else {
@@ -340,7 +340,6 @@ function addCadreGroupToList(selectedItems, selectedCadreGroups) {
 function removeCadreGroupToList(selectedItems, selectedCadreGroups) {
     $.each(selectedItems, function (index, selectedObjValue) {
         var id = $(selectedObjValue).attr("data-id");
-        delete selectedCadreGroups[id];
         selectedCadreGroups.splice($.inArray(id, selectedCadreGroups), 1);
     });
 }
@@ -380,24 +379,20 @@ function cascadeRemoveFromCadre(selectedItems) {
 
 
 var CadreEvent = function () {
-    this.selectedCadres = {},
+    this.selectedCadres = [],
             this.loadCadreData = function (selectedItems, type, clickedItem) {
 
                 var that = this;
                 if (type == 'add') {
                     $.each(selectedItems, function (index, selectedObjValue) {
-                        var name = $(selectedObjValue).attr("data-name");
                         var id = $(selectedObjValue).attr("data-id");
-                        that.selectedCadres[id] = {'name': name};
-
+                        that.selectedCadres.push(id);
                     });
                 } else {
                     $.each(selectedItems, function (index, selectedObjValue) {
                         var id = $(selectedObjValue).attr("data-id");
-                        delete that.selectedCadres[id];
-                        console.log(that.selectedCadres);
+                        that.selectedCadres.splice($.inArray(id, that.selectedCadres), 1);
                     });
-
                 }
 
             };
@@ -602,13 +597,25 @@ var updateData = function () {
         var humanResourceValuesToQuery = {};
         humanResourceValuesToQuery['what'] = "human_resource:" + selectedHumanResrceRadio;
         humanResourceValuesToQuery['filter'] = {};
-
+        
+        var what = '';
+        
+        var selectedCadreGroupsTypes = cadreGroupEvent.selectedCadreGroups;
+        if (!jQuery.isEmptyObject(selectedCadreGroupsTypes)) {
+            
+                what = what + ':cadre-group';
+            
+            humanResourceValuesToQuery['filter']['cadre-group'] = selectedCadreGroupsTypes;
+        }
+        
         var selectedCadreTypes = cadreEvent.selectedCadres;
         if (!jQuery.isEmptyObject(selectedCadreTypes)) {
-
+           
+                what = what + ':cadre';
+            
             humanResourceValuesToQuery['filter']['cadre'] = selectedCadreTypes;
         }
-
+        humanResourceValuesToQuery['what']=humanResourceValuesToQuery['what']+what;
         queryParametersList.push(humanResourceValuesToQuery);
         isAnyParametersSelected = true;
     }

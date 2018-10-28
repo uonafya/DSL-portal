@@ -19,6 +19,7 @@ import java.util.Properties;
 import java.util.Set;
 import org.apache.log4j.Logger;
 import org.json.JSONArray;
+import org.json.JSONException;
 import org.json.JSONObject;
 
 /**
@@ -52,30 +53,35 @@ public class QueryInterpreter {
         }
         String finalQuery = getQuery(queriesToRun);
         log.info("calling query populator " + array.length());
-        finalQuery = populatorQueryParameters(finalQuery, _httpJsonArray);
+        finalQuery = populatQueryParameters(finalQuery, _httpJsonArray);
         Map<String, List<Object>> results = runSqlQuery(finalQuery);
         return results;
     }
 
     /**
-     * Replace filter placeholders from sql queries
+     * Replace http filter values to placeholders in the sql queries
      *
      * @param finalQuery
      * @param array original json array from the http request
      * @return replace query with real filter values
      */
-    private String populatorQueryParameters(String finalQuery, JSONArray array) {
+    private String populatQueryParameters(String finalQuery, JSONArray array) {
         log.debug("query parameter called populator");
         for (Object o : array) {
             JSONObject jsoObj = (JSONObject) o;
             String[] queryNamesFromUI = jsoObj.getString("what").split(":");
             log.debug("check if locality object in list");
-            if (Arrays.asList(queryNamesFromUI).contains("locality")) {
-                log.debug("locality object is in list");
+            // if (Arrays.asList(queryNamesFromUI).contains("locality")) {
+            log.debug("locality object is in list");
+            try {
                 JSONObject filters = jsoObj.getJSONObject("filter");
                 Map<String, String> parameterPlaceholder = getSqlParameterPlaceHolderToReplace(filters);
                 finalQuery = QueryParameterPopulator.populateLocalityParameters(finalQuery, jsoObj, parameterPlaceholder);
+            } catch (JSONException e) {
+                log.error(e);
             }
+
+            // }
         }
         return finalQuery;
     }
@@ -94,25 +100,25 @@ public class QueryInterpreter {
         PropertiesLoader propLoader = new PropertiesLoader();
         props = propLoader.getPropertiesFile(props, "query_parameters_mapper.properties");
         Set<Object> queryMatcherPropsKeys = propLoader.getAllKeys(props);
-        log.debug("Place holder keys "+queryMatcherPropsKeys.toString());
+        log.debug("Place holder keys " + queryMatcherPropsKeys.toString());
         Map<String, String> parameterPlaceholders = new HashMap();
-        log.debug("The set "+Obj.toString());
+        log.debug("The set " + Obj.toString());
         for (Object k : queryMatcherPropsKeys) {
             String key = (String) k;
-            log.debug("query parameters key from file "+key);
+            log.debug("query parameters key from file " + key);
             Iterator i = Obj.keys();
             while (i.hasNext()) {
                 log.debug("filtering object has values ");
-                String x=(String) i.next();
-                log.debug("key twp "+x);
-                log.debug("key twp2 "+key);
-                if (key.equals( x)) {
+                String x = (String) i.next();
+                log.debug("key twp " + x);
+                log.debug("key twp2 " + key);
+                if (key.equals(x)) {
                     parameterPlaceholder = props.getProperty(key);
                     parameterPlaceholders.put(key, parameterPlaceholder);
                 }
             }
         }
-        log.debug("Returned placeholder map "+parameterPlaceholders);
+        log.debug("Returned placeholder map " + parameterPlaceholders);
         return parameterPlaceholders;
     }
 
@@ -124,6 +130,7 @@ public class QueryInterpreter {
      */
     private JSONArray addFilterLevelsToMainQueryAttributes(JSONArray array) {
         array = injectLocalityFilterLevel(array);
+        log.info("Http json array with injeced filters " + array.toString());
         return array;
     }
 
@@ -164,6 +171,7 @@ public class QueryInterpreter {
                 return arrayReplace;
             }
         }
+
         return arrayReplace;
     }
 
@@ -296,18 +304,17 @@ public class QueryInterpreter {
         for (int x = 0; x <= queriesToRunListLength; x++) {
             //   append fetch values
             String r = (String) _queriesToRun.get(x).get("fetchValues");
-            r = r.replace("[", "").replace("]", "");
-            String[] fetchValues = (String[]) r.split("'");
+            JSONArray fetchValues = new JSONArray(r);
             String alias = (String) _queriesToRun.get(x).get("alias");
-            for (int y = 0; y <= fetchValues.length - 1; y++) {
+            for (int y = 0; y <= fetchValues.length() - 1; y++) {
                 StringBuilder g = new StringBuilder();
-                log.info("fetch value to append " + alias + "." + fetchValues[y] + " ");
-                if (fetchValues[y].length() != 0) {
+                log.info("fetch value to append " + alias + "." + fetchValues.getString(y) + " ");
+                if (fetchValues.getString(y).length() != 0) {
                     if (isFirstFetchValue) {
-                        finalQueryToRun.append(alias + "." + fetchValues[y] + " ");
+                        finalQueryToRun.append(alias + "." + fetchValues.getString(y) + " ");
                         isFirstFetchValue = false;
                     } else {
-                        finalQueryToRun.append("," + alias + "." + fetchValues[y] + " ");
+                        finalQueryToRun.append("," + alias + "." + fetchValues.getString(y) + " ");
                     }
                 }
 
