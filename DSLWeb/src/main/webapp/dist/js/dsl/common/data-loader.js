@@ -603,9 +603,9 @@ var updateData = function () {
         var selectedCadreGroupsTypes = cadreGroupEvent.selectedCadreGroups;
         if (!jQuery.isEmptyObject(selectedCadreGroupsTypes)) {
             
-                what = what + ':cadre-group';
+                what = what + ':cadre_group';
             
-            humanResourceValuesToQuery['filter']['cadre-group'] = selectedCadreGroupsTypes;
+            humanResourceValuesToQuery['filter']['cadre_group'] = selectedCadreGroupsTypes;
         }
         
         var selectedCadreTypes = cadreEvent.selectedCadres;
