@@ -26,7 +26,7 @@ public class QueryParameterPopulator {
      * @param parameterPlaceholder
      * @return
      */
-    public static String populateLocalityParameters(String finalQuery, JSONObject jsoObj, Map<String, String> parameterPlaceholder) {
+    public static String populateParametersWithRequestFilterValues(String finalQuery, JSONObject jsoObj, Map<String, String> parameterPlaceholder) {
         log.debug("locality paramerter populator");
         JSONObject Obj = jsoObj.getJSONObject("filter");
         Iterator parameterPlaceholderKeys = parameterPlaceholder.keySet().iterator();
