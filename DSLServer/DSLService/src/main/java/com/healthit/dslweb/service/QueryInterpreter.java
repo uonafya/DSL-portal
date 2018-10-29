@@ -502,7 +502,7 @@ public class QueryInterpreter {
 
     private boolean checkMatchingQueryName(String[] queryNamesFromUI, String[] queryMatcherPropKey) {
         boolean queryNameMatch = true;
-        log.info("Query names to match " + Arrays.toString(queryNamesFromUI) + " and  " + Arrays.toString(queryMatcherPropKey) + " length: " + queryNamesFromUI.length + " " + queryMatcherPropKey.length);
+        log.info("Query names to match " + Arrays.toString(queryNamesFromUI) + " and  from file: " + Arrays.toString(queryMatcherPropKey) + " length: " + queryNamesFromUI.length + " " + queryMatcherPropKey.length);
 
         if (queryNamesFromUI.length != queryMatcherPropKey.length) {
             return false; //if not of same length then contents of ui string and query_matcher are not the same

@@ -81,46 +81,38 @@ var FacilityNameEvent = function () {
 };
 
 var FacilityTypeEvent = function () {
-    this.selectedFacilityType = {},
+    this.selectedFacilityType = [],
             this.loadFacilityTypeData = function (selectedItems, type, clickedItem) {
-
                 var that = this;
                 if (type == 'add') {
                     $.each(selectedItems, function (index, selectedObjValue) {
-                        var name = $(selectedObjValue).attr("data-name");
                         var id = $(selectedObjValue).attr("data-id");
-                        that.selectedFacilityType[id] = {'name': name};
+                        that.selectedFacilityType.push(id);
                     });
                 } else {
                     $.each(selectedItems, function (index, selectedObjValue) {
                         var id = $(selectedObjValue).attr("data-id");
-                        delete that.selectedFacilityType[id];
+                        that.selectedFacilityType.splice($.inArray(id, that.selectedFacilityType), 1);
                     });
-
                 }
-
             };
 };
 
 var FacilityLevelEvent = function () {
-    this.selectedFacilityLevel = {},
+    this.selectedFacilityLevel = [],
             this.loadFacilityLevelData = function (selectedItems, type, clickedItem) {
 
                 var that = this;
                 if (type == 'add') {
                     $.each(selectedItems, function (index, selectedObjValue) {
-                        var name = $(selectedObjValue).attr("data-name");
                         var id = $(selectedObjValue).attr("data-id");
-                        that.selectedFacilityLevel[id] = {'name': name};
-
+                        that.selectedFacilityLevel.push(id);
                     });
                 } else {
                     $.each(selectedItems, function (index, selectedObjValue) {
                         var id = $(selectedObjValue).attr("data-id");
-                        delete that.selectedFacilityLevel[id];
-                        console.log(that.selectedFacilityLevel);
+                        that.selectedFacilityLevel.splice($.inArray(id, that.selectedFacilityLevel), 1);
                     });
-
                 }
 
             };
@@ -555,22 +547,25 @@ var updateData = function () {
 
     if (selectedFacilRadio != 'none' && selectedFacilRadio != '') {
         var facilityValuesToQuery = {};
-        facilityValuesToQuery['what'] = "facility:" + selectedFacilRadio;
         facilityValuesToQuery['filter'] = {};
 
+        var what = '';
         var selectedFacilTypes = facilityTypeEvent.selectedFacilityType;
         if (!jQuery.isEmptyObject(selectedFacilTypes)) {
-
+            what = what + ':facility_type';
             facilityValuesToQuery['filter']['facility_type'] = selectedFacilTypes;
         }
         var selectedFacilityLevels = facilityLevelEvent.selectedFacilityLevel;
         if (!jQuery.isEmptyObject(selectedFacilityLevels)) {
-
+            what = what + ':facility_keph_level';
             facilityValuesToQuery['filter']['facility_keph_level'] = selectedFacilityLevels;
         }
 
         queryParametersList.push(facilityValuesToQuery);
         isAnyParametersSelected = true;
+
+        facilityValuesToQuery['what'] = "facility:" + selectedFacilRadio + what;
+        ;
     }
 
     //kemsa commodities
@@ -597,25 +592,25 @@ var updateData = function () {
         var humanResourceValuesToQuery = {};
         humanResourceValuesToQuery['what'] = "human_resource:" + selectedHumanResrceRadio;
         humanResourceValuesToQuery['filter'] = {};
-        
+
         var what = '';
-        
+
         var selectedCadreGroupsTypes = cadreGroupEvent.selectedCadreGroups;
         if (!jQuery.isEmptyObject(selectedCadreGroupsTypes)) {
-            
-                what = what + ':cadre_group';
-            
+
+            what = what + ':cadre_group';
+
             humanResourceValuesToQuery['filter']['cadre_group'] = selectedCadreGroupsTypes;
         }
-        
+
         var selectedCadreTypes = cadreEvent.selectedCadres;
         if (!jQuery.isEmptyObject(selectedCadreTypes)) {
-           
-                what = what + ':cadre';
-            
+
+            what = what + ':cadre';
+
             humanResourceValuesToQuery['filter']['cadre'] = selectedCadreTypes;
         }
-        humanResourceValuesToQuery['what']=humanResourceValuesToQuery['what']+what;
+        humanResourceValuesToQuery['what'] = humanResourceValuesToQuery['what'] + what;
         queryParametersList.push(humanResourceValuesToQuery);
         isAnyParametersSelected = true;
     }
