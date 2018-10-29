@@ -502,9 +502,7 @@ function populateAnalyticsTable(data) {
     console.log("populating");
     if ($.fn.dataTable.isDataTable('#analytics-table')) {
         try {
-            console.log("destroying");
             table.destroy();
-            console.log("destroying 2");
         } catch (err) {
             console.log(err);
         }

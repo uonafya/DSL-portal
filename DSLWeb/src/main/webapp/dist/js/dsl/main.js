@@ -153,7 +153,6 @@ $(document).ready(function () {
             $this.trigger('click');
         }
     });
-
-
+8
    
 });

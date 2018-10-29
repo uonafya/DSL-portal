@@ -26,7 +26,7 @@ import org.json.JSONObject;
  *
  * @author duncan
  */
-public class QueryInterpreter {
+public class QueryInterpreter{
 
     final static Logger log = Logger.getLogger(QueryInterpreter.class.getCanonicalName());
     static Properties queriesFile;
@@ -76,7 +76,7 @@ public class QueryInterpreter {
             try {
                 JSONObject filters = jsoObj.getJSONObject("filter");
                 Map<String, String> parameterPlaceholder = getSqlParameterPlaceHolderToReplace(filters);
-                finalQuery = QueryParameterPopulator.populateLocalityParameters(finalQuery, jsoObj, parameterPlaceholder);
+                finalQuery = QueryParameterPopulator.populateParametersWithRequestFilterValues(finalQuery, jsoObj, parameterPlaceholder);
             } catch (JSONException e) {
                 log.error(e);
             }
