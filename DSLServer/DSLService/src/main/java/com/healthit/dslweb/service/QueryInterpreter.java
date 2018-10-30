@@ -62,7 +62,7 @@ public class QueryInterpreter{
      * Replace http filter values to placeholders in the sql queries
      *
      * @param finalQuery
-     * @param array original json array from the http request
+     * @param array original json array from the http request with the parameter values
      * @return replace query with real filter values
      */
     private String populatQueryParameters(String finalQuery, JSONArray array) {

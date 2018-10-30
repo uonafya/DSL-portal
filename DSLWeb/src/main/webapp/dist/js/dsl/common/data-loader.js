@@ -659,6 +659,19 @@ var updateData = function () {
         console.log("terminating");
         return;
     }
+
+    //add Date options 
+    var startDate = [$('#start-period').val()];
+    var endDate = [$('#end-period').val()];
+    var dateValuesToQuery = {};
+    dateValuesToQuery['what'] = 'date';
+    dateValuesToQuery['filter']={};
+    
+    dateValuesToQuery['filter']['start_date'] = startDate;
+    dateValuesToQuery['filter']['end_date'] = endDate;
+    queryParametersList.push(dateValuesToQuery);
+
+    console.log("the dates "+dateValuesToQuery);
     console.log(queryParametersList);
     var queryToSubmit = {"query": queryParametersList};
     var x = JSON.stringify(queryToSubmit);
