@@ -174,7 +174,6 @@ public class QueryInterpreter {
                             if (list.contains("commodity") || list.contains("human_resource")) {
                                 jsoObj2 = injectYearANDMonth(jsoObj2, jsoObj);
                             }
-                            log.debug("Refactorxx " + jsoObj2.toString());
                         } catch (Exception e) {
                             log.error(e);
                         }

@@ -516,7 +516,8 @@ function populate(data) {
     $('#analytics-table').empty();
     table = $('#analytics-table').DataTable({
         data: data.data,
-        columns: data.columns
+        columns: data.columns,
+        colReorder: true
     });
     return table;
 
@@ -665,13 +666,13 @@ var updateData = function () {
     var endDate = [$('#end-period').val()];
     var dateValuesToQuery = {};
     dateValuesToQuery['what'] = 'date';
-    dateValuesToQuery['filter']={};
-    
+    dateValuesToQuery['filter'] = {};
+
     dateValuesToQuery['filter']['start_date'] = startDate;
     dateValuesToQuery['filter']['end_date'] = endDate;
     queryParametersList.push(dateValuesToQuery);
 
-    console.log("the dates "+dateValuesToQuery);
+    console.log("the dates " + dateValuesToQuery);
     console.log(queryParametersList);
     var queryToSubmit = {"query": queryParametersList};
     var x = JSON.stringify(queryToSubmit);
