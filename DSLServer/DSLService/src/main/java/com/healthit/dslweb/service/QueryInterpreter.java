@@ -8,8 +8,13 @@ import com.healthit.dslservice.util.strings.RandomStringGenerator;
 import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.GregorianCalendar;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
@@ -21,12 +26,13 @@ import org.apache.log4j.Logger;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+import javax.servlet.http.HttpSession;
 
 /**
  *
  * @author duncan
  */
-public class QueryInterpreter{
+public class QueryInterpreter {
 
     final static Logger log = Logger.getLogger(QueryInterpreter.class.getCanonicalName());
     static Properties queriesFile;
@@ -62,7 +68,8 @@ public class QueryInterpreter{
      * Replace http filter values to placeholders in the sql queries
      *
      * @param finalQuery
-     * @param array original json array from the http request with the parameter values
+     * @param array original json array from the http request with the parameter
+     * values
      * @return replace query with real filter values
      */
     private String populatQueryParameters(String finalQuery, JSONArray array) {
@@ -129,7 +136,9 @@ public class QueryInterpreter{
      * @return
      */
     private JSONArray addFilterLevelsToMainQueryAttributes(JSONArray array) {
+        array = injectPeriodicityFilterLevel(array);
         array = injectLocalityFilterLevel(array);
+
         log.info("Http json array with injeced filters " + array.toString());
         return array;
     }
@@ -140,20 +149,114 @@ public class QueryInterpreter{
      * ward:contituency:county
      *
      * @param array
-     * @return
+     * @return array
+     */
+    private JSONArray injectPeriodicityFilterLevel(JSONArray array) {
+        JSONArray arrayReplace = array;
+        for (Object o : array) {
+            JSONObject jsoObj = (JSONObject) o;
+            String[] queryNamesFromUI = jsoObj.getString("what").split(":");
+            if (Arrays.asList(queryNamesFromUI).contains("date")) {
+                arrayReplace = new JSONArray();
+                for (Object obj : array) {
+                    JSONObject jsoObj2 = (JSONObject) obj;
+                    String[] queryFetchValues = jsoObj2.getString("what").split(":");
+                    if (!Arrays.asList(queryFetchValues).contains("date") && !Arrays.asList(queryFetchValues).contains("locality")) {
+                        JSONObject jsonObj = new JSONObject();
+                        try {
+                            try {
+                                jsoObj2.getJSONObject("filter");
+                            } catch (Exception e) {
+                                JSONObject objt = new JSONObject();
+                                jsoObj2.put("filter", objt);
+                            }
+                            List list = Arrays.asList(queryFetchValues);
+                            if (list.contains("commodity") || list.contains("human_resource")) {
+                                jsoObj2 = injectYearANDMonth(jsoObj2, jsoObj);
+                            }
+                            log.debug("Refactorxx " + jsoObj2.toString());
+                        } catch (Exception e) {
+                            log.error(e);
+                        }
+                        arrayReplace.put(jsoObj2);
+                        log.debug("The period injected array1 "+arrayReplace.toString());
+                    }else{
+                        arrayReplace.put(jsoObj2);
+                        log.debug("The period injected array2 "+arrayReplace.toString());
+                    }
+                }
+                log.debug("The period injected array "+arrayReplace.toString());
+                return arrayReplace;
+            }
+        }
+        return arrayReplace;
+    }
+
+    private JSONObject injectYearANDMonth(JSONObject jsoObj2, JSONObject jsoObj) throws ParseException {
+        Map map3 = new HashMap();
+        log.debug("Refactor 2 " + map3.toString());
+        Map map1 = jsoObj2.getJSONObject("filter").toMap();
+        log.debug("Refactor 3 " + map1.toString());
+        String startDateSring = jsoObj.getJSONObject("filter").getJSONArray("start_date").get(0).toString();
+        String endDateString = jsoObj.getJSONObject("filter").getJSONArray("end_date").get(0).toString();
+        Date startDate = new SimpleDateFormat("dd/MM/yyyy").parse(startDateSring);
+        Date endDate = new SimpleDateFormat("dd/MM/yyyy").parse(endDateString);
+        
+        Calendar calendar = new GregorianCalendar();
+        calendar.setTime(startDate);
+        int month = calendar.get(Calendar.MONTH) + 1;
+        int year = calendar.get(Calendar.YEAR);
+        Map<String,List> periodMap = new HashMap();
+        
+        List<Integer> periodList=new ArrayList();
+        periodList.add(year);
+        periodMap.put("start_year", periodList);
+        periodList=new ArrayList();
+        periodList.add(month);
+        periodMap.put("start_month", periodList );
+        
+        log.debug("Start period "+periodMap.toString());
+        
+        calendar.setTime(endDate);
+        month = calendar.get(Calendar.MONTH) + 1;
+        year = calendar.get(Calendar.YEAR);
+        periodList=new ArrayList();
+        periodList.add(year);
+        periodMap.put("end_year", periodList);
+        periodList=new ArrayList();
+        periodList.add(month);
+        periodMap.put("end_month", periodList );
+        
+         log.debug("end period "+periodMap.toString());
+        
+        map3.putAll(map1);
+        map3.putAll(periodMap);
+        log.debug("Injected year month "+map3.toString());
+        jsoObj2.put("filter", new JSONObject(map3));
+        return jsoObj2;
+    }
+
+    /**
+     * Adds the locality(administrative) level to the query name(used for
+     * retrieving actual query from file), eg ward, ward,contituency,
+     * ward:contituency:county
+     *
+     * @param array
+     * @return array
      */
     private JSONArray injectLocalityFilterLevel(JSONArray array) {
         JSONArray arrayReplace = array;
         for (Object o : array) {
             JSONObject jsoObj = (JSONObject) o;
             String[] queryNamesFromUI = jsoObj.getString("what").split(":");
+
             if (Arrays.asList(queryNamesFromUI).contains("locality")) {
                 //we create a new json array without the locality filter object, rather we append then to the other objects in their filter objects
                 arrayReplace = new JSONArray();
                 for (Object obj : array) {
                     JSONObject jsoObj2 = (JSONObject) obj;
                     String[] queryFetchValues = jsoObj2.getString("what").split(":");
-                    if (!Arrays.asList(queryFetchValues).contains("locality")) {
+                    if (!Arrays.asList(queryFetchValues).contains("date") && !Arrays.asList(queryFetchValues).contains("locality")) {
                         JSONObject jsonObj = new JSONObject();
                         //jsoObj object in out loop object that contains all the locality filter attributes
                         //jsoObj2 this is current json object with what needs to be queried from database, eg commodity county
@@ -165,6 +268,13 @@ public class QueryInterpreter{
                         } catch (Exception e) {
                             //pass
                         }
+                        arrayReplace.put(jsonObj);
+                    }
+                    if (Arrays.asList(queryFetchValues).contains("date")) {
+                        JSONObject jsonObj = new JSONObject();
+                        String whatReplaced = jsoObj2.getString("what");
+                        jsonObj.put("what", whatReplaced);
+                        jsonObj.put("filter", jsoObj2.getJSONObject("filter"));
                         arrayReplace.put(jsonObj);
                     }
                 }
