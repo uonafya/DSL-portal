@@ -401,6 +401,15 @@ var SelectedCommodityRadio = function () {
     this.selectedRadioBtn = "";
 };
 
+
+var SelectedPeriodType = function () {
+    this.selectedRadioBtn = "yearly";
+};
+
+
+//period
+var selectedPeriodType = new SelectedPeriodType();
+
 // DHIS objects
 var indicatorGroupEvent = new IndicatorGroupEvent();
 var indicatorNameEvent = new IndicatorNameEvent();
@@ -436,8 +445,8 @@ function displayErrorAlert(msg) {
 }
 
 function validateDateInput() {
-    var startDate = $('#start-period').val();
-    var endDate = $('#end-period').val();
+    var startDate = $('#start_year').val();
+    var endDate = $('#end_year').val();
 
     if (!(startDate)) {
         displayErrorAlert("please ensure the start period is filled");
@@ -661,15 +670,28 @@ var updateData = function () {
         return;
     }
 
-    //add Date options 
-    var startDate = [$('#start-period').val()];
-    var endDate = [$('#end-period').val()];
-    var dateValuesToQuery = {};
-    dateValuesToQuery['what'] = 'date';
-    dateValuesToQuery['filter'] = {};
+    //period selected
+    var selectedTimePeriodRadioBtn = selectedPeriodType.selectedRadioBtn;
 
-    dateValuesToQuery['filter']['start_date'] = startDate;
-    dateValuesToQuery['filter']['end_date'] = endDate;
+    var startDate = $('#start_year').val();
+    var endDate = $('#end_year').val();
+
+    var startMonth = $('#start_month').val();
+    var endMonth = $('#end_month').val();
+
+    var dateValuesToQuery = {};
+    dateValuesToQuery['filter'] = {};
+    if (selectedTimePeriodRadioBtn == 'yearly') {
+        dateValuesToQuery['what'] = 'date:yearly';
+    } else {
+        dateValuesToQuery['what'] = 'date:yearly:month';
+        dateValuesToQuery['filter']['start_month'] = new Array(startMonth);
+        dateValuesToQuery['filter']['end_month'] = new Array(endMonth);
+    }
+    dateValuesToQuery['filter']['start_year'] =new Array(startDate);
+    dateValuesToQuery['filter']['end_year'] = new Array(endDate);
+    console.log("got to");
+    console.log(dateValuesToQuery);
     queryParametersList.push(dateValuesToQuery);
 
     console.log("the dates " + dateValuesToQuery);
