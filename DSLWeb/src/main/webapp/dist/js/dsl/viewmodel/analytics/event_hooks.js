@@ -154,6 +154,16 @@ $(document).ready(function () {
         }
     });
 
-
-   
+    //
+    $("input:radio[name=optradiotimespan]").click(function (event) {
+        var periodTypeSelected=event.target.value;
+        if(periodTypeSelected=='monthly'){
+            $('.month').show();
+            selectedPeriodType.selectedRadioBtn='monthly';
+        }else{
+            $('.month').hide();
+            selectedPeriodType.selectedRadioBtn='yearly';
+        }
+        
+    });
 });

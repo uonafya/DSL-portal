@@ -39,20 +39,28 @@ var IndicatorGroupEvent = function () {
 };
 
 var IndicatorNameEvent = function () {
-    this.selectedNames = {},
+    this.selectedNames = [],
             this.loadNameData = function (selectedIndicatorItems, type, clickedItem) {
                 var that = this;
                 if (type == 'add') {
                     $.each(selectedIndicatorItems, function (index, selectedObjValue) {
+                        //var name = $(selectedObjValue).attr("data-name");
+                        //var groupId = $(selectedObjValue).attr("data-group-id");
+                        //var id = $(selectedObjValue).attr("data-id");
+                        //that.selectedNames[id] = {'name': name, 'groupId': groupId};
+                        
                         var name = $(selectedObjValue).attr("data-name");
-                        var groupId = $(selectedObjValue).attr("data-group-id");
-                        var id = $(selectedObjValue).attr("data-id");
-                        that.selectedNames[id] = {'name': name, 'groupId': groupId};
+                        that.selectedNames.push(name);
+                        
                     });
                 } else {
                     $.each(selectedIndicatorItems, function (index, selectedObjValue) {
-                        var id = $(selectedObjValue).attr("data-id");
-                        delete that.selectedNames[id];
+//                        var id = $(selectedObjValue).attr("data-id");
+//                        delete that.selectedNames[id];
+                        
+                        var name = $(selectedObjValue).attr("data-name");
+                        that.selectedNames.splice($.inArray(name, that.selectedFacilityLevel), 1);
+                        
                     });
 
                 }
@@ -401,6 +409,15 @@ var SelectedCommodityRadio = function () {
     this.selectedRadioBtn = "";
 };
 
+
+var SelectedPeriodType = function () {
+    this.selectedRadioBtn = "yearly";
+};
+
+
+//period
+var selectedPeriodType = new SelectedPeriodType();
+
 // DHIS objects
 var indicatorGroupEvent = new IndicatorGroupEvent();
 var indicatorNameEvent = new IndicatorNameEvent();
@@ -436,8 +453,8 @@ function displayErrorAlert(msg) {
 }
 
 function validateDateInput() {
-    var startDate = $('#start-period').val();
-    var endDate = $('#end-period').val();
+    var startDate = $('#start_year').val();
+    var endDate = $('#end_year').val();
 
     if (!(startDate)) {
         displayErrorAlert("please ensure the start period is filled");
@@ -502,9 +519,7 @@ function populateAnalyticsTable(data) {
     console.log("populating");
     if ($.fn.dataTable.isDataTable('#analytics-table')) {
         try {
-            console.log("destroying");
             table.destroy();
-            console.log("destroying 2");
         } catch (err) {
             console.log(err);
         }
@@ -518,7 +533,8 @@ function populate(data) {
     $('#analytics-table').empty();
     table = $('#analytics-table').DataTable({
         data: data.data,
-        columns: data.columns
+        columns: data.columns,
+        colReorder: true
     });
     return table;
 
@@ -533,7 +549,7 @@ var updateData = function () {
     //dhis indicators
     var selectedIndicatorNames = indicatorNameEvent.selectedNames;
     var selectedIndicatRadio = selectedIndicatorRadio.selectedRadioBtn;
-
+    
     if (selectedIndicatRadio != 'none' && selectedIndicatRadio != '' && !jQuery.isEmptyObject(selectedIndicatorNames)) {
         var indicatorValuesToQuery = {};
         indicatorValuesToQuery['what'] = "indicator:" + selectedIndicatRadio;
@@ -661,7 +677,36 @@ var updateData = function () {
         console.log("terminating");
         return;
     }
-    console.log("queryParametersList is: "+JSON.stringify(queryParametersList));
+    
+
+
+    //period selected
+    var selectedTimePeriodRadioBtn = selectedPeriodType.selectedRadioBtn;
+
+    var startDate = $('#start_year').val();
+    var endDate = $('#end_year').val();
+
+    var startMonth = $('#start_month').val();
+    var endMonth = $('#end_month').val();
+
+    var dateValuesToQuery = {};
+    dateValuesToQuery['filter'] = {};
+    if (selectedTimePeriodRadioBtn == 'yearly') {
+        dateValuesToQuery['what'] = 'date:yearly';
+    } else {
+        dateValuesToQuery['what'] = 'date:yearly:month';
+        dateValuesToQuery['filter']['start_month'] = new Array(startMonth);
+        dateValuesToQuery['filter']['end_month'] = new Array(endMonth);
+    }
+    dateValuesToQuery['filter']['start_year'] =new Array(startDate);
+    dateValuesToQuery['filter']['end_year'] = new Array(endDate);
+    console.log("got to");
+    console.log(dateValuesToQuery);
+    queryParametersList.push(dateValuesToQuery);
+
+    console.log("the dates " + dateValuesToQuery);
+	
+	console.log("queryParametersList is: "+JSON.stringify(queryParametersList));
     var queryToSubmit = {"query": queryParametersList};
     var x = JSON.stringify(queryToSubmit);
     //    sendQueryParamatersToServer(queryParametersList);

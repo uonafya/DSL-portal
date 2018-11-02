@@ -5,7 +5,6 @@
  */
 package com.healthit.dslservice.util;
 
-import com.healthit.dslweb.service.QueryInterpreter;
 import java.io.IOException;
 import java.io.InputStream;
 import org.apache.log4j.Logger;

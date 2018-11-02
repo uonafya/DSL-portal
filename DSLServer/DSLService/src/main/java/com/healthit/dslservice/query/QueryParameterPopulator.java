@@ -26,7 +26,7 @@ public class QueryParameterPopulator {
      * @param parameterPlaceholder
      * @return
      */
-    public static String populateLocalityParameters(String finalQuery, JSONObject jsoObj, Map<String, String> parameterPlaceholder) {
+    public static String populateParametersWithRequestFilterValues(String finalQuery, JSONObject jsoObj, Map<String, String> parameterPlaceholder) {
         log.debug("locality paramerter populator");
         JSONObject Obj = jsoObj.getJSONObject("filter");
         Iterator parameterPlaceholderKeys = parameterPlaceholder.keySet().iterator();
@@ -37,7 +37,7 @@ public class QueryParameterPopulator {
             JSONArray itemIdsToReplace = Obj.getJSONArray(placeholderKey);
             String placeHolder = parameterPlaceholder.get(placeholderKey);
             log.debug("The placeholder " + placeholderKey);
-            if (placeholderKey.equals("county") || placeholderKey.equals("cadre")) {
+            if (placeholderKey.equals("county") || placeholderKey.equals("cadre") || placeholderKey.equals("indicator") ) {
                 List intList = Arrays.asList(itemIdsToReplace.toList());
                 finalQuery = populateStringParameterValues(finalQuery, itemIdsToReplace, placeHolder);
                 log.debug("String with values for replacement " + intList.toString());
