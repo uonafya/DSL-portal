@@ -39,20 +39,28 @@ var IndicatorGroupEvent = function () {
 };
 
 var IndicatorNameEvent = function () {
-    this.selectedNames = {},
+    this.selectedNames = [],
             this.loadNameData = function (selectedIndicatorItems, type, clickedItem) {
                 var that = this;
                 if (type == 'add') {
                     $.each(selectedIndicatorItems, function (index, selectedObjValue) {
+                        //var name = $(selectedObjValue).attr("data-name");
+                        //var groupId = $(selectedObjValue).attr("data-group-id");
+                        //var id = $(selectedObjValue).attr("data-id");
+                        //that.selectedNames[id] = {'name': name, 'groupId': groupId};
+                        
                         var name = $(selectedObjValue).attr("data-name");
-                        var groupId = $(selectedObjValue).attr("data-group-id");
-                        var id = $(selectedObjValue).attr("data-id");
-                        that.selectedNames[id] = {'name': name, 'groupId': groupId};
+                        that.selectedNames.push(name);
+                        
                     });
                 } else {
                     $.each(selectedIndicatorItems, function (index, selectedObjValue) {
-                        var id = $(selectedObjValue).attr("data-id");
-                        delete that.selectedNames[id];
+//                        var id = $(selectedObjValue).attr("data-id");
+//                        delete that.selectedNames[id];
+                        
+                        var name = $(selectedObjValue).attr("data-name");
+                        that.selectedNames.splice($.inArray(name, that.selectedFacilityLevel), 1);
+                        
                     });
 
                 }
@@ -541,7 +549,7 @@ var updateData = function () {
     //dhis indicators
     var selectedIndicatorNames = indicatorNameEvent.selectedNames;
     var selectedIndicatRadio = selectedIndicatorRadio.selectedRadioBtn;
-
+    
     if (selectedIndicatRadio != 'none' && selectedIndicatRadio != '' && !jQuery.isEmptyObject(selectedIndicatorNames)) {
         var indicatorValuesToQuery = {};
         indicatorValuesToQuery['what'] = "indicator:" + selectedIndicatRadio;
