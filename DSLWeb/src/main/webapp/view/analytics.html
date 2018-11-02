@@ -21,6 +21,9 @@
         <link href="../dist/css/sb-admin-2.css" rel="stylesheet">
 
         <link href="../dist/css/global-style.css" rel="stylesheet">
+        
+        <!--Esri ArcGIS files-->
+        <link href="../dist/arcgis/css/main.css" rel="stylesheet">
 
         <!-- pivot -->
         <link href="../vendor/pivotjs/pivot.min.css" rel="stylesheet" type="text/css"/>
@@ -131,6 +134,23 @@
             }
             .list-picker-group a {
                 font-family: Georgia, serif;font-size: 11px;
+            }
+            
+            #gismagic {
+                height: 650px; 
+                min-width: 310px; 
+                margin: 0 auto; 
+            }
+            .highcharts-credits{
+                display: none;
+                color: transparent;
+                width: 0;
+                height: 0;
+            }
+            .loading {
+                margin-top: 10em;
+                text-align: center;
+                color: gray;
             }
 
         </style>
@@ -534,14 +554,19 @@
 
                     <button style="margin-bottom: 3px;" class="btn btn-primary btn-sm" onclick="updateData()">Update Data</button>
                     <ul class="nav nav-tabs">
-                        <li class="active">
-                            <a data-toggle="tab" href="#table">Table</a></li>
+                        <li class="active"><a data-toggle="tab" href="#gis">GIS</a></li>
+                        <li><a data-toggle="tab" href="#table">Table</a></li>
                         <li><a data-toggle="tab" href="#pivot">Pivot</a></li>
-
                     </ul>
 
                     <div class="tab-content">
-                        <div id="table" class="tab-pane fade in active">
+                        <div id="gis" class="tab-pane fade in active">
+                            <!-- pivot table -->
+                            <div id="gismagic" style="margin: 20px; min-height: 450px;">
+                                <div class="alert alert-info">Loading map&hellip;</div>
+                            </div>
+                        </div>
+                        <div id="table" class="tab-pane fade">
                             <br/>
                             <div>
                                 <table id="analytics-table" class="display" style="width:100%">
@@ -553,6 +578,7 @@
                             <!-- pivot table -->
                             <div id="output" style="margin: 30px;"></div>
                         </div>
+                        
 
                     </div>
 
@@ -624,6 +650,17 @@
         <!-- jquery date picker -->
         <script src="../vendor/jquery/jquery-ui-datepicker/jquery-ui.js"></script>
 
+        <!--Esri ArcGIS files-->
+        <!--  <script src="../dist/arcgis/js/dojo.js"></script> -->
+
+        <!--HighMaps files-->
+        <script src="../dist/highmaps/highmaps.js"></script>
+        <script src="../dist/highmaps/data.js"></script>
+        <script src="../dist/highmaps/exporting.js"></script>
+        <script src="../dist/highmaps/offline-exporting.js"></script>
+        <script src="../dist/highmaps/analytics-config.js"></script>
+        
+        
         <script type="text/javascript" src="../vendor/knockout/knockout-3.4.2.js"></script>
         <script src="../dist/js/dsl/common/data-loader.js" type="text/javascript"></script>
         <script src="../dist/js/dsl/viewmodel/Dhis.js"></script>
@@ -632,6 +669,7 @@
         <script src="../dist/js/dsl/viewmodel/kemsa.js" type="text/javascript"></script>
         <script src="../dist/js/dsl/viewmodel/ihris.js" type="text/javascript"></script>
         <script src="../dist/js/dsl/main.js"></script>
+
 
         <!-- pivot -->
 
@@ -648,6 +686,30 @@
         <!-- Pivot js renderers -->
         <script src="../vendor/pivotjs/c3_renderers.min.js" type="text/javascript"></script>
 
+        
+        <!--Esri ArcGIS config-->
+        <!-- <script>
+            require([
+                "esri/Map",
+                "esri/views/MapView"
+              ], function(Map, MapView) {
+                var map = new Map({
+                  basemap: "streets"
+                });
+                var view = new MapView({
+                  container: "gismagic",  // Reference to the DOM node that will contain the view
+                  map: map               // References the map object created in step 3
+                });
+              });
+        </script>-->
+        
+        
+        <!--HighMaps config-->
+        <script>
+            // county
+            var data = [['1', 728],['2', 710],['3', 100],['4', 541],['5', 622],['6', 866],['7', 398],['8', 785],['9', 223],['10', 605],['11', 237],['12', 157],['13', 134],['14', 136],['15', 99],['15', 361],['16', 728],['17', 710],['18', 963],['19', 541],['20', 622],['21', 866],['22', 398],['23', 785],['24', 102],['25', 605],['26', 237],['27', 157],['28', 134],['29', 136],['30', 704],['31', 361],['32', 605],['33', 237],['34', 157],['35', 134],['36', 136],['37', 704],['38', 361],['39', 728],['40', 10],['41', 963],['42', 541],['43', 622],['44', 866],['45', 398],['46', 102],['47', 223]];
+            loadMap('county', data);
+        </script>
 
 
 

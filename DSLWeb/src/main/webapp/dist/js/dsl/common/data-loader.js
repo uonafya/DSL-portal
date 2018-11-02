@@ -661,7 +661,7 @@ var updateData = function () {
         console.log("terminating");
         return;
     }
-    console.log(queryParametersList);
+    console.log("queryParametersList is: "+JSON.stringify(queryParametersList));
     var queryToSubmit = {"query": queryParametersList};
     var x = JSON.stringify(queryToSubmit);
     //    sendQueryParamatersToServer(queryParametersList);
@@ -675,7 +675,7 @@ var updateData = function () {
         success: function (data, textStatus, jqXHR) {
 
             console.log("All went well ");
-            console.log(data);
+            console.log("Data is: "+JSON.stringify(data));
             populateAnalyticsTable(data);
         },
         error: function (response, request) {
