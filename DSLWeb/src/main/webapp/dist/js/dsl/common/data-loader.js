@@ -48,19 +48,19 @@ var IndicatorNameEvent = function () {
                         //var groupId = $(selectedObjValue).attr("data-group-id");
                         //var id = $(selectedObjValue).attr("data-id");
                         //that.selectedNames[id] = {'name': name, 'groupId': groupId};
-                        
+
                         var name = $(selectedObjValue).attr("data-name");
                         that.selectedNames.push(name);
-                        
+
                     });
                 } else {
                     $.each(selectedIndicatorItems, function (index, selectedObjValue) {
 //                        var id = $(selectedObjValue).attr("data-id");
 //                        delete that.selectedNames[id];
-                        
+
                         var name = $(selectedObjValue).attr("data-name");
                         that.selectedNames.splice($.inArray(name, that.selectedFacilityLevel), 1);
-                        
+
                     });
 
                 }
@@ -549,10 +549,13 @@ var updateData = function () {
     //dhis indicators
     var selectedIndicatorNames = indicatorNameEvent.selectedNames;
     var selectedIndicatRadio = selectedIndicatorRadio.selectedRadioBtn;
-    
-    if (selectedIndicatRadio != 'none' && selectedIndicatRadio != '' && !jQuery.isEmptyObject(selectedIndicatorNames)) {
+
+    if (selectedIndicatRadio != 'none' && selectedIndicatRadio != '') {
         var indicatorValuesToQuery = {};
         indicatorValuesToQuery['what'] = "indicator:" + selectedIndicatRadio;
+        if(!jQuery.isEmptyObject(selectedIndicatorNames)){
+            indicatorValuesToQuery['what']=indicatorValuesToQuery['what']+":with_filter";
+        }
         indicatorValuesToQuery['filter'] = {'indicator': selectedIndicatorNames};
         queryParametersList.push(indicatorValuesToQuery);
         isAnyParametersSelected = true;
@@ -587,19 +590,15 @@ var updateData = function () {
     //kemsa commodities
 
     var selectedCommodtyRadio = selectedCommodityRadio.selectedRadioBtn;
-    if (!isFacilitiesSelected() && !isLocalitySelected() && selectedCommodtyRadio != 'none' && selectedCommodtyRadio != '') {
 
-        displayErrorAlert("please ensure you choose a locality or facilities selection");
-        return false;
-    } else {
-        if (selectedCommodtyRadio != 'none' && selectedCommodtyRadio != '') {
-            var commodityValuesToQuery = {};
-            commodityValuesToQuery['what'] = "commodity:" + selectedCommodtyRadio;
-            queryParametersList.push(commodityValuesToQuery);
-            isAnyParametersSelected = true;
-        }
-
+    if (selectedCommodtyRadio != 'none' && selectedCommodtyRadio != '') {
+        var commodityValuesToQuery = {};
+        commodityValuesToQuery['what'] = "commodity:" + selectedCommodtyRadio;
+        queryParametersList.push(commodityValuesToQuery);
+        isAnyParametersSelected = true;
     }
+
+
 
     //ihris 
     var selectedHumanResrceRadio = selectedHumanResourceRadio.selectedRadioBtn;
@@ -677,7 +676,7 @@ var updateData = function () {
         console.log("terminating");
         return;
     }
-    
+
 
 
     //period selected
@@ -698,18 +697,20 @@ var updateData = function () {
         dateValuesToQuery['filter']['start_month'] = new Array(startMonth);
         dateValuesToQuery['filter']['end_month'] = new Array(endMonth);
     }
-    dateValuesToQuery['filter']['start_year'] =new Array(startDate);
+    dateValuesToQuery['filter']['start_year'] = new Array(startDate);
     dateValuesToQuery['filter']['end_year'] = new Array(endDate);
     console.log("got to");
     console.log(dateValuesToQuery);
     queryParametersList.push(dateValuesToQuery);
 
     console.log("the dates " + dateValuesToQuery);
-	
-	console.log("queryParametersList is: "+JSON.stringify(queryParametersList));
+
+    console.log("queryParametersList is: " + JSON.stringify(queryParametersList));
     var queryToSubmit = {"query": queryParametersList};
     var x = JSON.stringify(queryToSubmit);
     //    sendQueryParamatersToServer(queryParametersList);
+    //$("#table-status").css("display", "block");
+    $('#table-status').show();
     $.ajax({
         type: 'POST', // define the type of HTTP verb we want to use
         url: '/DSLWeb/api/processquery', // the url from server we that we want to use
@@ -720,16 +721,20 @@ var updateData = function () {
         success: function (data, textStatus, jqXHR) {
 
             console.log("All went well ");
-            console.log("Data is: "+JSON.stringify(data));
+            console.log("Data is: " + JSON.stringify(data));
             populateAnalyticsTable(data);
+            $('#table-status').hide();
         },
         error: function (response, request) {
             //   console.log("got an error fetching cadregroups");
+            $('#table-status').hide();
             var parsed_data = response.responseText;
+
         }
 
     });
 
+    //$("#table-status").css("display", "block");
 
 
 

@@ -654,27 +654,32 @@
 
                     <button style="margin-bottom: 3px;" class="btn btn-primary btn-sm" onclick="updateData()">Update Data</button>
                     <ul class="nav nav-tabs">
-                        <li class="active"><a data-toggle="tab" href="#gis">GIS</a></li>
-                        <li><a data-toggle="tab" href="#table">Table</a></li>
+                        <li class="active"><a data-toggle="tab" href="#table">Table</a></li>
+                        <li><a data-toggle="tab" href="#gis">GIS</a></li>
                         <li><a data-toggle="tab" href="#pivot">Pivot</a></li>
                     </ul>
 
                     <div class="tab-content">
-                        <div id="gis" class="tab-pane fade in active">
-                            <!-- pivot table -->
-                            <div id="gismagic" style="margin: 20px; min-height: 450px;">
-                                <div class="alert alert-info">Loading map&hellip;</div>
-                            </div>
-                        </div>
-                        <div id="table" class="tab-pane fade">
+                        <div id="table-status">Loading <i class="fas fa-spinner fa-spin" style="font-size: 24px;"></i></div>
+                        <!--<i class="fa fa-spinner fa-spin" ></i></div>-->
+                        <div id="table" class="tab-pane fade in active">
                             <br/>
                             <div>
+
                                 <table id="analytics-table" class="display" style="width:100%">
 
                                 </table>
                             </div>
                         </div>
-                        <div id="pivot" class="tab-pane fade">
+
+                        <div id="gis" class="tab-pane fade in">
+                            <!-- pivot table -->
+                            <div id="gismagic" style="margin: 20px; min-height: 450px;">
+                                <div class="alert alert-info">Loading map&hellip;</div>
+                            </div>
+                        </div>
+
+                        <div id="pivot" class="tab-pane fade in">
                             <!-- pivot table -->
                             <div id="output" style="margin: 30px;"></div>
                         </div>
@@ -745,6 +750,10 @@
                                 }
 
                             });
+
+
+                            $('#table-status').hide();  // Hide it initially
+                                    
 
 
                             // $('.demo').dropdown({});
