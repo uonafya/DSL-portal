@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <title>DSL - Board </title>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+        <meta name="apple-mobile-web-app-capable" content="yes">
+        <!--<link href="../../dist/dash/css/bootstrap.css" rel="stylesheet" type="text/css"/>-->
+        <link href="../../vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet" type="text/css"/>
+        <link href="../static/js/public_dash/gridstack/gridstack.min.css" rel="stylesheet">
+        <link href="http://fonts.googleapis.com/css?family=Open+Sans:400italic,600italic,400,600"
+              rel="stylesheet">
+        <!--<link href="../../dist/dash/css/font-awesome.css" rel="stylesheet" type="text/css"/>-->
+        <link href="../../vendor/font-awesome/css/font-awesome.css" rel="stylesheet" type="text/css"/>
+        <link href="../../dist/dash/css/pages/dash-styles.css" rel="stylesheet" type="text/css"/>
+        <!--<link href="https://cdnjs.cloudflare.com/ajax/libs/flag-icon-css/2.3.1/css/flag-icon.min.css" rel="stylesheet"/>-->
+        <link href="../../vendor/flag-icon-css-master/css/flag-icon.min.css" rel="stylesheet" type="text/css"/>
+        <link href="../../vendor/chosen/chosen.css" rel="stylesheet" type="text/css"/>
+        <!-- Le HTML5 shim, for IE6-8 support of HTML5 elements -->
+        <!--[if lt IE 9]>
+        <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
+        <![endif]-->
+        
+        <style>
+            .org-unit {
+                margin-top: 20px;
+            }
+            .org-unit > span, .chosen-single,.chosen-results {
+                font-size: 15px;
+            }
+        </style>
+        
+    </head>
+    <body>
+
+        <nav class="navbar navbar-default navbar-fixed-top">
+            <div class="navbar-inner">
+                <div class="container-fluid">
+                    <!-- Brand and toggle get grouped for better mobile display -->
+                    <div class="navbar-header">
+                        <button type="button" class="navbar-toggle collapsed" data-toggle="collapse"
+                                data-target="#bs-example-navbar-collapse-1" aria-expanded="false">
+                            <span class="sr-only">Toggle navigation</span>
+                            <span class="icon-bar"></span>
+                            <span class="icon-bar"></span>
+                            <span class="icon-bar"></span>
+                        </button>
+                        <span style="font-size: 40px;float:left;padding-top: 17px;" class="flag-icon flag-icon-background flag-icon-ke"> </span> 
+                        <a class="navbar-brand" href="../index.html" style="color: #ffffff;padding-top: 17px;">
+                            <strong> DSL BOARD</strong></a>
+                    </div>
+
+                    <!-- Collect the nav links, forms, and other content for toggling -->
+                    <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+
+                        <ul class="nav navbar-nav pull-right">
+                            <li class="dropdown"><a href="#" class="dropdown-toggle" data-toggle="dropdown"><i
+                                        class="fa fa-user" aria-hidden="true"></i> Human resource(Cadre) <b class="caret"></b></a>
+                                <ul class="dropdown-menu">
+                                    <li><a href="javascript:;">nurse</a></li>
+                                </ul>
+                            </li>
+                        </ul>
+
+                        <ul class="nav navbar-nav pull-right">
+                            <li class="dropdown"><a href="#" class="dropdown-toggle" data-toggle="dropdown"><i
+                                        class="fa fa-flask" aria-hidden="true"></i> Commodity <b class="caret"></b></a>
+                                <ul class="dropdown-menu">
+                                    <li><a href="javascript:;">Amoxil 2g dose</a></li>
+
+                                </ul>
+                            </li>
+                        </ul>
+
+                        <ul class="nav navbar-nav pull-right">
+                            <li class="dropdown"><a href="#" class="dropdown-toggle" data-toggle="dropdown"><i
+                                        class="fa fa-line-chart" aria-hidden="true"></i> Indicators <b class="caret"></b></a>
+                                <ul class="dropdown-menu">
+                                    <li><a href="javascript:;">Fully immunized Child Performance</a></li>
+                                    <li><a href="javascript:;">Proportion of pregnant women attending 4 <br/>ANC visits according to <br/>Focused ANC schedule</a></li>
+                                    <li><a href="javascript:;">TB curative Rate</a></li>
+                                </ul>
+                            </li>
+                        </ul>
+
+
+                        <ul class="nav navbar-nav pull-right">
+                            <li class="dropdown"><a href="#" class="dropdown-toggle" data-toggle="dropdown"><i
+                                        class="fa fa-map" aria-hidden="true"></i> Organisation unit <b class="caret"></b></a>
+                                <ul class="dropdown-menu">
+                                    <li><a href="javascript:;">National</a></li>
+                                    <li><a href="javascript:;">County</a></li>
+                                    <li><a href="javascript:;">Counstituency</a></li>
+                                    <li><a href="javascript:;">Sub County</a></li>
+                                </ul>
+                            </li>
+
+                        </ul>
+
+                    </div><!-- /.navbar-collapse -->
+                </div><!-- /.container-fluid -->
+            </div>
+        </nav>
+
+        <div class="subnavbar">
+            <div class="subnavbar-inner">
+                <div class="container" style="width: 100%;">
+                    <div class="org-unit">
+                        <span >County: </span>
+                        <select id="example" >
+                            <option>Machakos</option>
+                            <option>Nairobi</option>
+                            <option>Nakuru</option>
+                            <option>Kisumu</option>
+                            <option>Mombasa</option>
+                        </select>
+                    </div>
+                </div>
+
+
+                <!-- /container -->
+            </div>
+            <!-- /subnavbar-inner -->
+        </div>
+        <!-- /subnavbar -->
+
+        <div class="main">
+            <div class="main-inner">
+                <div class="container-fluid">
+                    <div class="row">
+                        <div id="art_status_chart" class="col-sm-6"></div>
+                        <div id="hiv_status_chart" class="col-sm-6"></div>
+                    </div>
+                    <br/>
+                    <div class="row">
+                        <div id="artt_status_chart" class="col-sm-6"></div>
+                        <div id="hiv_status_chart" class="col-sm-6"></div>
+                    </div>
+
+                </div>
+                <!-- /container -->
+            </div>
+            <!-- /main-inner -->
+        </div>
+        <!-- /main -->
+
+        <!-- /extra -->
+        <div class="footer">
+            <div class="footer-inner">
+                <div class="container">
+                    <div class="row">
+                        <div class="span12"> &copy; 2018 <a href="#" style="color: #ffffff;">DSL BOARD</a>.</div>
+                        <!-- /span12 -->
+                    </div>
+                    <!-- /row -->
+                </div>
+                <!-- /container -->
+            </div>
+            <!-- /footer-inner -->
+        </div>
+        <!-- /footer -->
+
+        <!-- Placed at the end of the document so the pages load faster -->
+
+
+
+        <!--<script src="../../vendor/jquery/jquery.min.js" type="text/javascript"></script>-->
+        <script
+            src="https://code.jquery.com/jquery-2.2.4.min.js"
+            integrity="sha256-BbhdlvQf/xTY9gja0Dq3HiwQF8LaCRTXxZKRutelT44="
+        crossorigin="anonymous"></script>
+        <script src="../../vendor/jquery/jquery-ui.min.js" type="text/javascript"></script>
+        <!--<script src="../../vendor/bootstrap/js/bootstrap.min.js" type="text/javascript"></script>-->
+        <script src="../../vendor/bootstrap/js/bootstrap.min.js" type="text/javascript"></script>
+        <script src="../../vendor/chosen/chosen.jquery.js" type="text/javascript"></script>
+
+        <script src="../../dist/js/charts/highcharts.js" type="text/javascript"></script>
+        <script src="../../dist/js/charts/stacked-bar.js" type="text/javascript"></script>
+        <script src="../../dist/js/charts/hiv-stats.js" type="text/javascript"></script>
+
+
+        <script>
+            $("#example").chosen({
+                width: "10%"
+            });
+        </script>
+
+    </body>
+</html>

@@ -1,7 +1,7 @@
 package com.healthit.dslweb.service;
 
 import com.healthit.dslservice.DslException;
-import com.healthit.dslservice.query.QueryParameterPopulator;
+import com.healthit.dslservice.service.query.QueryParameterPopulator;
 import com.healthit.dslservice.util.Database;
 import com.healthit.dslservice.util.PropertiesLoader;
 import com.healthit.dslservice.util.strings.RandomStringGenerator;
@@ -26,7 +26,6 @@ import org.apache.log4j.Logger;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
-import javax.servlet.http.HttpSession;
 
 /**
  *
