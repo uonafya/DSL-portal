@@ -171,6 +171,7 @@ public class QueryInterpreter {
                                 JSONObject objt = new JSONObject();
                                 jsoObj2.put("filter", objt);
                             }
+                            
                             List list = Arrays.asList(queryFetchValues);
                             if (list.contains("commodity") || list.contains("human_resource") || list.contains("indicator")) {
                                 jsoObj2 = injectYearANDMonth(jsoObj2, jsoObj);

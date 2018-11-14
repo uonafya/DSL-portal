@@ -94,7 +94,3 @@ function displayArttStatus(){
     });
 }
 
-
-$( ".nav .dropdown" ).click(function() {
-  alert( "Handler for .click() called." );
-});

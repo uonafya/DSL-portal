@@ -42,7 +42,7 @@ $(document).ready(function () {
             //alert("fetch indicators failed");
             //alert(this.url);
             //    console.log("got an error fetching indicator_group");
-            var parsed_data = JSON.parse(response.responseText);
+            var parsed_data = response.responseText;
         }
 
     });
@@ -89,7 +89,7 @@ $(document).ready(function () {
         error: function (response, request) {
 
             //   console.log("got an error  fetching kpi");
-            var parsed_data = JSON.parse(response.responseText);
+            var parsed_data = response.responseText;
 
         }
 
