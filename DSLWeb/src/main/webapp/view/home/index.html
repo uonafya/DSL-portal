@@ -27,7 +27,7 @@
         <style>
             .org-unit {
                 margin-top: 10px;
-                padding-top: 10px;
+                /*                padding-top: 10px;*/
             }
 
             .ui-datepicker-calendar {
@@ -40,6 +40,10 @@
                 margin-left: 100px;
                 margin-right: 10px;
 
+            }
+
+            #start_month> li{
+                display:inline-block;
             }
 
         </style>
@@ -116,59 +120,74 @@
         <div class="subnavbar">
             <div class="subnavbar-inner">
                 <div class="container org-unit" style="width: 100%;">
-                    <label data-name="organisation-unit" for="organisation-unit">County: </label>
+                    <div class="col-sm-4" style="margin-top: 20px;"> 
+                        
+                            
+                            <label data-name="organisation-unit" for="organisation-unit">County: </label>
 
-                    <select id="organisation-unit" >
+                            <select id="organisation-unit" >
 
-                    </select>
-
-
-                    <span class="vl"></span>
-
-                    <label for="end_month">Month: </label>
-                    <select  id="start_month" >
-                        <option value="1">Jan</option>
-                        <option value="2">Feb</option>
-                        <option value="3">Mar</option>
-                        <option value="4">Apr</option>
-                        <option value="5">May</option>
-                        <option value="6">Jun</option>
-                        <option value="7">Jul</option>
-                        <option value="8">Aug</option>
-                        <option value="9">Sep</option>
-                        <option value="10">Oct</option>
-                        <option value="11">Nov</option>
-                        <option value="12">Dec</option>
-                    </select>
-
-                    <label for="year">Year: </label>
-                    <select id="start_year">
-                        <option value="2007">2007</option>
-                        <option value="2008">2008</option>
-                        <option value="2009">2009</option>
-                        <option value="2010">2010</option>
-                        <option value="2011">2011</option>
-                        <option value="2012">2012</option>
-                        <option value="2013">2013</option>
-                        <option value="2014">2014</option>
-                        <option value="2015">2015</option>
-                        <option value="2016">2016</option>
-                        <option value="2017">2017</option>
-                        <option value="2018">2018</option>
-                    </select>
-
-                    <span class="vl"></span>
-
-                    <label for="start-time">From:</label>
-                    <input id="start-time" class="time-period date-picker" name="time-period" type="text">
+                            </select>
 
 
-                    <label for="end-time">To:</label>
-                    <input id="end-time" class="time-period date-picker" name="time-period" type="text">
+                            <!--<span class="vl"></span>-->
 
-                    <button type="button" style="margin-left: 20px;height: 31px; width: 60px;font-size: 18px;" >
-                        <i class="fa fa-play" aria-hidden="true"></i>
-                    </button>
+                        
+                    </div>
+                    <div class="col-sm-4">
+                        <div class="row" style="display: inline-block;">
+
+                            <div class="col-sm-3">
+                                <label for="year">Year: </label>
+                                <select id="start_year">
+                                    <option value="2007">2007</option>
+                                    <option value="2008">2008</option>
+                                    <option value="2009">2009</option>
+                                    <option value="2010">2010</option>
+                                    <option value="2011">2011</option>
+                                    <option value="2012">2012</option>
+                                    <option value="2013">2013</option>
+                                    <option value="2014">2014</option>
+                                    <option value="2015">2015</option>
+                                    <option value="2016">2016</option>
+                                    <option value="2017">2017</option>
+                                    <option value="2018">2018</option>
+                                </select>
+                            </div>
+
+                            <div class="col-sm-9">
+                                <label for="end_month">Month: </label>
+                                <ul style="padding-left: 0;" id="start_month" >
+                                    <li data-value="1">Jan</li>
+                                    <li data-value="2">Feb</li>
+                                    <li data-value="3">Mar</li>
+                                    <li data-value="4">Apr</li>
+                                    <li data-value="5">May</li>
+                                    <li data-value="6">Jun</li>
+                                    <li data-value="7">Jul</li>
+                                    <li data-value="8">Aug</li>
+                                    <li data-value="9">Sep</li>
+                                    <li data-value="10">Oct</li>
+                                    <li data-value="11">Nov</li>
+                                    <li data-value="12">Dec</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-sm-4" style="margin-top: 15px;">
+                        <!--<span class="vl"></span>-->
+
+                        <label for="start-time">From:</label>
+                        <input id="start-time" class="time-period date-picker" style="display: inline-block" name="time-period" type="text">
+
+
+                        <label for="end-time">To:</label>
+                        <input id="end-time" class="time-period date-picker" style="display: inline-block" name="time-period" type="text">
+
+                        <button type="button" style="margin-left: 20px;height: 31px; width: 60px;font-size: 18px;" >
+                            <i class="fa fa-play" aria-hidden="true"></i>
+                        </button>
+                    </div>
                 </div>
 
 

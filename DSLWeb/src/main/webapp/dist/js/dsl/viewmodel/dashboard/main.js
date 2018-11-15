@@ -32,7 +32,7 @@ $(document).ajaxComplete(function (event, xhr, settings) {
 
 var initOrganisationUnitChosenDropDown = function initOrganisationUnitChosenDropDown() {
     $("#organisation-unit").chosen({
-        width: "15%"
+        width: "50%"
     });
 };
 
@@ -76,6 +76,7 @@ $(document).ready(function () {
 });
 
 
+var queryParametersList = [];
 
 function getSelectedPeriod() {
     //period selected
@@ -97,8 +98,6 @@ function getSelectedPeriod() {
 }
 
 $(document).ready(function () {
-
-    var queryParametersList = [];
 
     $("#indicators li a").click(function (event) {
         queryParametersList = [];
