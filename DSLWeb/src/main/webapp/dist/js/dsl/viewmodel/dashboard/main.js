@@ -1,18 +1,80 @@
-
+//load county list
 $(document).ajaxComplete(function (event, xhr, settings) {
-    console.log("county event");
-    console.log($("#organisation-unit"));
+
     if (settings.url === SETTING.county_api) {
-        $.each(locationCommon.countiesList, function (index, objValue) {
-            var elementToAppend = '<option data-id="' + objValue.id + '" data-name="' + objValue.name + '">' + objValue.name + '</option>';
-            $("#organisation-unit").append(elementToAppend);
-        });
-        $("#organisation-unit").chosen({
-            width: "15%"
+        destroyChosenDropDownList();
+        populateOrgunitList(locationCommon.countiesList);
+        initOrganisationUnitChosenDropDown()
+
+    }
+});
+
+//load commodity names list
+$(document).ajaxComplete(function (event, xhr, settings) {
+    if (settings.url === SETTING.commodity_names) {
+        $("#organisation-unit").empty();
+        $.each(commodityCommon.commodity_names, function (index, objValue) {
+            var elementToAppend = ' <li><a href="#" data-name="' + objValue + '">' + objValue + '</a></li>';
+            // $("#commodity-names").append(elementToAppend);
         });
     }
-
 });
+
+//load cadre names list
+$(document).ajaxComplete(function (event, xhr, settings) {
+    if (settings.url === SETTING.cadre) {
+        $.each(common_ihris.cadres, function (index, objValue) {
+            var elementToAppend = ' <li><a href="#" data-name="' + objValue.name + '" data-id="' + objValue.id + '" >' + objValue.name + '</a></li>';
+            $("#cadre_names_list").append(elementToAppend);
+        });
+    }
+});
+
+var initOrganisationUnitChosenDropDown = function initOrganisationUnitChosenDropDown() {
+    $("#organisation-unit").chosen({
+        width: "15%"
+    });
+};
+
+function destroyChosenDropDownList() {
+    try {
+        console.log("destroying ...");
+
+        $("#organisation-unit").chosen("destroy");
+    } catch (err) {
+        console.log(err);
+    }
+}
+;
+
+function populateOrgunitList(data) {
+    $("#organisation-unit").empty();
+    $.each(data, function (index, objValue) {
+        var elementToAppend = '<option data-id="' + objValue.id + '" data-name="' + objValue.name + '">' + objValue.name + '</option>';
+        $("#organisation-unit").append(elementToAppend);
+    });
+}
+
+$(document).ready(function () {
+    $("#organisation-unit-level li a").click(function (event) {
+
+        var orgUnitLevel = $(event.target).attr('data-value');
+        if (orgUnitLevel == 'county') {
+            $("label[data-name='organisation-unit']").text("County:");
+            destroyChosenDropDownList();
+            populateOrgunitList(locationCommon.countiesList);
+            initOrganisationUnitChosenDropDown();
+        } else if (orgUnitLevel == 'constituency') {
+            destroyChosenDropDownList();
+            populateOrgunitList(locationCommon.constituenciesList);
+            initOrganisationUnitChosenDropDown();
+            $("label[data-name='organisation-unit']").text("Constituency:");
+        } else {
+            //pass
+        }
+    });
+});
+
 
 
 function getSelectedPeriod() {

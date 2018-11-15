@@ -22,5 +22,5 @@ public class CacheKeys {
     public static String constituencies="CONSTITUENCIES";
     public static String indicatorGroupTable="INDICATORGROUPTable";
     
-
+     public static String commodityNames="COMMODITYNAMES";
 }

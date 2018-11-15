@@ -55,7 +55,7 @@ $(document).ready(function () {
     //Fetch cadres
     $.ajax({
         type: 'GET', // define the type of HTTP verb we want to use
-        url: '/DSLWeb/api/cadre', // the url from server we that we want to use
+        url: SETTING.cadre, // the url from server we that we want to use
         contentType: 'application/json; charset=utf-8',
         dataType: 'json', // what type of data do we expect back from the server
         encode: true,

@@ -57,5 +57,18 @@ public class Kemsa {
         }
 
     }
+    
+    @ResponseBody
+    @RequestMapping(value = "/commodity_names", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<?> getCommodityNames() {
+        try {
+            KemsaDao kemsa = new KemsaDao();
+            List<String> commodityNameList = kemsa.getCommodityNames();
+            return new ResponseEntity<List>(commodityNameList, HttpStatus.OK);
+        } catch (DslException ex) {
+            return new ResponseEntity<Message>(ex.getMsg(), HttpStatus.INTERNAL_SERVER_ERROR);
+        }
 
+    }
+   
 }
