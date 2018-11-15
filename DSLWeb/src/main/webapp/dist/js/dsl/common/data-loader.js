@@ -708,6 +708,7 @@ var updateData = function () {
     console.log("queryParametersList is: " + JSON.stringify(queryParametersList));
     var queryToSubmit = {"query": queryParametersList};
     var x = JSON.stringify(queryToSubmit);
+    console.log(queryToSubmit);
     //    sendQueryParamatersToServer(queryParametersList);
     //$("#table-status").css("display", "block");
     $('#table-status').show();
@@ -719,9 +720,6 @@ var updateData = function () {
         encode: true,
         data: x,
         success: function (data, textStatus, jqXHR) {
-
-            console.log("All went well ");
-            console.log("Data is: " + JSON.stringify(data));
             populateAnalyticsTable(data);
             $('#table-status').hide();
         },

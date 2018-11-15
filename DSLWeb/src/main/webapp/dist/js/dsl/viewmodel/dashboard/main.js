@@ -32,7 +32,7 @@ $(document).ajaxComplete(function (event, xhr, settings) {
 
 var initOrganisationUnitChosenDropDown = function initOrganisationUnitChosenDropDown(orgType) {
     $("#organisation-unit").chosen({
-        placeholder_text_single: "Select "+orgType+": ",
+        placeholder_text_single: "Select " + orgType + ": ",
         no_results_text: "No results found!",
         width: "50%"
     });
@@ -80,20 +80,22 @@ $(document).ready(function () {
 
 
 
+
+
 var queryParametersList = [];
 
 function getSelectedPeriod() {
     //period selected
-
-
+    var dateValuesToQuery = {};
+    dateValuesToQuery['filter']={}
     var startDate = $('#start_year').val();
     var endDate = $('#start_year').val();
-
-
-    var dateValuesToQuery = {};
+    
     dateValuesToQuery['filter'] = {};
-    dateValuesToQuery['what'] = 'date:yearly';
-
+    dateValuesToQuery['what'] = 'date:yearly:monthly';
+    
+    dateValuesToQuery['filter']['start_month'] = new Array('1');
+    dateValuesToQuery['filter']['end_month'] = new Array('12');
     dateValuesToQuery['filter']['start_year'] = new Array(startDate);
     dateValuesToQuery['filter']['end_year'] = new Array(endDate);
 
@@ -101,51 +103,52 @@ function getSelectedPeriod() {
 
 }
 
+function getIndicatorValues(indicatorName) {
+    var indicatorValuesToQuery = {};
+    indicatorValuesToQuery['what'] = "indicator:average:all_county:with_filter";
+    indicatorValuesToQuery['filter'] = {'indicator': new Array(indicatorName)};
+    queryParametersList.push(indicatorValuesToQuery);
+
+}
+
 $(document).ready(function () {
 
     $("#indicators li a").click(function (event) {
-        queryParametersList = [];
         getSelectedPeriod();
         var indicatorName = $(event.target).attr('data-value');
-        var selectedIndicatorNames = [indicatorName];
-
-
-//dhis indicators
-
-        var indicatorValuesToQuery = {};
-        indicatorValuesToQuery['what'] = "indicator:average:with_filter";
-        indicatorValuesToQuery['filter'] = {'indicator': selectedIndicatorNames};
-        queryParametersList.push(indicatorValuesToQuery);
-
-
+        getIndicatorValues(indicatorName);
         var queryToSubmit = {"query": queryParametersList};
         var x = JSON.stringify(queryToSubmit);
-
-        $.ajax({
-            type: 'POST', // define the type of HTTP verb we want to use
-            url: '/DSLWeb/api/processquery', // the url from server we that we want to use
-            dataType: 'json', // what type of data do we expect back from the server
-            contentType: 'application/json; charset=utf-8',
-            encode: true,
-            data: x,
-            success: function (data, textStatus, jqXHR) {
-
-                console.log("All went well ");
-                console.log("Data is: " + JSON.stringify(data));
-                //populateAnalyticsTable(data);
-                $('#table-status').hide();
-            },
-            error: function (response, request) {
-                //   console.log("got an error fetching cadregroups");
-                $('#table-status').hide();
-                var parsed_data = response.responseText;
-
-            }
-
-        });
+        console.log(queryToSubmit);
+        getQueryValues(x);
 
     });
 
 });
 
 
+function getQueryValues(x) {
+    $.ajax({
+        type: 'POST', // define the type of HTTP verb we want to use
+        url: '/DSLWeb/api/processquery', // the url from server we that we want to use
+        dataType: 'json', // what type of data do we expect back from the server
+        contentType: 'application/json; charset=utf-8',
+        encode: true,
+        data: x,
+        success: function (data, textStatus, jqXHR) {
+
+            console.log("All went well ");
+            console.log("Data is: " + JSON.stringify(data));
+            //populateAnalyticsTable(data);
+            $('#table-status').hide();
+        },
+        error: function (response, request) {
+            //   console.log("got an error fetching cadregroups");
+            $('#table-status').hide();
+            var parsed_data = response.responseText;
+
+        }
+
+    });
+    queryParametersList = [];
+}
