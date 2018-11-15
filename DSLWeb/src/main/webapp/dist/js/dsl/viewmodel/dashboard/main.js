@@ -4,7 +4,7 @@ $(document).ajaxComplete(function (event, xhr, settings) {
     if (settings.url === SETTING.county_api) {
         destroyChosenDropDownList();
         populateOrgunitList(locationCommon.countiesList);
-        initOrganisationUnitChosenDropDown()
+        initOrganisationUnitChosenDropDown("county")
 
     }
 });
@@ -30,8 +30,10 @@ $(document).ajaxComplete(function (event, xhr, settings) {
     }
 });
 
-var initOrganisationUnitChosenDropDown = function initOrganisationUnitChosenDropDown() {
+var initOrganisationUnitChosenDropDown = function initOrganisationUnitChosenDropDown(orgType) {
     $("#organisation-unit").chosen({
+        placeholder_text_single: "Select "+orgType+": ",
+        no_results_text: "No results found!",
         width: "50%"
     });
 };
@@ -49,6 +51,7 @@ function destroyChosenDropDownList() {
 
 function populateOrgunitList(data) {
     $("#organisation-unit").empty();
+    $("#organisation-unit").append("<option></option>");
     $.each(data, function (index, objValue) {
         var elementToAppend = '<option data-id="' + objValue.id + '" data-name="' + objValue.name + '">' + objValue.name + '</option>';
         $("#organisation-unit").append(elementToAppend);
@@ -63,11 +66,11 @@ $(document).ready(function () {
             $("label[data-name='organisation-unit']").text("County:");
             destroyChosenDropDownList();
             populateOrgunitList(locationCommon.countiesList);
-            initOrganisationUnitChosenDropDown();
+            initOrganisationUnitChosenDropDown("county");
         } else if (orgUnitLevel == 'constituency') {
             destroyChosenDropDownList();
             populateOrgunitList(locationCommon.constituenciesList);
-            initOrganisationUnitChosenDropDown();
+            initOrganisationUnitChosenDropDown("constituency");
             $("label[data-name='organisation-unit']").text("Constituency:");
         } else {
             //pass
