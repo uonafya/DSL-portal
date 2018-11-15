@@ -693,7 +693,7 @@ var updateData = function () {
     if (selectedTimePeriodRadioBtn == 'yearly') {
         dateValuesToQuery['what'] = 'date:yearly';
     } else {
-        dateValuesToQuery['what'] = 'date:yearly:month';
+        dateValuesToQuery['what'] = 'date:yearly:monthly';
         dateValuesToQuery['filter']['start_month'] = new Array(startMonth);
         dateValuesToQuery['filter']['end_month'] = new Array(endMonth);
     }

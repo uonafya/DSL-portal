@@ -79,6 +79,7 @@ $(document).ready(function () {
 });
 
 
+
 var queryParametersList = [];
 
 function getSelectedPeriod() {
