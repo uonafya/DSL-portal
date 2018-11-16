@@ -80,20 +80,86 @@ $(document).ready(function () {
 
 
 
-
-
 var queryParametersList = [];
+
+
+// ########### init functions ##########
+// ###########                ##########
+//initial date values to start visualization
+function initDateValues() {
+    var dateValuesToQuery = {};
+    dateValuesToQuery['filter'] = {};
+    var startDate = '2015';
+    var endDate = '2015';
+    dateValuesToQuery['filter'] = {};
+    dateValuesToQuery['what'] = 'date:yearly:monthly';
+    dateValuesToQuery['filter']['start_month'] = new Array('1');
+    dateValuesToQuery['filter']['end_month'] = new Array('12');
+    dateValuesToQuery['filter']['start_year'] = new Array(startDate);
+    dateValuesToQuery['filter']['end_year'] = new Array(endDate);
+    queryParametersList.push(dateValuesToQuery);
+    return queryParametersList;
+}
+
+function initIndicatorValues() {
+    var indicatorValuesToQuery = {};
+    indicatorValuesToQuery['what'] = "indicator:average:with_filter";
+    indicatorValuesToQuery['filter'] = {'indicator': new Array("TB curative Rate")};
+    queryParametersList.push(indicatorValuesToQuery);
+    return queryParametersList;
+}
+
+
+function initIhrisValues() {
+    var humanResourceValuesToQuery = {};
+    humanResourceValuesToQuery['what'] = "human_resource:count";
+    humanResourceValuesToQuery['filter'] = {};
+    var what = '';
+    humanResourceValuesToQuery['what'] = humanResourceValuesToQuery['what'] + what;
+    queryParametersList.push(humanResourceValuesToQuery);
+    return queryParametersList;
+}
+
+
+function initKemsaValues() {
+    
+        var commodityValuesToQuery = {};
+        commodityValuesToQuery['what'] = "commodity:count";
+        queryParametersList.push(commodityValuesToQuery);    
+        return queryParametersList;
+    
+}
+
+
+function init() {
+    console.log("Initializing charts");
+    //period selected
+    initDateValues();
+    initIndicatorValues();
+    initIhrisValues();
+    initKemsaValues();
+    var queryToSubmit = {"query": queryParametersList};
+    var x = JSON.stringify(queryToSubmit);
+    console.log(queryToSubmit);
+    getQueryValues(x);
+}
+
+init();
+
+/// end of init function
+
+
 
 function getSelectedPeriod() {
     //period selected
     var dateValuesToQuery = {};
-    dateValuesToQuery['filter']={}
+    dateValuesToQuery['filter'] = {};
     var startDate = $('#start_year').val();
     var endDate = $('#start_year').val();
-    
+
     dateValuesToQuery['filter'] = {};
     dateValuesToQuery['what'] = 'date:yearly:monthly';
-    
+
     dateValuesToQuery['filter']['start_month'] = new Array('1');
     dateValuesToQuery['filter']['end_month'] = new Array('12');
     dateValuesToQuery['filter']['start_year'] = new Array(startDate);

@@ -52,8 +52,8 @@ function displayArtStatus(){
     $.each(data, function (index, objValue) {
        //var ward=new Ward(objValue.name);
        var elementId="art_status_chart";
-       var categoriee= ['ART', 'Antenatal', 'Family Planning']
-       var titlee = 'Indicators - human resource - 2017';
+       var categoriee= ['Jan', 'Feb', 'Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+       var titlee = 'TB curative Rate - 2017';
        var serie = [{
                         name: 'Indicator Rate',
                         data: [objValue.hiv_positive_f, objValue.HIV_negative_f, objValue.HIV_unknown_status_f]

@@ -6,9 +6,9 @@ function stackedBar(elementId, titlee, categoriee, serie) {
         title: {
             text: titlee
         },
-        subtitle: {
-            text: 'Source: WorldClimate.com'
-        },
+//        subtitle: {
+//            text: 'Source: WorldClimate.com'
+//        },
         xAxis: [{
                 categories: categoriee,
                 crosshair: true

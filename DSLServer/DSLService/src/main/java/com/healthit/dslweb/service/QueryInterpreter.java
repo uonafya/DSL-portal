@@ -171,7 +171,7 @@ public class QueryInterpreter {
                                 JSONObject objt = new JSONObject();
                                 jsoObj2.put("filter", objt);
                             }
-                            
+
                             List list = Arrays.asList(queryFetchValues);
                             if (list.contains("commodity") || list.contains("human_resource") || list.contains("indicator")) {
                                 jsoObj2 = injectYearANDMonth(jsoObj2, jsoObj);
@@ -345,8 +345,15 @@ public class QueryInterpreter {
             List<String> resultRow = new ArrayList();
             for (int x = 1; x <= columnsCount; x++) {
                 colType = rsMetaData.getColumnTypeName(x);
-                reslts[x - 1][rowIndex - 1] = rs.getObject(x).toString();
-                resultRow.add(rs.getObject(x).toString());
+                String val = "";
+                try {
+                    val = rs.getObject(x).toString();
+                } catch (NullPointerException e) {
+                    log.error(e);
+                }
+                reslts[x - 1][rowIndex - 1] = val;
+                //resultRow.add(rs.getObject(x).toString());
+                resultRow.add(val);
             }
             reslts1.add(resultRow);
             wrapperMap.put("data", (List<Object>) (Object) reslts1);
@@ -444,11 +451,28 @@ public class QueryInterpreter {
 
     private StringBuilder addJoinValuesToSelectSegment(List<Map<String, Object>> _queriesToRun, StringBuilder finalQueryToRun) {
         List<String[]> sqlJoinValues = getJoinValues(_queriesToRun, 0);
-        String alias = (String) _queriesToRun.get(0).get("alias");
+        log.debug("The queries to run attribs " + _queriesToRun.toString());
+        //String alias = (String) _queriesToRun.get(0).get("alias");
         log.debug("the join length " + sqlJoinValues.size());
         for (int x = 0; x <= sqlJoinValues.get(1).length - 1; x++) {
-            finalQueryToRun.append("," + alias + "." + sqlJoinValues.get(1)[x] + " ");
+            StringBuilder addCoalesce = new StringBuilder();
+            addCoalesce.append("coalesce(");
+            boolean isFirstAppend = true;
+            for (int y = 0; y <= _queriesToRun.size() - 1; y++) {
+                String alias = (String) _queriesToRun.get(y).get("alias");
+                if (isFirstAppend) {
+                    addCoalesce.append(alias + "." + sqlJoinValues.get(1)[x] + " ");
+                    isFirstAppend = false;
+                } else {
+
+                    addCoalesce.append("," + alias + "." + sqlJoinValues.get(1)[x] + " ");
+                }
+            }
+            addCoalesce.append(") as " + sqlJoinValues.get(1)[x] + " ");
+            finalQueryToRun.append("," + addCoalesce.toString());
+            //finalQueryToRun.append("," + alias + "." + sqlJoinValues.get(1)[x] + " ");
         }
+        log.debug("The coalesed string " + finalQueryToRun);
         return finalQueryToRun;
     }
 
@@ -478,7 +502,7 @@ public class QueryInterpreter {
      * @return
      */
     private StringBuilder createJoinSqlSegment(StringBuilder finalQueryToRun, List<Map<String, Object>> _queriesToRun, int loopIndex) {
-        finalQueryToRun.append(" inner join ");
+        finalQueryToRun.append(" full outer join ");
         finalQueryToRun.append("(" + _queriesToRun.get(loopIndex).get("querySring") + ")");
         finalQueryToRun.append(" " + _queriesToRun.get(loopIndex).get("alias"));
         finalQueryToRun.append(" on ");
