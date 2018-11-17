@@ -81,7 +81,7 @@ $(document).ready(function () {
 
 
 var queryParametersList = [];
-
+var currentIndicator="TB curative Rate";
 
 // ########### init functions ##########
 // ###########                ##########
@@ -104,7 +104,7 @@ function initDateValues() {
 function initIndicatorValues() {
     var indicatorValuesToQuery = {};
     indicatorValuesToQuery['what'] = "indicator:average:with_filter";
-    indicatorValuesToQuery['filter'] = {'indicator': new Array("TB curative Rate")};
+    indicatorValuesToQuery['filter'] = {'indicator': new Array(currentIndicator)};
     queryParametersList.push(indicatorValuesToQuery);
     return queryParametersList;
 }
@@ -141,7 +141,12 @@ function init() {
     var queryToSubmit = {"query": queryParametersList};
     var x = JSON.stringify(queryToSubmit);
     console.log(queryToSubmit);
-    getQueryValues(x);
+    var dslGraph=new DslGraph();
+    dslGraph.type=SETTING.graph_year_month;
+    dslGraph.elementId="test-graph";
+    dslGraph.indicator=currentIndicator;
+    getQueryValues(x,dslGraph);
+    
 }
 
 init();
@@ -187,13 +192,14 @@ $(document).ready(function () {
         var x = JSON.stringify(queryToSubmit);
         console.log(queryToSubmit);
         getQueryValues(x);
+        
 
     });
 
 });
 
 
-function getQueryValues(x) {
+function getQueryValues(x,dslGraph) {
     $.ajax({
         type: 'POST', // define the type of HTTP verb we want to use
         url: '/DSLWeb/api/processquery', // the url from server we that we want to use
@@ -202,11 +208,11 @@ function getQueryValues(x) {
         encode: true,
         data: x,
         success: function (data, textStatus, jqXHR) {
-
-            console.log("All went well ");
             console.log("Data is: " + JSON.stringify(data));
+            dslGraph.graphData=data;
+            dslGraph.drawGraph();
             //populateAnalyticsTable(data);
-            $('#table-status').hide();
+//            $('#table-status').hide();
         },
         error: function (response, request) {
             //   console.log("got an error fetching cadregroups");
