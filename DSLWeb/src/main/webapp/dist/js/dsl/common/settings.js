@@ -6,5 +6,6 @@ var SETTING={
     commodity_names:'/DSLWeb/api/commodity_names',
     cadre:'/DSLWeb/api/cadre',
     //graph properties
-    graph_year_month:"year-month"
+    graph_year_month:"year-month",
+    graph_yearly:"yearly"
 };

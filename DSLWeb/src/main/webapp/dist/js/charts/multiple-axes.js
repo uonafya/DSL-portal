@@ -15,13 +15,13 @@ function drawMultipleAxes(elementId, titlee, categoriee, serie) {
             }],
         yAxis: [{// Primary yAxis
                 labels: {
-                    format: '{value}°C',
+                    format: '{value}',
                     style: {
                         color: Highcharts.getOptions().colors[2]
                     }
                 },
                 title: {
-                    text: 'commodity_count',
+                    text: 'commodity count',
                     style: {
                         color: Highcharts.getOptions().colors[2]
                     }
@@ -31,13 +31,13 @@ function drawMultipleAxes(elementId, titlee, categoriee, serie) {
             }, {// Secondary yAxis
                 gridLineWidth: 0,
                 title: {
-                    text: 'indicator_average',
+                    text: 'indicator value', //text on the y or x axis
                     style: {
                         color: Highcharts.getOptions().colors[0]
                     }
                 },
                 labels: {
-                    format: '{value} mm',
+                    format: '{value}',
                     style: {
                         color: Highcharts.getOptions().colors[0]
                     }
@@ -46,13 +46,13 @@ function drawMultipleAxes(elementId, titlee, categoriee, serie) {
             }, {// Tertiary yAxis
                 gridLineWidth: 0,
                 title: {
-                    text: 'cadre_count',
+                    text: 'cadre count',
                     style: {
                         color: Highcharts.getOptions().colors[1]
                     }
                 },
                 labels: {
-                    format: '{value} mb',
+                    format: '{value}',
                     style: {
                         color: Highcharts.getOptions().colors[1]
                     }
@@ -67,7 +67,7 @@ function drawMultipleAxes(elementId, titlee, categoriee, serie) {
             align: 'left',
             x: 80,
             verticalAlign: 'top',
-            y: 55,
+            y: 25,
             floating: true,
             backgroundColor: (Highcharts.theme && Highcharts.theme.legendBackgroundColor) || 'rgba(255,255,255,0.25)'
         },
