@@ -7,5 +7,6 @@ var SETTING={
     cadre:'/DSLWeb/api/cadre',
     //graph properties
     graph_year_month:"year-month",
-    graph_yearly:"yearly"
+    graph_yearly:"yearly",
+    orgisation_level:['facility','ward','constituency','county','national']
 };

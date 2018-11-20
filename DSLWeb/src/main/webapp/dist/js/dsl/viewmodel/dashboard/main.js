@@ -37,8 +37,6 @@ var initOrganisationUnitChosenDropDown = function initOrganisationUnitChosenDrop
 
 function destroyChosenDropDownList() {
     try {
-        console.log("destroying ...");
-
         $("#organisation-unit").chosen("destroy");
     } catch (err) {
         console.log(err);
@@ -53,19 +51,47 @@ function populateOrgunitList(data) {
         var elementToAppend = '<option data-id="' + objValue.id + '" data-name="' + objValue.name + '">' + objValue.name + '</option>';
         $("#organisation-unit").append(elementToAppend);
     });
-
 }
+
+
+//on change orgunit 
+$('#organisation-unit').on('change', function (event) {
+    var orgunitId = $("#organisation-unit option:selected").attr('data-id');
+    var year = yearMonthParameters.currentYear;
+    var indicator = dslGraph.indicator;
+
+    //organisationUnit.current_level;
+
+    yearMonthParameters.currentYear = year;
+    setPeriodValues("monthly", year, year);
+    
+    console.log("the org unit "+organisationUnit.current_level);
+        
+    setIndicatorValues("indicator:average:with_filter", indicator);
+    setIhrisValues("human_resource:count");
+    setKemsaValues("commodity:count");
+    var filter={};
+    filter[organisationUnit.current_level]=new Array(orgunitId);
+    setLocality(organisationUnit.current_level,filter);
+    
+    var queryPropertiesToSubmit = prepareQueryPropertiesToSubmit(indicator, SETTING.graph_year_month);
+    getQueryValues(queryPropertiesToSubmit, dslGraph);
+
+});
+
 
 $(document).ready(function () {
     $("#organisation-unit-level li a").click(function (event) {
 
-        var orgUnitLevel = $(event.target).attr('data-value');
+        var orgUnitLevel = $(event.target).attr('data-org_unit');
         if (orgUnitLevel == 'county') {
+            organisationUnit.current_level = SETTING.orgisation_level[3];
             $("label[data-name='organisation-unit']").text("County:");
             destroyChosenDropDownList();
             populateOrgunitList(locationCommon.countiesList);
             initOrganisationUnitChosenDropDown("county");
         } else if (orgUnitLevel == 'constituency') {
+            organisationUnit.current_level = SETTING.orgisation_level[2];
             destroyChosenDropDownList();
             populateOrgunitList(locationCommon.constituenciesList);
             initOrganisationUnitChosenDropDown("constituency");
@@ -100,7 +126,7 @@ function setPeriodValues(periodType, startDate, endDate) {
 }
 
 
-function setIndicatorValues(indicatorType, indicator) {
+function setIndicatorValues(indicatorType, indicator,filter) {
     var indicatorValuesToQuery = {};
     indicatorValuesToQuery['what'] = indicatorType;
     indicatorValuesToQuery['filter'] = {'indicator': new Array(indicator)};
@@ -108,6 +134,16 @@ function setIndicatorValues(indicatorType, indicator) {
     return queryParametersList;
 }
 
+
+function setLocality(org_level,filter){
+    var localityValuesToQuery = {};
+    localityValuesToQuery['what'] = "locality:"+org_level;
+    localityValuesToQuery['filter'] = filter;
+    console.log("Filter");
+    console.log(filter);
+    queryParametersList.push(localityValuesToQuery);
+    return queryParametersList;
+    }
 
 function setIhrisValues(cadreType) {
     var humanResourceValuesToQuery = {};
@@ -138,56 +174,39 @@ init();
 
 function init() {
 
-    yearMonthAttributesSetter("TB curative Rate", '2015');
+    yearMonthParameters.currentYear = '2015';
+    setPeriodValues("monthly", '2015', '2015');
+    setIndicatorValues("indicator:average:with_filter", "TB curative Rate");
+    setIhrisValues("human_resource:count");
+    setKemsaValues("commodity:count");
+    var queryPropertiesToSubmit = prepareQueryPropertiesToSubmit("TB curative Rate", SETTING.graph_year_month);
+    getQueryValues(queryPropertiesToSubmit, dslGraph);
 
 }
 
 
-/// end of init function
-
-function yearMonthAttributesSetter(currentIndicator, date) {
-    yearMonthParameters.currentYear = date;
-    //period selected
-    var currentIndicator = currentIndicator;
-    setPeriodValues("monthly",date, date);
-    setIndicatorValues("indicator:average:with_filter", currentIndicator);
-    setIhrisValues("human_resource:count");
-    setKemsaValues("commodity:count");
+function prepareQueryPropertiesToSubmit(currentIndicator, grapType) {
     var queryToSubmit = {"query": queryParametersList};
-    var x = JSON.stringify(queryToSubmit);
+    var queryPropertiesToSubmit = JSON.stringify(queryToSubmit);
     console.log(queryToSubmit);
     dslGraph = new DslGraph();
-    dslGraph.type = SETTING.graph_year_month;
+    dslGraph.type = grapType;
     dslGraph.elementId = "test-graph";
     dslGraph.indicator = currentIndicator;
-    getQueryValues(x, dslGraph);
-}
-
-
-function yearlyAttributesSetter(currentIndicator, startYear, endYear) {
-    yearlyParameters.startYear = startYear;
-    yearlyParameters.endYear = endYear
-    //period selected
-    var currentIndicator = currentIndicator;
-    setPeriodValues("yearly",startYear, endYear);
-    setIndicatorValues("indicator:average:with_filter", currentIndicator);
-    setIhrisValues("human_resource:count");
-    setKemsaValues("commodity:count");
-    var queryToSubmit = {"query": queryParametersList};
-    var x = JSON.stringify(queryToSubmit);
-    console.log(queryToSubmit);
-    dslGraph = new DslGraph();
-    dslGraph.type = SETTING.graph_yearly;
-    dslGraph.elementId = "test-graph";
-    dslGraph.indicator = currentIndicator;
-    getQueryValues(x, dslGraph);
+    return queryPropertiesToSubmit;
 }
 
 $(document).ready(function () {
     $('#start_year').change(function () {
         var year = $(this).val();
         var indicator = dslGraph.indicator;
-        yearMonthAttributesSetter(indicator, year);
+        yearMonthParameters.currentYear = year;
+        setPeriodValues("monthly", year, year);
+        setIndicatorValues("indicator:average:with_filter", indicator);
+        setIhrisValues("human_resource:count");
+        setKemsaValues("commodity:count");
+        var queryPropertiesToSubmit = prepareQueryPropertiesToSubmit(indicator, SETTING.graph_year_month);
+        getQueryValues(queryPropertiesToSubmit, dslGraph);
 
     });
 });
@@ -196,16 +215,18 @@ $(document).ready(function () {
 $(document).ready(function () {
 
     $("#indicators li a").click(function (event) {
-
         var year = yearMonthParameters.currentYear;
         var indicator = $(event.target).attr('data-value');
-        yearMonthAttributesSetter(indicator, year);
-
+        yearMonthParameters.currentYear = year;
+        setPeriodValues("monthly", year, year);
+        setIndicatorValues("indicator:average:with_filter", indicator);
+        setIhrisValues("human_resource:count");
+        setKemsaValues("commodity:count");
+        var queryPropertiesToSubmit = prepareQueryPropertiesToSubmit(indicator, SETTING.graph_year_month);
+        getQueryValues(queryPropertiesToSubmit, dslGraph);
     });
 
 });
-
-
 
 var table = null;
 var count = 0;
@@ -230,7 +251,7 @@ function populate(data) {
         searching: false
     });
     if (count == 0) { //hack to load counties/constituency in drop downist b4 bugfix
-        $("a[data-value='county']").trigger("click");
+        $("a[data-org_unit='county']").trigger("click");
         count = 1;
     }
 
@@ -263,9 +284,16 @@ $(document).ready(function () {
         var valid = _validateYearRange(startYear, endYear);
         if (valid) {
             var indicator = dslGraph.indicator;
-            yearlyAttributesSetter(indicator, startYear, endYear);
+            yearlyParameters.startYear = startYear;
+            yearlyParameters.endYear = endYear
+            var currentIndicator = currentIndicator;
+            setPeriodValues("yearly", startYear, endYear);
+            setIndicatorValues("indicator:average:with_filter", indicator);
+            setIhrisValues("human_resource:count");
+            setKemsaValues("commodity:count");
+            var queryPropertiesToSubmit = prepareQueryPropertiesToSubmit(indicator, SETTING.graph_yearly);
+            getQueryValues(queryPropertiesToSubmit, dslGraph);
         }
-
     });
 });
 

@@ -14,6 +14,12 @@ var yearlyParameters = {
     endYear: ""
 };
 
+
+var organisationUnit={
+    current_level: SETTING.orgisation_level[4],
+    orgnuinit: "national"
+};
+
 DslGraph.prototype.drawGraph = function draw() {
     that = this;
     if (this.type == SETTING.graph_year_month) {
