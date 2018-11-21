@@ -31,12 +31,12 @@
         <style>
             .org-unit {
                 margin-top: 10px;
-                /*                padding-top: 10px;*/
             }
 
             .ui-datepicker-calendar {
                 display: none;
             }
+
             .vl {
                 border-left: 6px solid green;
                 height: 10px;
@@ -49,13 +49,94 @@
             #start_month> li{
                 display:inline-block;
             }
+
             #table-status{
                 display: none;
             }
+
             ._label { 	display: inline-block; 	max-width: 100%; 	margin-bottom: 5px; 	font-weight: 700; }
             .chosen-container{
                 margin-top: 4px;
             }
+
+
+
+            .switch {
+                position: relative;
+                display: inline-block;
+                width: 50px;
+                height: 24px;
+                margin-top: 6px;
+            }
+
+            .switch input { 
+                opacity: 0;
+                width: 0;
+                height: 0;
+            }
+
+            .slider {
+                position: absolute;
+                cursor: pointer;
+                top: 0;
+                left: 0;
+                right: 0;
+                bottom: 0;
+                background-color: #ccc;
+                -webkit-transition: .4s;
+                transition: .4s;
+            }
+
+            .slider:before {
+                position: absolute;
+                content: "";
+                height: 17px;
+                width: 17px;
+                left: 4px;
+                bottom: 4px;
+                background-color: white;
+                -webkit-transition: .4s;
+                transition: .4s;
+            }
+
+            input:checked + .slider {
+                background-color: #2196F3;
+            }
+
+            input:focus + .slider {
+                box-shadow: 0 0 1px #2196F3;
+            }
+
+            input:checked + .slider:before {
+                -webkit-transform: translateX(26px);
+                -ms-transform: translateX(26px);
+                transform: translateX(26px);
+            }
+
+            /* Rounded sliders */
+            .slider.round {
+                border-radius: 34px;
+            }
+
+            .slider.round:before {
+                border-radius: 50%;
+            }
+
+            .datasources{
+                width:185px; margin-top:-10px;margin-left:5px;margin-bottom: 0;background:white;font-size: inherit;
+            }
+            .sources{
+                background-color: #d6d6c2;
+                margin-top: 9px;
+                margin-left: 2px;
+                border-radius: 5px;
+            }
+            
+            .subnavbar .caret {
+	border-top-color: initial;
+	border-bottom-color: initial;
+}
+            
         </style>
 
     </head>
@@ -80,11 +161,11 @@
 
                     <!-- Collect the nav links, forms, and other content for toggling -->
                     <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
-                        
+
                         <ul class="nav navbar-nav pull-right">
                             <li class="dropdown"><a href="#" class="dropdown-toggle" data-toggle="dropdown"><i
-                                          class="fa fa-home" aria-hidden="true"></i> DSL <b class="caret"></b></a>
-                                        <ul class="dropdown-menu" style="right: 0;left:auto;">
+                                        class="fa fa-home" aria-hidden="true"></i> DSL <b class="caret"></b></a>
+                                <ul class="dropdown-menu" style="right: 0;left:auto;">
                                     <li><a href="../index.html">DSL Home</a></li>
                                     <li><a href="../analytics.html">DSL Analytics</a></li>
                                 </ul>
@@ -93,26 +174,8 @@
 
                         <ul class="nav navbar-nav pull-right">
                             <li class="dropdown"><a href="#" class="dropdown-toggle" data-toggle="dropdown"><i
-                                        class="fa fa-user" aria-hidden="true"></i> Human resource(Cadre) <b class="caret"></b></a>
-                                <ul id="cadre_names_list" style="width: 210px; height: 400px; overflow: auto" class="dropdown-menu">
-
-                                </ul>
-                            </li>
-                        </ul>
-
-                        <ul class="nav navbar-nav pull-right">
-                            <li class="dropdown"><a href="#" class="dropdown-toggle" data-toggle="dropdown"><i
-                                        class="fa fa-flask" aria-hidden="true"></i> Commodity <b class="caret"></b></a>
-                                <ul id="commodity-names" class="dropdown-menu">
-                                    <li><a href="javascript:;">Issue</a></li>
-                                </ul>
-                            </li>
-                        </ul>
-
-                        <ul class="nav navbar-nav pull-right">
-                            <li class="dropdown"><a href="#" class="dropdown-toggle" data-toggle="dropdown"><i
                                         class="fa fa-line-chart" aria-hidden="true"></i> Indicators <b class="caret"></b></a>
-                                <ul class="dropdown-menu" id="indicators">
+                                <ul style="right: 0;left:auto;" class="dropdown-menu" id="indicators">
                                     <li><a data-value="Fully immunized Child Coverage" href="javascript:;">Fully Immunized Child Coverage</a></li>
                                     <li><a data-value="Proportion of pregnant women attending 4" href="javascript:;">Proportion of pregnant women attending 4<br/>ANC visits according to <br/>Focused ANC schedule</a></li>
                                     <li><a data-value="TB curative Rate" href="javascript:;">TB curative Rate</a></li>
@@ -124,7 +187,7 @@
                         <ul class="nav navbar-nav pull-right">
                             <li class="dropdown"><a href="#" class="dropdown-toggle" data-toggle="dropdown"><i
                                         class="fa fa-map" aria-hidden="true"></i> Organisation unit <b class="caret"></b></a>
-                                <ul id="organisation-unit-level" class="dropdown-menu">
+                                        <ul style="width: 100%;" id="organisation-unit-level" class="dropdown-menu">
                                     <li><a  data-org_unit="county" href="javascript:;">County</a></li>
                                     <li><a  data-org_unit="constituency" href="javascript:;">Counstituency</a></li>
                                 </ul>
@@ -230,12 +293,50 @@
                                                                     Filter
                                                                 </button>-->
                                 <button id="filter" style="margin-left: 4px;margin-bottom: 2.5px;height: 29.5px; line-height: normal; padding:calc;width: 80px;" type="button" class="btn btn-primary btn-xs">Filter</button>
-                                
+
                             </div>
 
                         </div>
 
 
+                    </div>
+                    <div class="" style="float: left;margin-top: 12px;margin-left: 20px">
+                        <div style="width:300px;border:1px solid black;padding-left:3px;">
+                            <h4 class="datasources"><label>Display Other Data Sources</label></h4>
+
+                            <span> Ihris </span>
+                            <label class="switch">
+                                <input id="ihris-switch" type="checkbox">
+                                <span class="slider round"></span>
+                            </label>
+
+                            <span> Kemsa </span>
+                            <label class="switch">
+                                <input id="kemsa-switch" type="checkbox">
+                                <span class="slider round"></span>
+                            </label>
+                        </div>
+                    </div>
+
+
+                    <div style="display: inline-block;">
+                        <ul style="display: none" id="cadres" class="nav navbar-nav sources" >
+                            <li class="dropdown"><a href="#" class="dropdown-toggle" data-toggle="dropdown"><i
+                                        class="fa fa-user" aria-hidden="true"></i> Human resource(Cadre) <b class="caret"></b></a>
+                                <ul id="cadre_names_list" style="width: 210px; height: 400px; overflow: auto" class="dropdown-menu">
+
+                                </ul>
+                            </li>
+                        </ul>
+
+                        <ul style="display: none" id="commodities" class="nav navbar-nav sources">
+                            <li class="dropdown"><a href="#" class="dropdown-toggle" data-toggle="dropdown"><i
+                                        class="fa fa-flask" aria-hidden="true"></i> Commodity <b class="caret"></b></a>
+                                <ul id="commodity-names" class="dropdown-menu">
+                                    <li><a href="javascript:;">Issue</a></li>
+                                </ul>
+                            </li>
+                        </ul>
                     </div>
 
                 </div>

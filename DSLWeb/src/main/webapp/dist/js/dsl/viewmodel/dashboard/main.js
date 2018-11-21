@@ -282,7 +282,7 @@ $("input:radio[name=optradiotimespan]").click(function (event) {
     if (periodTypeSelected == 'monthly') {
         //$('#monthly-opt').show();
         $('#monthly-opt').css('display', 'inline-block');
-         $('#yearly-opt').css('display', 'none');
+        $('#yearly-opt').css('display', 'none');
         selectedPeriodType.selectedRadioBtn = 'monthly';
     } else {
         //$('.month').hide();
@@ -292,6 +292,32 @@ $("input:radio[name=optradiotimespan]").click(function (event) {
     }
 
 });
+
+
+
+//show or hide other data sources
+$(document).ready(function () {
+    //set initial state.
+    //  $('#ihris-on').val($(this).is(':checked'));
+
+    $('#kemsa-switch').change(function () {
+        if ($(this).is(":checked")) {
+            $('#commodities').show();
+        } else {
+            $('#commodities').hide();
+        }
+    });
+
+    $('#ihris-switch').change(function () {
+        if ($(this).is(":checked")) {
+            $('#cadres').show();
+        } else {
+            $('#cadres').hide();
+        }
+    });
+
+});
+
 
 
 //get year range data
