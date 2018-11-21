@@ -30,82 +30,40 @@ var ihrisViewModel = {
 $(document).ready(function () {
 
     //Fetch  cadregroups
-    $.ajax({
-        type: 'GET', // define the type of HTTP verb we want to use
-        url: '/DSLWeb/api/cadregroups', // the url from server we that we want to use
-        contentType: 'application/json; charset=utf-8',
-        dataType: 'json', // what type of data do we expect back from the server
-        encode: true,
-        success: function (data, textStatus, jqXHR) {
-            
-            $.each(data, function (index, objValue) {
-                var elementToAppend = '<a href="#" class="list-group-item"><strong>' + objValue.name + '</strong>\n\
+    function populateCadreGroups() {
+        console.log("called");
+        $.each(common_ihris.cadresGroups, function (index, objValue) {
+            var elementToAppend = '<a href="#" class="list-group-item"><strong>' + objValue.name + '</strong>\n\
                                        <input data-id="' + objValue.id + '" data-name="' + objValue.name + '" class="pull-right" type="checkbox"></a>';
-                $(".cadre-group-list").append(elementToAppend);
-            });
-        },
-        error: function (response, request) {
-            //   console.log("got an error fetching cadregroups");
-            var parsed_data = JSON.parse(response.responseText);
-        }
-
-    });
-
-
+            $(".cadre-group-list").append(elementToAppend);
+            console.log("called 2");
+        });
+    }
+    fetchCadresGroups(populateCadreGroups);
+    
+    
     //Fetch cadres
-    $.ajax({
-        type: 'GET', // define the type of HTTP verb we want to use
-        url: SETTING.cadre, // the url from server we that we want to use
-        contentType: 'application/json; charset=utf-8',
-        dataType: 'json', // what type of data do we expect back from the server
-        encode: true,
-        success: function (data, textStatus, jqXHR) {
-
-//            var cadreEvent = new CadreEvent();
-//            cadreEvent.loadCadreData(arguments[1]);
-            
-            $.each(data, function (index, objValue) {
-                var elementToAppend = '<a href="#" class="list-group-item"><strong>' + objValue.name + '</strong>\n\
+    function populateCadres() {
+        $.each(common_ihris.cadres , function (index, objValue) {
+            var elementToAppend = '<a href="#" class="list-group-item"><strong>' + objValue.name + '</strong>\n\
                                        <input data-id="' + objValue.id + '" data-name="' + objValue.name + '" data-group-id="' + objValue.cadreGroupId + '" class="pull-right" type="checkbox"></a>';
-                $(".cadre-list").append(elementToAppend);
-            });
-        },
-        error: function (response, request) {
-            //    console.log("got an error fetching cadres");
-            var parsed_data = JSON.parse(response.responseText);
-        }
-
-    });
-
-
-    //Fetch cadre allocations
-    $.ajax({
-        type: 'GET', // define the type of HTTP verb we want to use
-        url: '/DSLWeb/api/cadreallocation', // the url from server we that we want to use
-        contentType: 'application/json; charset=utf-8',
-        dataType: 'json', // what type of data do we expect back from the server
-        encode: true,
-        success: function (data, textStatus, jqXHR) {
-
-        },
-        error: function (response, request) {
-            var parsed_data = JSON.parse(response.responseText);
-        }
-
-    });
+            $(".cadre-list").append(elementToAppend);
+        });
+        
+    }
     
+    fetchCadre(populateCadres);
     
-     //    ihris ui hooks    
-//
-     //radio buttons events
+    //ihris ui hooks    
+    //radio buttons events
     $("input[name='optradiohresource']").click(function () {
         var radioValue = $("input[name='optradiohresource']:checked").val();
         if (radioValue) {
-            selectedHumanResourceRadio.selectedRadioBtn=radioValue;
+            selectedHumanResourceRadio.selectedRadioBtn = radioValue;
         }
 
     });
-    
+
     //radio buttons events
     $('body').on('click', 'input[name="optradiocadres"]', function (e) {
         var radioValue = $("input[name='optradiocadres']:checked").val();

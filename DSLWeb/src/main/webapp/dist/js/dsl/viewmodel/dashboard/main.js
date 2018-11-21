@@ -1,30 +1,3 @@
-//load county list
-$(document).ajaxComplete(function (event, xhr, settings) {
-    if (settings.url === SETTING.county_api) {
-        destroyChosenDropDownList();
-        // 
-        populateOrgunitList(locationCommon.countiesList)
-        initOrganisationUnitChosenDropDown("county");
-    }
-    //load commodity names list
-    if (settings.url === SETTING.commodity_names) {
-        $("#organisation-unit").empty();
-        $.each(commodityCommon.commodity_names, function (index, objValue) {
-            var elementToAppend = ' <li><a href="#" data-name="' + objValue + '">' + objValue + '</a></li>';
-            // $("#commodity-names").append(elementToAppend);
-        });
-    }
-
-    //load cadre names list
-
-    if (settings.url === SETTING.cadre) {
-        $.each(common_ihris.cadres, function (index, objValue) {
-            var elementToAppend = ' <li><a href="#" data-name="' + objValue.name + '" data-id="' + objValue.id + '" >' + objValue.name + '</a></li>';
-            $("#cadre_names_list").append(elementToAppend);
-        });
-    }
-
-});
 
 
 var initOrganisationUnitChosenDropDown = function initOrganisationUnitChosenDropDown(orgType) {
@@ -34,6 +7,37 @@ var initOrganisationUnitChosenDropDown = function initOrganisationUnitChosenDrop
         width: "85%"
     });
 };
+
+//load county list
+function populateCounty() {
+    destroyChosenDropDownList();
+// 
+    populateOrgunitList(locationCommon.countiesList)
+    initOrganisationUnitChosenDropDown("county");
+}
+
+
+
+//load commodity names list
+function populateCommodity() {
+    $("#organisation-unit").empty();
+    $.each(commodityCommon.commodity_names, function (index, objValue) {
+        var elementToAppend = ' <li><a href="#" data-name="' + objValue + '">' + objValue + '</a></li>';
+        // $("#commodity-names").append(elementToAppend);
+    });
+}
+
+
+
+
+
+function populateCadres() {
+    $.each(common_ihris.cadres, function (index, objValue) {
+        var elementToAppend = ' <li><a href="#" data-name="' + objValue.name + '" data-id="' + objValue.id + '" >' + objValue.name + '</a></li>';
+        $("#cadre_names_list").append(elementToAppend);
+    });
+}
+
 
 function destroyChosenDropDownList() {
     try {
@@ -169,10 +173,8 @@ function setKemsaValues(commodityType) {
 // ###########                ##########
 //initial date values to start visualization
 
-var dslGraph;
-init();
 
-function init() {
+function initGraph() {
 
     yearMonthParameters.currentYear = '2015';
     setPeriodValues("monthly", '2015', '2015');
@@ -229,7 +231,6 @@ $(document).ready(function () {
 });
 
 var table = null;
-var count = 0;
 function populateAnalyticsTable(data) {
     if ($.fn.dataTable.isDataTable('#analytics-table')) {
         try {
@@ -250,10 +251,6 @@ function populate(data) {
         colReorder: true,
         searching: false
     });
-    if (count == 0) { //hack to load counties/constituency in drop downist b4 bugfix
-        $("a[data-org_unit='county']").trigger("click");
-        count = 1;
-    }
 
     return table;
 }
@@ -369,3 +366,14 @@ function getQueryValues(x, dslGraph) {
     });
     queryParametersList = [];
 }
+
+$(document).ready(function () {
+//load cadre names list
+    fetchCadre(populateCadres);
+    fetchCounties(populateCounty);
+    fetchConstituency($.noop);
+
+    var dslGraph;
+    initGraph();
+
+});

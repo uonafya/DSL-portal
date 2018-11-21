@@ -16,7 +16,7 @@ var yearlyParameters = {
 
 
 var organisationUnit={
-    current_level: SETTING.orgisation_level[4],
+    current_level: SETTING.orgisation_level[3],
     orgnuinit: "national"
 };
 

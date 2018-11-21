@@ -26,41 +26,39 @@ var locationViewModel = {
 };
 
 
-
-$(document).ajaxComplete(function (event, xhr, settings) {
-    if (settings.url === SETTING.ward_api) {
-        $(document).ready(function () {
-            $.each(locationCommon.wardsList, function (index, objValue) {
-                var elementToAppend = '<a href="#" class="list-group-item"><strong>' + objValue.name + '</strong>\n\
+function loadWards() {
+    $.each(locationCommon.wardsList, function (index, objValue) {
+        var elementToAppend = '<a href="#" class="list-group-item"><strong>' + objValue.name + '</strong>\n\
                         <input data-constituency-id="' + objValue.constituencyId + '" data-id="' + objValue.id + '" data-name="' + objValue.name + '" class="pull-right" type="checkbox"></a>';
-                $(".ward-list").append(elementToAppend);
-            });
-        });
-    }
+        $(".ward-list").append(elementToAppend);
+    });
+}
 
-    if (settings.url === SETTING.constituency_api) {
-        $(document).ready(function () {
-            //Fetch constituencies
-            $.each(locationCommon.constituenciesList, function (index, objValue) {
-                var elementToAppend = '<a href="#" class="list-group-item"><strong>' + objValue.name + '</strong>\n\
+
+function loadConstituency() {
+    //Fetch constituencies
+    $.each(locationCommon.constituenciesList, function (index, objValue) {
+        var elementToAppend = '<a href="#" class="list-group-item"><strong>' + objValue.name + '</strong>\n\
                 <input data-id="' + objValue.id + '" data-name="' + objValue.name + '" data-county-id="' + objValue.countyId + '" class="pull-right" type="checkbox"></a>';
-                $(".constituency-list").append(elementToAppend);
-            });
-        });
-    }
+        $(".constituency-list").append(elementToAppend);
+    });
+}
 
 
-    if (settings.url === SETTING.county_api) {
-        $(document).ready(function () {
-            //Fetch county
-            $.each(locationCommon.countiesList, function (index, objValue) {
-                var elementToAppend = '<a href="#" class="list-group-item"><strong>' + objValue.name + '</strong>\n\
+function loadCounties() {
+    //Fetch county
+    $.each(locationCommon.countiesList, function (index, objValue) {
+        var elementToAppend = '<a href="#" class="list-group-item"><strong>' + objValue.name + '</strong>\n\
                                 <input data-id="' + objValue.id + '" data-name="' + objValue.name + '"  class="pull-right" type="checkbox"></a>';
-                $(".county-list").append(elementToAppend);
-            });
-        });
-    }
+        $(".county-list").append(elementToAppend);
+    });
+}
 
+
+$(document).ready(function () {
+    fetchCounties(loadCounties);
+    fetchConstituency(loadConstituency);
+    fetchWard(loadWards);
 });
 
 $(document).ready(function () {
