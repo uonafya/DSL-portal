@@ -1,4 +1,4 @@
-
+var dslGraph;
 
 var initOrganisationUnitChosenDropDown = function initOrganisationUnitChosenDropDown(orgType) {
     $("#organisation-unit").chosen({
@@ -17,7 +17,6 @@ function populateCounty() {
 }
 
 
-
 //load commodity names list
 function populateCommodity() {
     $("#organisation-unit").empty();
@@ -26,9 +25,6 @@ function populateCommodity() {
         // $("#commodity-names").append(elementToAppend);
     });
 }
-
-
-
 
 
 function populateCadres() {
@@ -58,32 +54,27 @@ function populateOrgunitList(data) {
 }
 
 
-//on change orgunit 
+//on change specific orgunit eg nairobi,momba  county, embakasi counstituency etc  
 $('#organisation-unit').on('change', function (event) {
     var orgunitId = $("#organisation-unit option:selected").attr('data-id');
     var year = yearMonthParameters.currentYear;
     var indicator = dslGraph.indicator;
-
-    //organisationUnit.current_level;
-
     yearMonthParameters.currentYear = year;
     setPeriodValues("monthly", year, year);
-
     console.log("the org unit " + organisationUnit.current_level);
-
     setIndicatorValues("indicator:average:with_filter", indicator);
+
     setIhrisValues("human_resource:count");
     setKemsaValues("commodity:count");
     var filter = {};
     filter[organisationUnit.current_level] = new Array(orgunitId);
     setLocality(organisationUnit.current_level, filter);
-
     var queryPropertiesToSubmit = prepareQueryPropertiesToSubmit(indicator, SETTING.graph_year_month);
     getQueryValues(queryPropertiesToSubmit, dslGraph);
 
 });
 
-
+//on click organisation unit level eg county, counstituency
 $(document).ready(function () {
     $("#organisation-unit-level li a").click(function (event) {
 
@@ -150,21 +141,25 @@ function setLocality(org_level, filter) {
 }
 
 function setIhrisValues(cadreType) {
-    var humanResourceValuesToQuery = {};
-    humanResourceValuesToQuery['what'] = cadreType;
-    humanResourceValuesToQuery['filter'] = {};
-    var what = '';
-    humanResourceValuesToQuery['what'] = humanResourceValuesToQuery['what'] + what;
-    queryParametersList.push(humanResourceValuesToQuery);
+    if (dslGraph.fetchIhrisData) {
+        var humanResourceValuesToQuery = {};
+        humanResourceValuesToQuery['what'] = cadreType;
+        humanResourceValuesToQuery['filter'] = {};
+        var what = '';
+        humanResourceValuesToQuery['what'] = humanResourceValuesToQuery['what'] + what;
+        queryParametersList.push(humanResourceValuesToQuery);
+    }
     return queryParametersList;
 }
 
 
 function setKemsaValues(commodityType) {
+    if (dslGraph.fetchKemsaData) {
+        var commodityValuesToQuery = {};
+        commodityValuesToQuery['what'] = commodityType;
+        queryParametersList.push(commodityValuesToQuery);
+    }
 
-    var commodityValuesToQuery = {};
-    commodityValuesToQuery['what'] = commodityType;
-    queryParametersList.push(commodityValuesToQuery);
     return queryParametersList;
 
 }
@@ -175,6 +170,7 @@ function setKemsaValues(commodityType) {
 
 
 function initGraph() {
+    dslGraph = new DslGraph();
 
     yearMonthParameters.currentYear = '2015';
     setPeriodValues("monthly", '2015', '2015');
@@ -183,7 +179,6 @@ function initGraph() {
     setKemsaValues("commodity:count");
     var queryPropertiesToSubmit = prepareQueryPropertiesToSubmit("TB curative Rate", SETTING.graph_year_month);
     getQueryValues(queryPropertiesToSubmit, dslGraph);
-
 }
 
 
@@ -191,13 +186,14 @@ function prepareQueryPropertiesToSubmit(currentIndicator, grapType) {
     var queryToSubmit = {"query": queryParametersList};
     var queryPropertiesToSubmit = JSON.stringify(queryToSubmit);
     console.log(queryToSubmit);
-    dslGraph = new DslGraph();
+
     dslGraph.type = grapType;
     dslGraph.elementId = "test-graph";
     dslGraph.indicator = currentIndicator;
     return queryPropertiesToSubmit;
 }
 
+//on change mothly data year selection
 $(document).ready(function () {
     $('#start_year').change(function () {
         var year = $(this).val();
@@ -213,7 +209,7 @@ $(document).ready(function () {
     });
 });
 
-
+//on change indicator
 $(document).ready(function () {
 
     $("#indicators li a").click(function (event) {
@@ -273,24 +269,38 @@ function _validateYearRange(startYear, endYear) {
     return true;
 }
 
-
+//on click periodicity type
 $("input:radio[name=optradiotimespan]").click(function (event) {
     var periodTypeSelected = event.target.value;
     if (periodTypeSelected == 'monthly') {
         //$('#monthly-opt').show();
         $('#monthly-opt').css('display', 'inline-block');
         $('#yearly-opt').css('display', 'none');
-        selectedPeriodType.selectedRadioBtn = 'monthly';
+        dslGraph.selectedPeriodType = 'monthly';
     } else {
         //$('.month').hide();
         $('#yearly-opt').css('display', 'inline-block');
         $('#monthly-opt').css('display', 'none');
-        selectedPeriodType.selectedRadioBtn = 'yearly';
+        dslGraph.selectedPeriodType = 'yearly';
     }
 
 });
 
+function reRunQuery() {
+    if (dslGraph.selectedPeriodType == 'yearly') {
+    } else if (dslGraph.selectedPeriodType == 'monthly') {
+        var year = yearMonthParameters.currentYear;
+        var indicator = dslGraph.indicator;
+        yearMonthParameters.currentYear = year;
+        setPeriodValues("monthly", year, year);
+        setIndicatorValues("indicator:average:with_filter", indicator);
+        setIhrisValues("human_resource:count");
+        setKemsaValues("commodity:count");
+        var queryPropertiesToSubmit = prepareQueryPropertiesToSubmit(indicator, SETTING.graph_year_month);
+        getQueryValues(queryPropertiesToSubmit, dslGraph);
+    }
 
+}
 
 //show or hide other data sources
 $(document).ready(function () {
@@ -300,21 +310,28 @@ $(document).ready(function () {
     $('#kemsa-switch').change(function () {
         if ($(this).is(":checked")) {
             $('#commodities').show();
+            dslGraph.graphData
+            dslGraph.fetchKemsaData = true;
+            
+            reRunQuery();
         } else {
             $('#commodities').hide();
+            dslGraph.fetchKemsaData = false;
         }
     });
 
     $('#ihris-switch').change(function () {
         if ($(this).is(":checked")) {
             $('#cadres').show();
+            dslGraph.fetchIhrisData = true;
+            reRunQuery();
         } else {
             $('#cadres').hide();
+            dslGraph.fetchIhrisData = false;
         }
     });
 
 });
-
 
 
 //get year range data
@@ -372,8 +389,16 @@ $(document).ready(function () {
     fetchCadre(populateCadres);
     fetchCounties(populateCounty);
     fetchConstituency($.noop);
-
-    var dslGraph;
+    
     initGraph();
+    //initialise initial values
+    $('#kemsa-switch').prop('checked', false);
+    $('#ihris-switch').prop('checked', false);
+    console.log($('#start_year option[value="2015"]'));
+    $('#start_year').val('2015');
+    $('#montly-option').prop("checked", true);
+    dslGraph.fetchKemsaData = false;
+    dslGraph.fetchIhrisData = false;
+    dslGraph.selectedPeriodType="monthly";
 
 });

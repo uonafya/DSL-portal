@@ -1,8 +1,11 @@
 function DslGraph() {
-    type = '';
-    graphData = '';
-    elementId = '';
-    indicator = '';
+    var type = '';
+    var graphData = '';
+    var elementId = '';
+    var indicator = '';
+    var fetchKemsaData=false;
+    var fetchIhrisData=false;
+    var selectedPeriodType="monthly"; //currently either yearly or monthly string is set here
 }
 
 var yearMonthParameters = {
