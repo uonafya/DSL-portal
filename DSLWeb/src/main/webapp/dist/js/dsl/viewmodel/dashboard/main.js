@@ -57,21 +57,23 @@ function populateOrgunitList(data) {
 //on change specific orgunit eg nairobi,momba  county, embakasi counstituency etc  
 $('#organisation-unit').on('change', function (event) {
     var orgunitId = $("#organisation-unit option:selected").attr('data-id');
-    var year = yearMonthParameters.currentYear;
-    var indicator = dslGraph.indicator;
-    yearMonthParameters.currentYear = year;
-    setPeriodValues("monthly", year, year);
-    console.log("the org unit " + organisationUnit.current_level);
-    setIndicatorValues("indicator:average:with_filter", indicator);
-
-    setIhrisValues("human_resource:count");
-    setKemsaValues("commodity:count");
     var filter = {};
     filter[organisationUnit.current_level] = new Array(orgunitId);
     setLocality(organisationUnit.current_level, filter);
-    var queryPropertiesToSubmit = prepareQueryPropertiesToSubmit(indicator, SETTING.graph_year_month);
-    getQueryValues(queryPropertiesToSubmit, dslGraph);
-
+    
+    if (dslGraph.selectedPeriodType == 'yearly') {
+        getYearRangeData(_getYearRangeData);
+    } else if (dslGraph.selectedPeriodType == 'monthly') {
+        var year = yearMonthParameters.currentYear;
+        var indicator = dslGraph.indicator;
+        yearMonthParameters.currentYear = year;
+        setPeriodValues("monthly", year, year);
+        setIndicatorValues("indicator:average:with_filter", indicator);
+        setIhrisValues("human_resource:count");
+        setKemsaValues("commodity:count");
+        var queryPropertiesToSubmit = prepareQueryPropertiesToSubmit(indicator, SETTING.graph_year_month);
+        getQueryValues(queryPropertiesToSubmit, dslGraph);
+    }
 });
 
 //on click organisation unit level eg county, counstituency
@@ -211,21 +213,28 @@ $(document).ready(function () {
 
 //on change indicator
 $(document).ready(function () {
-
     $("#indicators li a").click(function (event) {
-        var year = yearMonthParameters.currentYear;
-        var indicator = $(event.target).attr('data-value');
-        yearMonthParameters.currentYear = year;
-        setPeriodValues("monthly", year, year);
-        setIndicatorValues("indicator:average:with_filter", indicator);
-        setIhrisValues("human_resource:count");
-        setKemsaValues("commodity:count");
-        var queryPropertiesToSubmit = prepareQueryPropertiesToSubmit(indicator, SETTING.graph_year_month);
-        getQueryValues(queryPropertiesToSubmit, dslGraph);
-    });
+        if (dslGraph.selectedPeriodType == 'yearly') {
+            var indicator = $(event.target).attr('data-value');
+            dslGraph.indicator = indicator;
+            console.log("indicator " + indicator);
+            getYearRangeData(_getYearRangeData);
+        } else {
+            var year = yearMonthParameters.currentYear;
+            var indicator = $(event.target).attr('data-value');
+            yearMonthParameters.currentYear = year;
+            setPeriodValues("monthly", year, year);
+            setIndicatorValues("indicator:average:with_filter", indicator);
+            setIhrisValues("human_resource:count");
+            setKemsaValues("commodity:count");
+            var queryPropertiesToSubmit = prepareQueryPropertiesToSubmit(indicator, SETTING.graph_year_month);
+            getQueryValues(queryPropertiesToSubmit, dslGraph);
 
+        }
+    });
 });
 
+//populate table with data
 var table = null;
 function populateAnalyticsTable(data) {
     if ($.fn.dataTable.isDataTable('#analytics-table')) {
@@ -251,7 +260,7 @@ function populate(data) {
     return table;
 }
 
-
+//validate selected year range
 function _validateYearRange(startYear, endYear) {
     if (!(startYear)) {
         $("#year-range-msg").text(" please select start year");
@@ -288,6 +297,7 @@ $("input:radio[name=optradiotimespan]").click(function (event) {
 
 function reRunQuery() {
     if (dslGraph.selectedPeriodType == 'yearly') {
+        getYearRangeData(_getYearRangeData);
     } else if (dslGraph.selectedPeriodType == 'monthly') {
         var year = yearMonthParameters.currentYear;
         var indicator = dslGraph.indicator;
@@ -298,28 +308,29 @@ function reRunQuery() {
         setKemsaValues("commodity:count");
         var queryPropertiesToSubmit = prepareQueryPropertiesToSubmit(indicator, SETTING.graph_year_month);
         getQueryValues(queryPropertiesToSubmit, dslGraph);
+    } else {
+
     }
 
 }
 
 //show or hide other data sources
+//kemsa data source
 $(document).ready(function () {
-    //set initial state.
-    //  $('#ihris-on').val($(this).is(':checked'));
-
     $('#kemsa-switch').change(function () {
         if ($(this).is(":checked")) {
             $('#commodities').show();
-            dslGraph.graphData
+            dslGraph.graphData;
             dslGraph.fetchKemsaData = true;
-            
             reRunQuery();
         } else {
             $('#commodities').hide();
             dslGraph.fetchKemsaData = false;
         }
     });
-
+});
+//ihris data source
+$(document).ready(function () {
     $('#ihris-switch').change(function () {
         if ($(this).is(":checked")) {
             $('#cadres').show();
@@ -333,25 +344,33 @@ $(document).ready(function () {
 
 });
 
+//###### END #######
+
+function getYearRangeData(_callback) {
+    var startYear = $("#start-time").val();
+    var endYear = $("#end-time").val();
+    var valid = _validateYearRange(startYear, endYear);
+    _callback(startYear, endYear, valid);
+}
+
+function _getYearRangeData(startYear, endYear, valid) {
+    if (valid) {
+        var indicator = dslGraph.indicator;
+        yearlyParameters.startYear = startYear;
+        yearlyParameters.endYear = endYear
+        setPeriodValues("yearly", startYear, endYear);
+        setIndicatorValues("indicator:average:with_filter", indicator);
+        setIhrisValues("human_resource:count");
+        setKemsaValues("commodity:count");
+        var queryPropertiesToSubmit = prepareQueryPropertiesToSubmit(indicator, SETTING.graph_yearly);
+        getQueryValues(queryPropertiesToSubmit, dslGraph);
+    }
+}
 
 //get year range data
 $(document).ready(function () {
     $("#filter").click(function () {
-        var startYear = $("#start-time").val();
-        var endYear = $("#end-time").val();
-        var valid = _validateYearRange(startYear, endYear);
-        if (valid) {
-            var indicator = dslGraph.indicator;
-            yearlyParameters.startYear = startYear;
-            yearlyParameters.endYear = endYear
-            var currentIndicator = currentIndicator;
-            setPeriodValues("yearly", startYear, endYear);
-            setIndicatorValues("indicator:average:with_filter", indicator);
-            setIhrisValues("human_resource:count");
-            setKemsaValues("commodity:count");
-            var queryPropertiesToSubmit = prepareQueryPropertiesToSubmit(indicator, SETTING.graph_yearly);
-            getQueryValues(queryPropertiesToSubmit, dslGraph);
-        }
+        getYearRangeData(_getYearRangeData);
     });
 });
 
@@ -389,7 +408,7 @@ $(document).ready(function () {
     fetchCadre(populateCadres);
     fetchCounties(populateCounty);
     fetchConstituency($.noop);
-    
+
     initGraph();
     //initialise initial values
     $('#kemsa-switch').prop('checked', false);
@@ -399,6 +418,6 @@ $(document).ready(function () {
     $('#montly-option').prop("checked", true);
     dslGraph.fetchKemsaData = false;
     dslGraph.fetchIhrisData = false;
-    dslGraph.selectedPeriodType="monthly";
+    dslGraph.selectedPeriodType = "monthly";
 
 });
