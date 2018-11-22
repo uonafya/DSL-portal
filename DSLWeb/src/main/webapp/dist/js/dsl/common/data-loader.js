@@ -39,20 +39,28 @@ var IndicatorGroupEvent = function () {
 };
 
 var IndicatorNameEvent = function () {
-    this.selectedNames = {},
+    this.selectedNames = [],
             this.loadNameData = function (selectedIndicatorItems, type, clickedItem) {
                 var that = this;
                 if (type == 'add') {
                     $.each(selectedIndicatorItems, function (index, selectedObjValue) {
+                        //var name = $(selectedObjValue).attr("data-name");
+                        //var groupId = $(selectedObjValue).attr("data-group-id");
+                        //var id = $(selectedObjValue).attr("data-id");
+                        //that.selectedNames[id] = {'name': name, 'groupId': groupId};
+
                         var name = $(selectedObjValue).attr("data-name");
-                        var groupId = $(selectedObjValue).attr("data-group-id");
-                        var id = $(selectedObjValue).attr("data-id");
-                        that.selectedNames[id] = {'name': name, 'groupId': groupId};
+                        that.selectedNames.push(name);
+
                     });
                 } else {
                     $.each(selectedIndicatorItems, function (index, selectedObjValue) {
-                        var id = $(selectedObjValue).attr("data-id");
-                        delete that.selectedNames[id];
+//                        var id = $(selectedObjValue).attr("data-id");
+//                        delete that.selectedNames[id];
+
+                        var name = $(selectedObjValue).attr("data-name");
+                        that.selectedNames.splice($.inArray(name, that.selectedFacilityLevel), 1);
+
                     });
 
                 }
@@ -401,6 +409,15 @@ var SelectedCommodityRadio = function () {
     this.selectedRadioBtn = "";
 };
 
+
+var SelectedPeriodType = function () {
+    this.selectedRadioBtn = "yearly";
+};
+
+
+//period
+var selectedPeriodType = new SelectedPeriodType();
+
 // DHIS objects
 var indicatorGroupEvent = new IndicatorGroupEvent();
 var indicatorNameEvent = new IndicatorNameEvent();
@@ -436,8 +453,8 @@ function displayErrorAlert(msg) {
 }
 
 function validateDateInput() {
-    var startDate = $('#start-period').val();
-    var endDate = $('#end-period').val();
+    var startDate = $('#start_year').val();
+    var endDate = $('#end_year').val();
 
     if (!(startDate)) {
         displayErrorAlert("please ensure the start period is filled");
@@ -516,7 +533,8 @@ function populate(data) {
     $('#analytics-table').empty();
     table = $('#analytics-table').DataTable({
         data: data.data,
-        columns: data.columns
+        columns: data.columns,
+        colReorder: true
     });
     return table;
 
@@ -532,9 +550,12 @@ var updateData = function () {
     var selectedIndicatorNames = indicatorNameEvent.selectedNames;
     var selectedIndicatRadio = selectedIndicatorRadio.selectedRadioBtn;
 
-    if (selectedIndicatRadio != 'none' && selectedIndicatRadio != '' && !jQuery.isEmptyObject(selectedIndicatorNames)) {
+    if (selectedIndicatRadio != 'none' && selectedIndicatRadio != '') {
         var indicatorValuesToQuery = {};
         indicatorValuesToQuery['what'] = "indicator:" + selectedIndicatRadio;
+        if(!jQuery.isEmptyObject(selectedIndicatorNames)){
+            indicatorValuesToQuery['what']=indicatorValuesToQuery['what']+":with_filter";
+        }
         indicatorValuesToQuery['filter'] = {'indicator': selectedIndicatorNames};
         queryParametersList.push(indicatorValuesToQuery);
         isAnyParametersSelected = true;
@@ -569,19 +590,15 @@ var updateData = function () {
     //kemsa commodities
 
     var selectedCommodtyRadio = selectedCommodityRadio.selectedRadioBtn;
-    if (!isFacilitiesSelected() && !isLocalitySelected() && selectedCommodtyRadio != 'none' && selectedCommodtyRadio != '') {
 
-        displayErrorAlert("please ensure you choose a locality or facilities selection");
-        return false;
-    } else {
-        if (selectedCommodtyRadio != 'none' && selectedCommodtyRadio != '') {
-            var commodityValuesToQuery = {};
-            commodityValuesToQuery['what'] = "commodity:" + selectedCommodtyRadio;
-            queryParametersList.push(commodityValuesToQuery);
-            isAnyParametersSelected = true;
-        }
-
+    if (selectedCommodtyRadio != 'none' && selectedCommodtyRadio != '') {
+        var commodityValuesToQuery = {};
+        commodityValuesToQuery['what'] = "commodity:" + selectedCommodtyRadio;
+        queryParametersList.push(commodityValuesToQuery);
+        isAnyParametersSelected = true;
     }
+
+
 
     //ihris 
     var selectedHumanResrceRadio = selectedHumanResourceRadio.selectedRadioBtn;
@@ -660,22 +677,41 @@ var updateData = function () {
         return;
     }
 
-    //add Date options 
-    var startDate = [$('#start-period').val()];
-    var endDate = [$('#end-period').val()];
+
+
+    //period selected
+    var selectedTimePeriodRadioBtn = selectedPeriodType.selectedRadioBtn;
+
+    var startDate = $('#start_year').val();
+    var endDate = $('#end_year').val();
+
+    var startMonth = $('#start_month').val();
+    var endMonth = $('#end_month').val();
+
     var dateValuesToQuery = {};
-    dateValuesToQuery['what'] = 'date';
-    dateValuesToQuery['filter']={};
-    
-    dateValuesToQuery['filter']['start_date'] = startDate;
-    dateValuesToQuery['filter']['end_date'] = endDate;
+    dateValuesToQuery['filter'] = {};
+    if (selectedTimePeriodRadioBtn == 'yearly') {
+        dateValuesToQuery['what'] = 'date:yearly';
+    } else {
+        dateValuesToQuery['what'] = 'date:yearly:monthly';
+        dateValuesToQuery['filter']['start_month'] = new Array(startMonth);
+        dateValuesToQuery['filter']['end_month'] = new Array(endMonth);
+    }
+    dateValuesToQuery['filter']['start_year'] = new Array(startDate);
+    dateValuesToQuery['filter']['end_year'] = new Array(endDate);
+    console.log("got to");
+    console.log(dateValuesToQuery);
     queryParametersList.push(dateValuesToQuery);
 
-    console.log("the dates "+dateValuesToQuery);
-    console.log(queryParametersList);
+    console.log("the dates " + dateValuesToQuery);
+
+    console.log("queryParametersList is: " + JSON.stringify(queryParametersList));
     var queryToSubmit = {"query": queryParametersList};
     var x = JSON.stringify(queryToSubmit);
+    console.log(queryToSubmit);
     //    sendQueryParamatersToServer(queryParametersList);
+    //$("#table-status").css("display", "block");
+    $('#table-status').show();
     $.ajax({
         type: 'POST', // define the type of HTTP verb we want to use
         url: '/DSLWeb/api/processquery', // the url from server we that we want to use
@@ -684,18 +720,19 @@ var updateData = function () {
         encode: true,
         data: x,
         success: function (data, textStatus, jqXHR) {
-
-            console.log("All went well ");
-            console.log(data);
             populateAnalyticsTable(data);
+            $('#table-status').hide();
         },
         error: function (response, request) {
             //   console.log("got an error fetching cadregroups");
+            $('#table-status').hide();
             var parsed_data = response.responseText;
+
         }
 
     });
 
+    //$("#table-status").css("display", "block");
 
 
 

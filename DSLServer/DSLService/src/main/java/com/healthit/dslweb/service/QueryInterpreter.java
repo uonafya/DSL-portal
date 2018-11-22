@@ -1,15 +1,20 @@
 package com.healthit.dslweb.service;
 
 import com.healthit.dslservice.DslException;
-import com.healthit.dslservice.query.QueryParameterPopulator;
+import com.healthit.dslservice.service.query.QueryParameterPopulator;
 import com.healthit.dslservice.util.Database;
 import com.healthit.dslservice.util.PropertiesLoader;
 import com.healthit.dslservice.util.strings.RandomStringGenerator;
 import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.GregorianCalendar;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
@@ -26,7 +31,7 @@ import org.json.JSONObject;
  *
  * @author duncan
  */
-public class QueryInterpreter{
+public class QueryInterpreter {
 
     final static Logger log = Logger.getLogger(QueryInterpreter.class.getCanonicalName());
     static Properties queriesFile;
@@ -62,18 +67,19 @@ public class QueryInterpreter{
      * Replace http filter values to placeholders in the sql queries
      *
      * @param finalQuery
-     * @param array original json array from the http request with the parameter values
+     * @param array original json array from the http request with the parameter
+     * values
      * @return replace query with real filter values
      */
     private String populatQueryParameters(String finalQuery, JSONArray array) {
-        log.debug("query parameter called populator");
         for (Object o : array) {
             JSONObject jsoObj = (JSONObject) o;
             String[] queryNamesFromUI = jsoObj.getString("what").split(":");
-            log.debug("check if locality object in list");
+            log.debug("check if locality object in list" + Arrays.toString(queryNamesFromUI));
             // if (Arrays.asList(queryNamesFromUI).contains("locality")) {
             log.debug("locality object is in list");
             try {
+                log.debug("the objected with period and locality " + jsoObj.getJSONObject("filter").toString());
                 JSONObject filters = jsoObj.getJSONObject("filter");
                 Map<String, String> parameterPlaceholder = getSqlParameterPlaceHolderToReplace(filters);
                 finalQuery = QueryParameterPopulator.populateParametersWithRequestFilterValues(finalQuery, jsoObj, parameterPlaceholder);
@@ -129,9 +135,113 @@ public class QueryInterpreter{
      * @return
      */
     private JSONArray addFilterLevelsToMainQueryAttributes(JSONArray array) {
+        array = injectPeriodicityFilterLevel(array);
         array = injectLocalityFilterLevel(array);
+
         log.info("Http json array with injeced filters " + array.toString());
         return array;
+    }
+
+    /**
+     * Adds the periods to the query name( the name is used for retrieving
+     * actual query from file), eg ward, ward,contituency,
+     * ward:contituency:county
+     *
+     * @param array
+     * @return array
+     */
+    private JSONArray injectPeriodicityFilterLevel(JSONArray array) {
+        JSONArray arrayReplacement = array;
+        for (Object o : array) {
+            JSONObject jsoObj = (JSONObject) o;
+
+            String[] queryNamesFromUI = jsoObj.getString("what").split(":");
+            log.debug("The what value " + Arrays.toString(queryNamesFromUI));
+            if (Arrays.asList(queryNamesFromUI).contains("date")) {
+                arrayReplacement = new JSONArray();
+                for (Object obj : array) {
+                    JSONObject jsoObj2 = (JSONObject) obj;
+                    String[] queryFetchValues = jsoObj2.getString("what").split(":");
+                    if (!Arrays.asList(queryFetchValues).contains("date") && !Arrays.asList(queryFetchValues).contains("locality")) {
+                        JSONObject jsonObj = new JSONObject();
+                        try {
+                            try {
+                                jsoObj2.getJSONObject("filter");
+                            } catch (Exception e) {
+                                JSONObject objt = new JSONObject();
+                                jsoObj2.put("filter", objt);
+                            }
+
+                            List list = Arrays.asList(queryFetchValues);
+                            if (list.contains("commodity") || list.contains("human_resource") || list.contains("indicator")) {
+                                jsoObj2 = injectYearANDMonth(jsoObj2, jsoObj);
+                            }
+                        } catch (Exception e) {
+                            log.error(e);
+                        }
+                        arrayReplacement.put(jsoObj2);
+                        log.debug("The period injected array1 " + arrayReplacement.toString());
+                    } else if (Arrays.asList(queryFetchValues).contains("locality")) {
+                        arrayReplacement.put(jsoObj2);
+                        log.debug("The period injected array2 " + arrayReplacement.toString());
+                    } else {
+                    }
+                }
+                log.debug("The period injected array " + arrayReplacement.toString());
+                return arrayReplacement;
+            }
+        }
+        return arrayReplacement;
+    }
+
+    /**
+     *
+     * @param jsoObj2
+     * @param jsoObj the json object with period(date) attributes
+     * @return
+     * @throws ParseException
+     */
+    private JSONObject injectYearANDMonth(JSONObject jsoObj2, JSONObject jsoObj) throws ParseException {
+        log.debug("http Dates json object " + jsoObj);
+        Map map3 = new HashMap();
+        Map map1 = jsoObj2.getJSONObject("filter").toMap();
+        String startYear = jsoObj.getJSONObject("filter").getJSONArray("start_year").getString(0);
+        String sartMonth = "0";
+        String endMonth = "0";
+        try {// try becuase month may be empty if using yearly filter period
+            sartMonth = jsoObj.getJSONObject("filter").getJSONArray("start_month").getString(0);
+            endMonth = jsoObj.getJSONObject("filter").getJSONArray("end_month").getString(0);
+        } catch (Exception e) {
+
+        }
+        int month = Integer.parseInt(sartMonth);
+        int year = Integer.parseInt(startYear);
+        Map<String, List> periodMap = new HashMap();
+        List<Integer> periodList = new ArrayList();
+        periodList.add(year);
+        periodMap.put("start_year", periodList);
+        periodList = new ArrayList();
+        periodList.add(month);
+        periodMap.put("start_month", periodList);
+        log.debug("Start period " + periodMap.toString());
+        String endYear = jsoObj.getJSONObject("filter").getJSONArray("end_year").getString(0);
+
+        month = Integer.parseInt(endMonth);
+        year = Integer.parseInt(endYear);
+        periodList = new ArrayList();
+        periodList.add(year);
+        periodMap.put("end_year", periodList);
+        periodList = new ArrayList();
+        periodList.add(month);
+        periodMap.put("end_month", periodList);
+        log.debug("end period " + periodMap.toString());
+        map3.putAll(map1);
+        map3.putAll(periodMap);
+        jsoObj2.put("filter", new JSONObject(map3));
+        String whatReplaced = jsoObj2.getString("what") + jsoObj.getString("what").replace("date", "");
+        log.debug("Got it fast " + whatReplaced);
+        jsoObj2.put("what", whatReplaced);
+        return jsoObj2;
     }
 
     /**
@@ -140,20 +250,21 @@ public class QueryInterpreter{
      * ward:contituency:county
      *
      * @param array
-     * @return
+     * @return array
      */
     private JSONArray injectLocalityFilterLevel(JSONArray array) {
         JSONArray arrayReplace = array;
         for (Object o : array) {
             JSONObject jsoObj = (JSONObject) o;
             String[] queryNamesFromUI = jsoObj.getString("what").split(":");
+
             if (Arrays.asList(queryNamesFromUI).contains("locality")) {
                 //we create a new json array without the locality filter object, rather we append then to the other objects in their filter objects
                 arrayReplace = new JSONArray();
                 for (Object obj : array) {
                     JSONObject jsoObj2 = (JSONObject) obj;
                     String[] queryFetchValues = jsoObj2.getString("what").split(":");
-                    if (!Arrays.asList(queryFetchValues).contains("locality")) {
+                    if (!Arrays.asList(queryFetchValues).contains("date") && !Arrays.asList(queryFetchValues).contains("locality")) {
                         JSONObject jsonObj = new JSONObject();
                         //jsoObj object in out loop object that contains all the locality filter attributes
                         //jsoObj2 this is current json object with what needs to be queried from database, eg commodity county
@@ -165,6 +276,13 @@ public class QueryInterpreter{
                         } catch (Exception e) {
                             //pass
                         }
+                        arrayReplace.put(jsonObj);
+                    }
+                    if (Arrays.asList(queryFetchValues).contains("date")) {
+                        JSONObject jsonObj = new JSONObject();
+                        String whatReplaced = jsoObj2.getString("what");
+                        jsonObj.put("what", whatReplaced);
+                        jsonObj.put("filter", jsoObj2.getJSONObject("filter"));
                         arrayReplace.put(jsonObj);
                     }
                 }
@@ -227,8 +345,15 @@ public class QueryInterpreter{
             List<String> resultRow = new ArrayList();
             for (int x = 1; x <= columnsCount; x++) {
                 colType = rsMetaData.getColumnTypeName(x);
-                reslts[x - 1][rowIndex - 1] = rs.getObject(x).toString();
-                resultRow.add(rs.getObject(x).toString());
+                String val = "";
+                try {
+                    val = rs.getObject(x).toString();
+                } catch (NullPointerException e) {
+                    log.error(e);
+                }
+                reslts[x - 1][rowIndex - 1] = val;
+                //resultRow.add(rs.getObject(x).toString());
+                resultRow.add(val);
             }
             reslts1.add(resultRow);
             wrapperMap.put("data", (List<Object>) (Object) reslts1);
@@ -326,11 +451,28 @@ public class QueryInterpreter{
 
     private StringBuilder addJoinValuesToSelectSegment(List<Map<String, Object>> _queriesToRun, StringBuilder finalQueryToRun) {
         List<String[]> sqlJoinValues = getJoinValues(_queriesToRun, 0);
-        String alias = (String) _queriesToRun.get(0).get("alias");
+        log.debug("The queries to run attribs " + _queriesToRun.toString());
+        //String alias = (String) _queriesToRun.get(0).get("alias");
         log.debug("the join length " + sqlJoinValues.size());
         for (int x = 0; x <= sqlJoinValues.get(1).length - 1; x++) {
-            finalQueryToRun.append("," + alias + "." + sqlJoinValues.get(1)[x] + " ");
+            StringBuilder addCoalesce = new StringBuilder();
+            addCoalesce.append("coalesce(");
+            boolean isFirstAppend = true;
+            for (int y = 0; y <= _queriesToRun.size() - 1; y++) {
+                String alias = (String) _queriesToRun.get(y).get("alias");
+                if (isFirstAppend) {
+                    addCoalesce.append(alias + "." + sqlJoinValues.get(1)[x] + " ");
+                    isFirstAppend = false;
+                } else {
+
+                    addCoalesce.append("," + alias + "." + sqlJoinValues.get(1)[x] + " ");
+                }
+            }
+            addCoalesce.append(") as " + sqlJoinValues.get(1)[x] + " ");
+            finalQueryToRun.append("," + addCoalesce.toString());
+            //finalQueryToRun.append("," + alias + "." + sqlJoinValues.get(1)[x] + " ");
         }
+        log.debug("The coalesed string " + finalQueryToRun);
         return finalQueryToRun;
     }
 
@@ -360,7 +502,7 @@ public class QueryInterpreter{
      * @return
      */
     private StringBuilder createJoinSqlSegment(StringBuilder finalQueryToRun, List<Map<String, Object>> _queriesToRun, int loopIndex) {
-        finalQueryToRun.append(" inner join ");
+        finalQueryToRun.append(" full outer join ");
         finalQueryToRun.append("(" + _queriesToRun.get(loopIndex).get("querySring") + ")");
         finalQueryToRun.append(" " + _queriesToRun.get(loopIndex).get("alias"));
         finalQueryToRun.append(" on ");

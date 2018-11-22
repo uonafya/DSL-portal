@@ -22,6 +22,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.http.HttpEntity;
 import static com.healthit.dslservice.util.strings.DataTypeConverter.getJSONFromObject;
+import javax.servlet.http.HttpSession;
 
 /**
  *
@@ -32,7 +33,7 @@ public class QueryProcessor {
 
     @ResponseBody
     @RequestMapping(value = "/processquery", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<?> processQuery(@RequestBody String pBody) {
+    public ResponseEntity<?> processQuery(@RequestBody String pBody,HttpSession session) {
         QueryInterpreter queryInterpreterObj = new QueryInterpreter();
         JSONObject jsonObj = new JSONObject(pBody);
         JSONArray array = jsonObj.getJSONArray("query");
