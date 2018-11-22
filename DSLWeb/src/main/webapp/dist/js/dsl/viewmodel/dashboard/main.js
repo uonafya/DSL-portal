@@ -214,14 +214,14 @@ $(document).ready(function () {
 //on change indicator
 $(document).ready(function () {
     $("#indicators li a").click(function (event) {
+        var indicator = $(event.target).attr('data-value');
+        $("#indicator-name-label").text($(event.target).text());
         if (dslGraph.selectedPeriodType == 'yearly') {
-            var indicator = $(event.target).attr('data-value');
             dslGraph.indicator = indicator;
             console.log("indicator " + indicator);
             getYearRangeData(_getYearRangeData);
         } else {
             var year = yearMonthParameters.currentYear;
-            var indicator = $(event.target).attr('data-value');
             yearMonthParameters.currentYear = year;
             setPeriodValues("monthly", year, year);
             setIndicatorValues("indicator:average:with_filter", indicator);

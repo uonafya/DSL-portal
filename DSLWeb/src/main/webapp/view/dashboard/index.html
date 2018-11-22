@@ -139,6 +139,17 @@
             .spliter{
                 float: left;height: 100%;border-left: 1px #FFA500 solid;margin-left: 14px;margin-right: 14px;
             }
+
+            .right-caret {
+                border-left: 4px solid transparent;
+                border-right: 4px solid transparent;
+                border-top: 8px solid #fff;
+                left: 90%;
+                top: 45%;
+                position: absolute;
+                margin-top: auto !important;
+            }
+           
         </style>
 
     </head>
@@ -174,40 +185,53 @@
                             </li>
                         </ul>
 
-                        <ul class="nav navbar-nav pull-right">
-                            <li class="dropdown"><a href="#" class="dropdown-toggle" data-toggle="dropdown"><i
-                                        class="fa fa-line-chart" aria-hidden="true"></i> Indicators <b class="caret"></b></a>
-                                <ul style="right: 0;left:auto;" class="dropdown-menu" id="indicators">
-                                    <li><a data-value="Fully immunized Child Coverage" href="javascript:;">Fully Immunized Child Coverage</a></li>
-                                    <li><a data-value="Proportion of pregnant women attending 4" href="javascript:;">Proportion of pregnant women attending 4<br/>ANC visits according to <br/>Focused ANC schedule</a></li>
-                                    <li><a data-value="TB curative Rate" href="javascript:;">TB curative Rate</a></li>
-                                </ul>
-                            </li>
-                        </ul>
-
-
-                        <ul class="nav navbar-nav pull-right">
-                            <li class="dropdown"><a href="#" class="dropdown-toggle" data-toggle="dropdown"><i
-                                        class="fa fa-map" aria-hidden="true"></i> Organisation unit <b class="caret"></b></a>
-                                <ul style="width: 100%;" id="organisation-unit-level" class="dropdown-menu">
-                                    <li><a  data-org_unit="county" href="javascript:;">County</a></li>
-                                    <li><a  data-org_unit="constituency" href="javascript:;">Counstituency</a></li>
-                                </ul>
-                            </li>
-
-                        </ul>
-
                     </div><!-- /.navbar-collapse -->
                 </div><!-- /.container-fluid -->
             </div>
         </nav>
 
         <div class="subnavbar">
-            <div class="subnavbar-inner">
+            <div style="height: 65px;" class="subnavbar-inner">
                 <div class="container org-unit" style="width: 100%;height: 100%;">
+
                     <div class="" style="float: left;width: 200px"> 
 
-                        <label data-name="organisation-unit" style="display: block" for="organisation-unit">County: </label>
+                        <div class="dropdown">
+                            <button  style="width:85%;position: relative" class="btn btn-default dropdown-toggle" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
+                                Indicator
+                                <span class="right-caret caret "></span>
+                            </button>
+                            <ul style="right: 0;right:auto;" class="dropdown-menu" id="indicators">
+                                <li><a data-value="Fully immunized Child Coverage" href="javascript:;">Fully Immunized Child Coverage</a></li>
+                                <li><a data-value="Proportion of pregnant women attending 4" href="javascript:;">Proportion of pregnant women attending 4<br/>ANC visits according to <br/>Focused ANC schedule </a></li>
+                                <li><a data-value="TB curative Rate" href="javascript:;">TB curative Rate</a></li>
+                            </ul>
+                        </div>
+
+                        <!--<label data-name="organisation-unit" for="organisation-unit">County: </label>-->
+
+                        <label style="padding: 2px;line-height: 11px;color:white;background-color: #ff5100;display: inline-block;font-size: 12px;border-radius: 5px;" id="indicator-name-label">
+                            TB curative Rate
+                        </label>
+                        <!--<span class="vl"></span>-->
+                    </div>
+                    <div class="spliter"></div>
+
+
+                    <div class="" style="float: left;width: 200px"> 
+
+                        <div class="dropdown">
+                            <button style="width:85%;position: relative;" class="btn btn-default dropdown-toggle" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
+                                Organisation unit
+                                <span class="caret right-caret"></span>
+                            </button>
+                            <ul style="width: 100%;" id="organisation-unit-level" class="dropdown-menu">
+                                <li><a  data-org_unit="county" href="javascript:;">County</a></li>
+                                <li><a  data-org_unit="constituency" href="javascript:;">Counstituency</a></li>
+                            </ul>
+                        </div>
+
+                        <!--<label data-name="organisation-unit" for="organisation-unit">County: </label>-->
 
                         <select id="organisation-unit" >
 
