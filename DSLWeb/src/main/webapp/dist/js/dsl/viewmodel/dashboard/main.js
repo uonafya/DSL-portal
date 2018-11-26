@@ -349,6 +349,7 @@ $(document).ready(function () {
 
 //###### END #######
 
+//get year range data section
 function getYearRangeData(_callback) {
     var startYear = $("#start-time").val();
     var endYear = $("#end-time").val();
@@ -369,6 +370,29 @@ function _getYearRangeData(startYear, endYear, valid) {
         getQueryValues(queryPropertiesToSubmit, dslGraph);
     }
 }
+// #######END#######
+
+//get yearly data section
+function getYearlyData(_callback) {
+    var startYear = $("#start-time").val();
+    var endYear = $("#end-time").val();
+    var valid = _validateYearRange(startYear, endYear);
+    _callback(startYear, endYear, valid);
+}
+
+function _getYearlyData(year) {
+        var year = yearMonthParameters.currentYear;
+        var indicator = dslGraph.indicator;
+        yearMonthParameters.currentYear = year;
+        setPeriodValues("monthly", year, year);
+        setIndicatorValues("indicator:average:with_filter", indicator);
+        setIhrisValues("human_resource:count");
+        setKemsaValues("commodity:count");
+        var queryPropertiesToSubmit = prepareQueryPropertiesToSubmit(indicator, SETTING.graph_year_month);
+        getQueryValues(queryPropertiesToSubmit, dslGraph);
+}
+
+// #######END#######
 
 //get year range data
 $(document).ready(function () {
