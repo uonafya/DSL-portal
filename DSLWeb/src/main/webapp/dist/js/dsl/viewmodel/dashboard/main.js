@@ -3,8 +3,8 @@ var dslGraph;
 var initOrganisationUnitChosenDropDown = function initOrganisationUnitChosenDropDown(orgType) {
     $("#organisation-unit").chosen({
         placeholder_text_single: "Select " + orgType + ": ",
-        no_results_text: "No results found!",
-        width: "85%"
+        no_results_text: "No results found!"
+//        width: "85%"
     });
 };
 
@@ -87,12 +87,14 @@ $(document).ready(function () {
             destroyChosenDropDownList();
             populateOrgunitList(locationCommon.countiesList);
             initOrganisationUnitChosenDropDown("county");
+            
         } else if (orgUnitLevel == 'constituency') {
             organisationUnit.current_level = SETTING.orgisation_level[2];
             destroyChosenDropDownList();
             populateOrgunitList(locationCommon.constituenciesList);
             initOrganisationUnitChosenDropDown("constituency");
             $("label[data-name='organisation-unit']").text("Constituency:");
+            
         } else {
             //pass
         }
@@ -279,9 +281,10 @@ function _validateYearRange(startYear, endYear) {
 }
 
 //on click periodicity type
-$("input:radio[name=optradiotimespan]").click(function (event) {
-    var periodTypeSelected = event.target.value;
-    if (periodTypeSelected == 'monthly') {
+$("#period-option li a").click(function (event) {
+    var periodTypeSelected = $(event.target).text();
+    console.log("add "+periodTypeSelected);
+    if (periodTypeSelected == 'Monthly') {
         //$('#monthly-opt').show();
         $('#monthly-opt').css('display', 'inline-block');
         $('#yearly-opt').css('display', 'none');
@@ -346,6 +349,7 @@ $(document).ready(function () {
 
 //###### END #######
 
+//get year range data section
 function getYearRangeData(_callback) {
     var startYear = $("#start-time").val();
     var endYear = $("#end-time").val();
@@ -366,6 +370,29 @@ function _getYearRangeData(startYear, endYear, valid) {
         getQueryValues(queryPropertiesToSubmit, dslGraph);
     }
 }
+// #######END#######
+
+//get yearly data section
+function getYearlyData(_callback) {
+    var startYear = $("#start-time").val();
+    var endYear = $("#end-time").val();
+    var valid = _validateYearRange(startYear, endYear);
+    _callback(startYear, endYear, valid);
+}
+
+function _getYearlyData(year) {
+        var year = yearMonthParameters.currentYear;
+        var indicator = dslGraph.indicator;
+        yearMonthParameters.currentYear = year;
+        setPeriodValues("monthly", year, year);
+        setIndicatorValues("indicator:average:with_filter", indicator);
+        setIhrisValues("human_resource:count");
+        setKemsaValues("commodity:count");
+        var queryPropertiesToSubmit = prepareQueryPropertiesToSubmit(indicator, SETTING.graph_year_month);
+        getQueryValues(queryPropertiesToSubmit, dslGraph);
+}
+
+// #######END#######
 
 //get year range data
 $(document).ready(function () {
