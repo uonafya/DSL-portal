@@ -56,7 +56,8 @@
 
             ._label { 	display: inline-block; 	max-width: 100%; 	margin-bottom: 5px; 	font-weight: 700; }
             .chosen-container{
-                margin-top: 4px;
+                margin-top: 9px;
+                margin-bottom: 9px;
             }
 
 
@@ -149,7 +150,7 @@
                 position: absolute;
                 margin-top: auto !important;
             }
-           
+
         </style>
 
     </head>
@@ -181,6 +182,7 @@
                                 <ul class="dropdown-menu" style="right: 0;left:auto;">
                                     <li><a href="../home/">DSL Home</a></li>
                                     <li><a href="../analytics/">DSL Analytics</a></li>
+                                    <li><a href="../dashboard/">Drill  Dashboard</a></li>
                                 </ul>
                             </li>
                         </ul>
@@ -204,7 +206,17 @@
                             <ul style="right: 0;right:auto;" class="dropdown-menu" id="indicators">
                                 <li><a data-value="Fully immunized Child Coverage" href="javascript:;">Fully Immunized Child Coverage</a></li>
                                 <li><a data-value="Proportion of pregnant women attending 4" href="javascript:;">Proportion of pregnant women attending 4<br/>ANC visits according to <br/>Focused ANC schedule </a></li>
-                                <li><a data-value="TB curative Rate" href="javascript:;">TB curative Rate</a></li>
+                                <li><a data-value="TB curative Rate" href="javascript:;">TB curative Rate</a></li>             
+                                <li><a data-value="Female Infants below 6months on exclusive breastfeedding" href="javascript:;">Female Infants below 6months on exclusive breastfeedding</a></li>
+                                <li><a data-value="Deliveries conducted by skilled health attendants" href="javascript:;">Deliveries conducted by skilled health attendants</a></li>
+                                <li><a data-value="Fresh still Birth Rate" href="javascript:;">Fresh still Birth Rate</a></li>
+                                <li><a data-value="EAC Caesarean Sections performed" href="javascript:;">EAC Caesarean Sections performed</a></li>
+                                <li><a data-value="HIV+ test rate - DTC inpatients" href="javascript:;">HIV+ test rate - DTC inpatients</a></li>
+                                <li><a data-value="EAC ARVs to HIV positive mother during pregnancy" href="javascript:;">EAC ARVs to HIV positive mother during pregnancy</a></li>
+                                <li><a data-value="Under 5yrs attending CWC and are stunted" href="javascript:;">Under 5yrs attending CWC and are stunted</a></li>
+                                <li><a data-value="TB patients who have completed treatment Total" href="javascript:;">TB patients who have completed treatment Total</a></li>
+                                <li><a data-value="IP - Average Length of Stay" href="javascript:;">IP - Average Length of Stay</a></li>
+                                <li><a data-value="Malaria confirmed cases ratio" href="javascript:;">Malaria confirmed cases ratio</a></li>
                             </ul>
                         </div>
 
@@ -218,16 +230,20 @@
                     <div class="spliter"></div>
 
 
-                    <div class="" style="float: left;width: 200px"> 
-
-                        <div class="dropdown">
-                            <button style="width:85%;position: relative;" class="btn btn-default dropdown-toggle" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
-                                Organisation unit
+                    <div class="" style="float: left;"> 
+                        <label style="display: block;">Organisation Unit</label>
+                        <div style="display: inline-block;" class="dropdown">
+                            <button style="position: relative;line-height: 14px;padding-left: 10px;" class="btn btn-default dropdown-toggle" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
+                                    <span style="margin-right: 40px;">Level </span>
+                                    <!--<span style="margin-left:40%;">unit</span></span>-->
                                 <span class="caret right-caret"></span>
                             </button>
                             <ul style="width: 100%;" id="organisation-unit-level" class="dropdown-menu">
+                                <li><a  data-org_unit="nationl" href="javascript:;">National</a></li>
                                 <li><a  data-org_unit="county" href="javascript:;">County</a></li>
                                 <li><a  data-org_unit="constituency" href="javascript:;">Counstituency</a></li>
+                                <li><a  data-org_unit="ward" href="javascript:;">Ward</a></li>
+                                <li><a  data-org_unit="facility" href="javascript:;">Facility</a></li>
                             </ul>
                         </div>
 
@@ -241,21 +257,22 @@
                     <div class="spliter"></div>
                     <div class="" style="float: left;">
 
-                        <div style="display: inline-block;">
-                            <label style="display:block;margin-bottom: 9px;">Period Type: </label>
-                            <label class="radio-inline">
-                                <input id="montly-option" type="radio" value="monthly" name="optradiotimespan" checked>Monthly
-                            </label>
-                            <label class="radio-inline">
-                                <input type="radio" value="yearly" name="optradiotimespan">Yearly
-                            </label>
+                        <div ><label>Period</label></div>
+                        <div class="dropdown" style="display: inline-block">
+                            <button style="position: relative;padding-right: 20px;" class="btn btn-default dropdown-toggle" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
+                                Period Type 
+                                <span class="caret right-caret"></span>
+                            </button>
+                            <ul style="width: 100%;" id="period-option" class="dropdown-menu">
+                                <li><a  href="javascript:;">Monthly</a></li>
+                                <li><a  href="javascript:;">Yearly</a></li>
+                            </ul>
                         </div>
 
 
                         <div id="monthly-opt" style="display: inline-block;">
-                            <label class="_label" style="display: block;" for="year">Year: </label>
-                            <select style="height: 29.5px; border-radius:5px;" id="start_year">
-                                <option disabled selected value>-- select --</option>
+                            <select style="height: 33.5px" id="start_year">
+                                <option disabled selected value>-- year --</option>
                                 <option value="2007">2007</option>
                                 <option value="2008">2008</option>
                                 <option value="2009">2009</option>
@@ -274,11 +291,9 @@
                         <div id="yearly-opt" style="display: none;">
                             <!--<span class="vl"></span>-->
                             <div style="display: inline-block;">
-                                <div class="_label">From:</div><span style="color:red;" id="year-range-mg"></span>
-                                <div></div>
                                 <!--<div class="form-group">-->
-                                <select style="height: 29.5px;border-radius:5px; " id="start-time">
-                                    <option disabled selected value>-- select --</option>
+                                <select style="height: 33.5px " id="start-time">
+                                    <option disabled selected value>-- From: --</option>
                                     <option value="2007">2007</option>
                                     <option value="2008">2008</option>
                                     <option value="2009">2009</option>
@@ -297,11 +312,11 @@
                             <!--<label for="end-time">To:</label>-->
                             <!--<input id="end-time" class="time-period date-picker" style="display: inline-block" name="time-period" type="text">-->
                             <div style="display: inline-block;">
-                                <div class="_label">To:</div><span style="color:red;" id="year-range-msg"></span>
+                                <span style="color:red;" id="year-range-msg"></span>
                                 <div></div>
                                 <!--<div class="form-group">-->
-                                <select style="height: 29.5px;border-radius:5px; " id="end-time">
-                                    <option disabled selected value>-- select --</option>
+                                <select style="height: 33.5px;" id="end-time">
+                                    <option disabled selected value>-- To: --</option>
                                     <option value="2007">2007</option>
                                     <option value="2008">2008</option>
                                     <option value="2009">2009</option>

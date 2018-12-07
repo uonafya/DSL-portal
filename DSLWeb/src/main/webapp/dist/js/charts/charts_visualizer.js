@@ -3,9 +3,10 @@ function DslGraph() {
     var graphData = '';
     var elementId = '';
     var indicator = '';
-    var fetchKemsaData=false;
-    var fetchIhrisData=false;
-    var selectedPeriodType="monthly"; //currently either yearly or monthly string is set here
+    var fetchKemsaData = false;
+    var fetchIhrisData = false;
+    var selectedPeriodType = "monthly"; //currently either yearly or monthly string is set here
+    var graphType; // pie chart, bargraph, multiplex etc
 }
 
 var yearMonthParameters = {
@@ -18,47 +19,71 @@ var yearlyParameters = {
 };
 
 
-var organisationUnit={
+var organisationUnit = {
     current_level: SETTING.orgisation_level[3],
     orgnuinit: "national"
 };
 
 DslGraph.prototype.drawGraph = function draw() {
     that = this;
-    if (this.type == SETTING.graph_year_month) {
+    if (this.type == SETTING.graph_year_month && this.graphType == SETTING.graph_type[1]) {
         drawYearMonthGraph(that);
-    } else if (this.type == SETTING.graph_yearly) {
+    } else if (this.type == SETTING.graph_yearly && this.graphType == SETTING.graph_type[1]) {
         drawYearlyGraph(that);
+    } else if (this.type == SETTING.graph_yearly && this.graphType == SETTING.graph_type[0]) {
+        drawPieChart(that);
     }
+
 };
+
+
+function drawPieChart(that) {
+    console.log("data outut");
+    console.log(that.graphData);
+
+    var data = [];
+    $.each(that.graphData['data'], function (index, objValue) {
+        var dt = {};
+        dt['name'] = objValue[1];
+        dt['y'] = Number(objValue[0]);
+        data.push(dt);
+    });
+    console.log(data);
+    var seriee = [{
+            name: 'Cadre',
+            colorByPoint: true,
+            data: data
+        }];
+
+    drawPie(that.elementId, that.indicator, seriee);
+}
 
 
 function drawYearlyGraph(that) {
     var elementId = that.elementId;
     var titlee = that.indicator + ' - ' + yearlyParameters.startYear + " - " + yearlyParameters.endYear;
-    
+
     var categoriee = [];
     var initDataValues = [];
     var yearPositionMapper = {};
-    
+
     var x;
-    var count= 0;
-    for (x=yearlyParameters.startYear ; x <= yearlyParameters.endYear; x++) {
+    var count = 0;
+    for (x = yearlyParameters.startYear; x <= yearlyParameters.endYear; x++) {
         categoriee.push(x.toString());
         initDataValues.push("0");
-      
+
         yearPositionMapper[x] = count;
-        count=count+1;
+        count = count + 1;
     }
-   
-   
+
+
     var dataAttributess = {};
-    var monthPosition = 0;
     var yearPosition = '';
     var headerPositionMapping = {};
     $.each(that.graphData['columns'], function (index, objValue) {
 
-        if (!(objValue['title'] == 'year' || objValue['title'] == 'indicator_name')) {            
+        if (!(objValue['title'] == 'year' || objValue['title'] == 'indicator_name')) {
             dataAttributess[objValue['title']] = initDataValues.slice(0); //clone array to avoid same object reference
             headerPositionMapping[index] = objValue['title'];
         }
@@ -67,15 +92,18 @@ function drawYearlyGraph(that) {
         }
 
     });
-   
+
     dataAttributess = getYearlyDataValuesForChartDisplay(that, yearPosition, yearPositionMapper, headerPositionMapping, dataAttributess);
+    console.log("The attributes");
+    console.log(dataAttributess);
     var serie = getGraphSeries(dataAttributess);
-   
-    drawMultipleAxes('test-graph', titlee, categoriee, serie);
+
+    drawMultipleAxes(elementId, titlee, categoriee, serie);
 }
 
 
 function drawYearMonthGraph(that) {
+    //var elementId = "test-graph1";
     var elementId = that.elementId;
     var titlee = that.indicator + ' - ' + yearMonthParameters.currentYear;
     var categoriee = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
@@ -101,17 +129,15 @@ function drawYearMonthGraph(that) {
     });
     dataAttributes = getDataValuesForChartDisplay(that, yearPosition, monthPosition, headerPositionMapping, dataAttributes);
     var serie = getGraphSeries(dataAttributes);
-    
-
-    drawMultipleAxes('test-graph', indicatorName + "-" + yearMonthParameters.currentYear, categoriee, serie);
+    drawMultipleAxes(elementId, indicatorName + "-" + yearMonthParameters.currentYear, categoriee, serie);
 }
 
 
 function getYearlyDataValuesForChartDisplay(that, yearPosition, yearPositionMapper, headerPositionMapping, dataAttributes) {
     var position = yearPosition;
     $.each(that.graphData['data'], function (index, individualArrayWithData) {
-        
-        $.each(individualArrayWithData, function (dataRowIndex, dataRow) {      
+
+        $.each(individualArrayWithData, function (dataRowIndex, dataRow) {
             var yr = individualArrayWithData[position];
             var yrIndex = yearPositionMapper[yr];
             try {

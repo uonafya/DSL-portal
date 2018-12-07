@@ -1,12 +1,12 @@
 function loadMap(mtype, mapData){
     if(mtype=='county'){
-        mapGeo = '../dist/maps/county.geojson';
+        mapGeo = '../../dist/maps/county.geojson';
     }else if(mtype=='country'){
-        mapGeo = '../dist/maps/kenya.geojson';
+        mapGeo = '../../dist/maps/kenya.geojson';
     }else if(mtype=='constituency'){
-        mapGeo = '../dist/maps/constituency.geojson';
+        mapGeo = '../../dist/maps/constituency.geojson';
     }else if(mtype=='ward'){
-        mapGeo = '../dist/maps/wards.geojson';
+        mapGeo = '../../dist/maps/wards.geojson';
     }else{
         $('#gismagic').html('<div class ="alert alert-danger"><strong>Map Error</strong><br/>Failed to load this graph. Wrong map type picked. Please <a href="#" class="btn btn-xs btn-primary btn-rounded" onclick="window.location.reload(true)">refresh</a> this page to retry</div>');
         return;

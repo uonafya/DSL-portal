@@ -3,8 +3,8 @@ var dslGraph;
 var initOrganisationUnitChosenDropDown = function initOrganisationUnitChosenDropDown(orgType) {
     $("#organisation-unit").chosen({
         placeholder_text_single: "Select " + orgType + ": ",
-        no_results_text: "No results found!",
-        width: "85%"
+        no_results_text: "No results found!"
+//        width: "85%"
     });
 };
 
@@ -87,12 +87,14 @@ $(document).ready(function () {
             destroyChosenDropDownList();
             populateOrgunitList(locationCommon.countiesList);
             initOrganisationUnitChosenDropDown("county");
+            
         } else if (orgUnitLevel == 'constituency') {
             organisationUnit.current_level = SETTING.orgisation_level[2];
             destroyChosenDropDownList();
             populateOrgunitList(locationCommon.constituenciesList);
             initOrganisationUnitChosenDropDown("constituency");
             $("label[data-name='organisation-unit']").text("Constituency:");
+            
         } else {
             //pass
         }
@@ -188,7 +190,6 @@ function prepareQueryPropertiesToSubmit(currentIndicator, grapType) {
     var queryToSubmit = {"query": queryParametersList};
     var queryPropertiesToSubmit = JSON.stringify(queryToSubmit);
     console.log(queryToSubmit);
-
     dslGraph.type = grapType;
     dslGraph.elementId = "test-graph";
     dslGraph.indicator = currentIndicator;
@@ -279,9 +280,10 @@ function _validateYearRange(startYear, endYear) {
 }
 
 //on click periodicity type
-$("input:radio[name=optradiotimespan]").click(function (event) {
-    var periodTypeSelected = event.target.value;
-    if (periodTypeSelected == 'monthly') {
+$("#period-option li a").click(function (event) {
+    var periodTypeSelected = $(event.target).text();
+    console.log("add "+periodTypeSelected);
+    if (periodTypeSelected == 'Monthly') {
         //$('#monthly-opt').show();
         $('#monthly-opt').css('display', 'inline-block');
         $('#yearly-opt').css('display', 'none');
@@ -374,7 +376,7 @@ $(document).ready(function () {
     });
 });
 
-function getQueryValues(x, dslGraph) {
+function getQueryValues(queryToSubmit, dslGraph) {
     $('#table-status').show();
     $.ajax({
         type: 'POST', // define the type of HTTP verb we want to use
@@ -382,14 +384,12 @@ function getQueryValues(x, dslGraph) {
         dataType: 'json', // what type of data do we expect back from the server
         contentType: 'application/json; charset=utf-8',
         encode: true,
-        data: x,
+        data: queryToSubmit,
         success: function (data, textStatus, jqXHR) {
-            console.log("Data is: " + JSON.stringify(data));
             dslGraph.graphData = data;
+            dslGraph.graphType=SETTING.graph_type[1];
             dslGraph.drawGraph();
             populateAnalyticsTable(data);
-
-            //populateAnalyticsTable(data);
             $('#table-status').hide();
         },
         error: function (response, request) {
