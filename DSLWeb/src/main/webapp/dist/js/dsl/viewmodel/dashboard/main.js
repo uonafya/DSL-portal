@@ -288,11 +288,13 @@ $("#period-option li a").click(function (event) {
         $('#monthly-opt').css('display', 'inline-block');
         $('#yearly-opt').css('display', 'none');
         dslGraph.selectedPeriodType = 'monthly';
-    } else {
+    } else if(periodTypeSelected == 'Yearly'){
         //$('.month').hide();
         $('#yearly-opt').css('display', 'inline-block');
         $('#monthly-opt').css('display', 'none');
         dslGraph.selectedPeriodType = 'yearly';
+    }else{
+        
     }
 
 });
