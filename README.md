@@ -1,2 +1,2 @@
-# DSL-Analytics
-DSL-Analytics component
+# DSL-Portal
+DSL web Portal component
