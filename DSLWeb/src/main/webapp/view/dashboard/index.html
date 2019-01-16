@@ -67,7 +67,7 @@
                 height: 18px;
                 margin-top: 6px;
                 margin: 0;
-                
+
             }
 
             .switch input { 
@@ -220,7 +220,17 @@
                 left: initial;
             }
 
+            .graph-types-list {
+                margin-bottom: 9px;
+                margin-left: 20px;
+            }
 
+            .graph-types-list a i {
+                font-size: 20px;
+            }
+            
+            .graph-types-list a  { margin-right: 3px;}
+            
         </style>
 
     </head>
@@ -262,7 +272,7 @@
             </div>
         </nav>
 
-        <div class="subnavbar">
+        <div style="margin-bottom: 1em;" class="subnavbar">
             <div style="height: 65px;" class="subnavbar-inner">
                 <div class="container org-unit" style="width: 100%;height: 100%;">
 
@@ -506,10 +516,21 @@
             <!-- /subnavbar-inner -->
         </div>
         <!-- /subnavbar -->
+
+        <div class="graph-types-list">
+            <a href="#" style="display: inline-block;"> <i class="fa fa-bar-chart" aria-hidden="true"></i></a>
+            <a href="#" style="display: inline-block;"> <i class="fa fa-pie-chart" aria-hidden="true"></i></a>
+            <a href="#" style="display: inline-block;"> <i class="fa fa-line-chart" aria-hidden="true"></i></a>
+            <a href="#" style="display: inline-block;"> <i class="fa fa-area-chart" aria-hidden="true"></i></a>
+        </div>
+
         <div id="table-status">Loading <i class="fas fa-spinner fa-spin" style="font-size: 24px;"></i></div>
         <div class="main">
             <div class="main-inner">
                 <div class="container-fluid">
+
+
+
                     <div class="row">
                         <div id="test-graph" class="col-sm-12"></div>
                         <!--<div id="hiv_status_chart" class="col-sm-6"></div>-->
