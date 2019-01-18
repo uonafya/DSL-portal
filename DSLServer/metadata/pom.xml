@@ -5,8 +5,7 @@
         <groupId>com.healthit</groupId>
         <artifactId>DSLServer</artifactId>
         <version>1.0-SNAPSHOT</version>
-        <relativePath>../../pom.xml</relativePath>
     </parent>
-    <artifactId>Indicators</artifactId>
+    <artifactId>metadata</artifactId>
     <packaging>jar</packaging>
 </project>

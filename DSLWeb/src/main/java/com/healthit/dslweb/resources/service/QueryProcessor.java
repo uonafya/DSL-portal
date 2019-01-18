@@ -5,7 +5,6 @@
  */
 package com.healthit.dslweb.resources.service;
 
-import com.healthit.dslservice.route.DataResourceRouter;
 import com.healthit.dslweb.service.QueryInterpreter;
 import java.util.List;
 import java.util.Map;
@@ -23,6 +22,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.http.HttpEntity;
 import static com.healthit.dslservice.util.strings.DataTypeConverter.getJSONFromObject;
+import com.healthit.metadata.MetadataFetcher;
 import javax.servlet.http.HttpSession;
 
 /**
@@ -34,9 +34,15 @@ public class QueryProcessor {
 
     @ResponseBody
     @RequestMapping(value = "/processquery", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<?> processQuery(@RequestBody String pBody,HttpSession session) {
-        DataResourceRouter dataResourceRouter=new DataResourceRouter();
-        String queryResults=dataResourceRouter.route(pBody);
+    public ResponseEntity<?> processQuery(@RequestBody String pBody, HttpSession session) {
+        
+        QueryInterpreter queryInterpreterObj = new QueryInterpreter();
+        JSONObject jsonObj = new JSONObject(pBody);
+        JSONArray array = jsonObj.getJSONArray("query");
+        Map<String, List<Object>> rsults = queryInterpreterObj.interpretQuery(array);
+        String queryResults = getJSONFromObject(rsults);
+        MetadataFetcher metaData=new MetadataFetcher();
+        metaData.getMeta(pBody);
         return new ResponseEntity<String>(queryResults, HttpStatus.OK);
     }
 

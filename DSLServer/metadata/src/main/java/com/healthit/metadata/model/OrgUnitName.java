@@ -3,12 +3,16 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package com.healthit.indicators;
+package com.healthit.metadata.model;
 
 /**
  *
  * @author duncan
  */
-public class IndicatorException {
-    
+public enum OrgUnitName {
+    FACILITY,
+    WARD,
+    SUBCOUNTY,
+    COUNTY,
+    NATIONAL;
 }

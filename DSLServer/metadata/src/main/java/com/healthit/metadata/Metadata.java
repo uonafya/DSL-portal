@@ -3,12 +3,12 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package com.healthit.dslservice.route;
+package com.healthit.metadata;
 
 /**
  *
  * @author duncan
  */
-public interface Router {
-    public void route(String pBody);
+public interface Metadata {
+    public String getMetadataData(String requestString);
 }
