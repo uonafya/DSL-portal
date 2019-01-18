@@ -35,14 +35,15 @@ public class QueryProcessor {
     @ResponseBody
     @RequestMapping(value = "/processquery", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<?> processQuery(@RequestBody String pBody, HttpSession session) {
-        
+        System.out.println("Got it under water "+pBody);
         QueryInterpreter queryInterpreterObj = new QueryInterpreter();
         JSONObject jsonObj = new JSONObject(pBody);
         JSONArray array = jsonObj.getJSONArray("query");
+        MetadataFetcher metaData=new MetadataFetcher();
+        metaData.getMeta(array);
         Map<String, List<Object>> rsults = queryInterpreterObj.interpretQuery(array);
         String queryResults = getJSONFromObject(rsults);
-        MetadataFetcher metaData=new MetadataFetcher();
-        metaData.getMeta(pBody);
+        
         return new ResponseEntity<String>(queryResults, HttpStatus.OK);
     }
 

@@ -9,6 +9,7 @@ import com.healthit.metadata.model.RequestEntity;
 import com.healthit.metadata.util.RequestBodyDissolver;
 import java.util.List;
 import org.apache.log4j.Logger;
+import org.json.JSONArray;
 
 /**
  *
@@ -18,8 +19,9 @@ public class MetadataFetcher {
 
     final static Logger log = Logger.getLogger(MetadataFetcher.class.getCanonicalName());
 
-    public String getMeta(String requestBody) {
+    public String getMeta(JSONArray requestBody) {
         log.info("Getmetadata function");
+        log.info("Debugging 2");
         return _sort(requestBody);
     }
 
@@ -30,9 +32,10 @@ public class MetadataFetcher {
      * @param pBody
      * @return
      */
-    public String _sort(String pBody) {
+    public String _sort(JSONArray pBody) {
         log.info("metadata sorting");
         RequestBodyDissolver requestBodyDissolver = new RequestBodyDissolver();
+        log.info("Debugging 3");
         List<RequestEntity> rqtEntities = requestBodyDissolver.dissolve(pBody);
         return "";
     }
