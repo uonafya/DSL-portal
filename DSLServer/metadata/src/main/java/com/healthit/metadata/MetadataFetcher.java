@@ -21,7 +21,6 @@ public class MetadataFetcher {
 
     public String getMeta(JSONArray requestBody) {
         log.info("Getmetadata function");
-        log.info("Debugging 2");
         return _sort(requestBody);
     }
 

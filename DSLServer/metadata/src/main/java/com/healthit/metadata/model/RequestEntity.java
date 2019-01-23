@@ -10,11 +10,12 @@ package com.healthit.metadata.model;
  * @author duncan
  */
 public class RequestEntity {
+
     private String subject;
-    private String orgUnitID;
-    private OrgUnitName orgUnitName;
+    private Object orgUnitID;
+    private OrgUnitName orgUnitType;
     private String periodType;
-    private String period;
+    private Object period;
 
     public String getSubject() {
         return subject;
@@ -24,23 +25,22 @@ public class RequestEntity {
         this.subject = subject;
     }
 
-    public OrgUnitName getOrgUnitName() {
-        return orgUnitName;
+    public OrgUnitName getOrgUnitType() {
+        return orgUnitType;
     }
 
-    public void setOrgUnitName(OrgUnitName orgUnitName) {
-        this.orgUnitName = orgUnitName;
+    public void setOrgUnitType(OrgUnitName orgUnitType) {
+        this.orgUnitType = orgUnitType;
     }
 
-    public String getOrgUnitID() {
+    public Object getOrgUnitID() {
         return orgUnitID;
     }
 
-    public void setOrgUnitID(String orgUnitID) {
+    public void setOrgUnitID(Object orgUnitID) {
         this.orgUnitID = orgUnitID;
     }
 
-    
     public String getPeriodType() {
         return periodType;
     }
@@ -49,13 +49,12 @@ public class RequestEntity {
         this.periodType = periodType;
     }
 
-    public String getPeriod() {
+    public Object getPeriod() {
         return period;
     }
 
-    public void setPeriod(String period) {
+    public void setPeriod(Object period) {
         this.period = period;
     }
-    
-    
+
 }
