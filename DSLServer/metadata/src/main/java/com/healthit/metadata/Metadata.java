@@ -5,10 +5,12 @@
  */
 package com.healthit.metadata;
 
+import com.healthit.metadata.model.RequestEntity;
+
 /**
  *
  * @author duncan
  */
 public interface Metadata {
-    public String getMetadataData(String requestString);
+    public String getMetadataData(RequestEntity requestString);
 }

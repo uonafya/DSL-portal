@@ -3,28 +3,26 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package com.healthit.metadata.indicators.servicedelivery;
+package com.healthit.metadata.indicators.uhc;
 
 import com.healthit.metadata.Metadata;
 import com.healthit.metadata.model.RequestEntity;
-import java.util.List;
-import java.util.Map;
 import org.apache.log4j.Logger;
-
 
 /**
  *
  * @author duncan
  */
-public class EacArvsToHIV implements Metadata {
+public class TBcurativeRate implements Metadata {
 
-    final static Logger log = Logger.getLogger(EacArvsToHIV.class.getCanonicalName());
+    final static Logger log = Logger.getLogger(TBcurativeRate.class.getCanonicalName());
 
     @Override
     public String getMetadataData(RequestEntity requestString) {
-       String s="";
+        log.info("the Tb curative rate");
+        
+        String s = "";
         return s;
     }
 
-  
 }
