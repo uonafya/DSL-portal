@@ -5,10 +5,12 @@ import com.healthit.metadata.model.RequestEntity;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import org.apache.log4j.Logger;
 import org.json.JSONArray;
+import org.json.JSONException;
 import org.json.JSONObject;
 
 /**
@@ -19,6 +21,12 @@ public class RequestBodyDissolver {
 
     final static Logger log = Logger.getLogger(RequestBodyDissolver.class.getCanonicalName());
 
+    /**
+     * Gets the values from the jason array post data
+     *
+     * @param requestBody
+     * @return
+     */
     private Map<String, Object> getRequestsPart(JSONArray requestBody) {
         Map<String, Object> requestBodyValue = new HashMap();
         for (Object o : requestBody) {
@@ -28,8 +36,8 @@ public class RequestBodyDissolver {
             String[] queryNamesFromUI = jsoObj.getString("what").split(":");
             metadataSourceName.append(queryNamesFromUI[0]);
 
-            log.info("we got data "+queryNamesFromUI[0]);
-            
+            log.info("we got data " + queryNamesFromUI[0]);
+
             if (queryNamesFromUI[0].equals("date")) {
                 JSONObject filters = jsoObj.getJSONObject("filter");
                 requestBodyValue.put("period", filters);
@@ -44,10 +52,15 @@ public class RequestBodyDissolver {
         }
         return requestBodyValue;
     }
-    
 
+    /**
+     * Gets the main subject(indicator) from the jason array post data
+     *
+     * @param requestBody
+     * @return
+     */
     private List<String> getRequestSubject(JSONArray requestBody) {
-        List <String> subjects =new ArrayList();
+        List<String> subjects = new ArrayList();
         for (Object o : requestBody) {
 
             JSONObject jsoObj = (JSONObject) o;
@@ -55,10 +68,16 @@ public class RequestBodyDissolver {
             StringBuilder metadataSourceName = new StringBuilder();
 
             String[] queryNamesFromUI = jsoObj.getString("what").split(":");
-            
 
-            JSONObject filters = jsoObj.getJSONObject("filter");
-            JSONArray keys = filters.names();
+            log.info("the object " + jsoObj.toString());
+            JSONObject filters = null;
+            JSONArray keys = null;
+            try {
+                filters = jsoObj.getJSONObject("filter");
+                keys = filters.names();
+            } catch (JSONException ex) {
+                log.error(ex);
+            }
 
             if (keys != null) {
                 for (Object obj : keys) {
@@ -77,25 +96,33 @@ public class RequestBodyDissolver {
                         metadataSourceName.append("-").append(key).append("-").append(filterValue);
 
                         subjects.add(metadataSourceName.toString());
-                        metadataSourceName=new StringBuilder(); 
+                        metadataSourceName = new StringBuilder();
                     }
                 }
             }
 
-            
         }
-
         return subjects;
-        
     }
 
     public List<RequestEntity> dissolve(JSONArray requestBody) {
-
-        log.info("The request body values "+getRequestsPart(requestBody));
-        log.info("The request subject "+getRequestSubject(requestBody));
-        
         List<RequestEntity> requestEntities = new ArrayList();
+        Map<String, Object> bodValues = getRequestsPart(requestBody);
+        List<String> subjects = getRequestSubject(requestBody);
+        Iterator i = subjects.iterator();
+        while (i.hasNext()) {
+            RequestEntity rqstEntity = new RequestEntity();
+            rqstEntity.setSubject((String) i.next());
+            rqstEntity.setPeriodType((String) bodValues.get("periodType"));
+            rqstEntity.setPeriod(bodValues.get("period"));
+            rqstEntity.setOrgUnitID(bodValues.get("orgUnitID"));
+            rqstEntity.setOrgUnitType((String) bodValues.get("orgUnitType"));
+            requestEntities.add(rqstEntity);
+        }
+
+        for (Map.Entry<String, Object> entry : bodValues.entrySet()) {
+            System.out.println("Key : " + entry.getKey() + " value : " + entry.getValue());
+        }
         return requestEntities;
-        
     }
 }

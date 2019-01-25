@@ -7,6 +7,7 @@ package com.healthit.metadata;
 
 import com.healthit.metadata.model.RequestEntity;
 import com.healthit.metadata.util.RequestBodyDissolver;
+import java.util.Iterator;
 import java.util.List;
 import org.apache.log4j.Logger;
 import org.json.JSONArray;
@@ -21,7 +22,17 @@ public class MetadataFetcher {
 
     public String getMeta(JSONArray requestBody) {
         log.info("Getmetadata function");
-        return _sort(requestBody);
+         List<RequestEntity> rqtEntities = _sort(requestBody);
+         Iterator i = rqtEntities.iterator();
+         while(i.hasNext()){
+             RequestEntity rstEnty=(RequestEntity) i.next();
+             log.info("got one org id"+ rstEnty.getOrgUnitID());
+             log.info("got one org type"+ rstEnty.getOrgUnitType());
+             log.info("got one period"+ rstEnty.getPeriod());
+             log.info("got one period type"+ rstEnty.getPeriodType());
+             log.info("got one subject"+ rstEnty.getSubject());
+         }
+        return "";
     }
 
     /**
@@ -31,11 +42,11 @@ public class MetadataFetcher {
      * @param pBody
      * @return
      */
-    public String _sort(JSONArray pBody) {
+    public List<RequestEntity> _sort(JSONArray pBody) {
         log.info("metadata sorting");
         RequestBodyDissolver requestBodyDissolver = new RequestBodyDissolver();
-        log.info("Debugging 3");
         List<RequestEntity> rqtEntities = requestBodyDissolver.dissolve(pBody);
-        return "";
+        log.info("The meta list "+rqtEntities);
+        return rqtEntities;
     }
 }

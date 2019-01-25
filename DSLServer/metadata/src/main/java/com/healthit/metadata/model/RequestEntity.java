@@ -13,7 +13,7 @@ public class RequestEntity {
 
     private String subject;
     private Object orgUnitID;
-    private OrgUnitName orgUnitType;
+    private String orgUnitType;
     private String periodType;
     private Object period;
 
@@ -25,11 +25,11 @@ public class RequestEntity {
         this.subject = subject;
     }
 
-    public OrgUnitName getOrgUnitType() {
+    public String getOrgUnitType() {
         return orgUnitType;
     }
 
-    public void setOrgUnitType(OrgUnitName orgUnitType) {
+    public void setOrgUnitType(String orgUnitType) {
         this.orgUnitType = orgUnitType;
     }
 
