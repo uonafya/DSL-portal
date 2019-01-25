@@ -3,13 +3,17 @@
     <modelVersion>4.0.0</modelVersion>
     <parent>
         <groupId>com.healthit</groupId>
-        <artifactId>DSLAnalytics</artifactId>
+        <artifactId>DSLServer</artifactId>
         <version>1.0-SNAPSHOT</version>
     </parent>
-    <artifactId>DSLServer</artifactId>
-    <packaging>pom</packaging>
-    <modules>
-        <module>DSLService</module>
-        <module>metadata</module>
-    </modules>
+    <artifactId>metadata</artifactId>
+    <packaging>jar</packaging>
+    
+    <dependencies>
+        <dependency>
+            <groupId>org.json</groupId>
+            <artifactId>json</artifactId>
+            <version>20170516</version>
+        </dependency>
+    </dependencies>
 </project>

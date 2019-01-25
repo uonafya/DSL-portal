@@ -60,20 +60,21 @@
                 margin-bottom: 9px;
             }
 
-
-
             .switch {
                 position: relative;
                 display: inline-block;
-                width: 50px;
-                height: 24px;
+                width: 45px;
+                height: 18px;
                 margin-top: 6px;
+                margin: 0;
+
             }
 
             .switch input { 
                 opacity: 0;
                 width: 0;
                 height: 0;
+                margin-top: 10px;
             }
 
             .slider {
@@ -86,6 +87,7 @@
                 background-color: #ccc;
                 -webkit-transition: .4s;
                 transition: .4s;
+                height: 100%;
             }
 
             .slider:before {
@@ -121,10 +123,13 @@
 
             .slider.round:before {
                 border-radius: 50%;
+                bottom: 3px;
+                width: 13px;
+                height: 12px;
             }
 
             .datasources{
-                width:185px; margin-top:-10px;margin-left:5px;margin-bottom: 0;background:white;font-size: inherit;
+                width:156px; margin-top:1px;margin-bottom: 0;background:white;font-size: inherit;
             }
             .sources{
                 background-color: #d6d6c2;
@@ -151,6 +156,81 @@
                 margin-top: auto !important;
             }
 
+            .dropdown-submenu {
+                position:relative;
+            }
+            .dropdown-submenu>.dropdown-menu {
+                top:0;
+                left:100%;
+                margin-top:-6px;
+                margin-left:-1px;
+                -webkit-border-radius:0 6px 6px 6px;
+                -moz-border-radius:0 6px 6px 6px;
+                border-radius:0 6px 6px 6px;
+            }
+            .dropdown-submenu:hover>.dropdown-menu {
+                display:block;
+            }
+            .dropdown-submenu>a:after {
+                display:block;
+                content:" ";
+                float:right;
+                width:0;
+                height:0;
+                border-color:transparent;
+                border-style:solid;
+                border-width:5px 0 5px 5px;
+                border-left-color:#cccccc;
+                margin-top:5px;
+                margin-right:-10px;
+            }
+            .dropdown-submenu:hover>a:after {
+                border-left-color:#ffffff;
+            }
+            .dropdown-submenu.pull-left {
+                float:none;
+            }
+            .dropdown-submenu.pull-left>.dropdown-menu {
+                left:-100%;
+                margin-left:10px;
+                -webkit-border-radius:6px 0 6px 6px;
+                -moz-border-radius:6px 0 6px 6px;
+                border-radius:6px 0 6px 6px;
+            }
+
+            .subnavbar .dropdown-menu .rm::before {
+                content: '';
+                display: none;
+                border-left: none;
+                border-right: none;
+                border-bottom: none;
+                border-bottom-color: initial;
+                position: initial;
+                top: initial;
+                left: initial;
+            }
+
+            .subnavbar .dropdown-menu .rm::after {
+                display: none;
+                border-left: none;
+                border-right: none;
+                border-bottom: none;
+                position: initial;
+                top: initial;
+                left: initial;
+            }
+
+            .graph-types-list {
+                margin-bottom: 9px;
+                margin-left: 20px;
+            }
+
+            .graph-types-list a i {
+                font-size: 20px;
+            }
+            
+            .graph-types-list a  { margin-right: 3px;}
+            
         </style>
 
     </head>
@@ -182,7 +262,7 @@
                                 <ul class="dropdown-menu" style="right: 0;left:auto;">
                                     <li><a href="../home/">DSL Home</a></li>
                                     <li><a href="../analytics/">DSL Analytics</a></li>
-                                    <li><a href="../dashboard/">Dashboard</a></li>
+                                    <li><a href="../dashboard/">Drill  Dashboard</a></li>
                                 </ul>
                             </li>
                         </ul>
@@ -192,7 +272,7 @@
             </div>
         </nav>
 
-        <div class="subnavbar">
+        <div style="margin-bottom: 1em;" class="subnavbar">
             <div style="height: 65px;" class="subnavbar-inner">
                 <div class="container org-unit" style="width: 100%;height: 100%;">
 
@@ -204,9 +284,60 @@
                                 <span class="right-caret caret "></span>
                             </button>
                             <ul style="right: 0;right:auto;" class="dropdown-menu" id="indicators">
-                                <li><a data-value="Fully immunized Child Coverage" href="javascript:;">Fully Immunized Child Coverage</a></li>
-                                <li><a data-value="Proportion of pregnant women attending 4" href="javascript:;">Proportion of pregnant women attending 4<br/>ANC visits according to <br/>Focused ANC schedule </a></li>
-                                <li><a data-value="TB curative Rate" href="javascript:;">TB curative Rate</a></li>
+
+                                <li class="dropdown-submenu">
+                                    <a href="#" class="dropdown-toggle" data-toggle="dropdown">Service Delivery</a>
+                                    <ul class="dropdown-menu rm">
+                                        <li><a data-value="Female Infants below 6months on exclusive breastfeedding" href="javascript:;">Female Infants below 6months on exclusive breastfeedding</a></li>
+                                        <li><a data-value="Deliveries conducted by skilled health attendants" href="javascript:;">Deliveries conducted by skilled health attendants</a></li>
+                                        <li><a data-value="Fresh still Birth Rate" href="javascript:;">Fresh still Birth Rate</a></li>
+                                        <li><a data-value="EAC Caesarean Sections performed" href="javascript:;">EAC Caesarean Sections performed</a></li>
+                                        <li><a data-value="HIV+ test rate - DTC inpatients" href="javascript:;">HIV+ test rate - DTC inpatients</a></li>
+                                        <li><a data-value="EAC ARVs to HIV positive mother during pregnancy" href="javascript:;">EAC ARVs to HIV positive mother during pregnancy</a></li>
+                                        <li><a data-value="Under 5yrs attending CWC and are stunted" href="javascript:;">Under 5yrs attending CWC and are stunted</a></li>
+                                        <li><a data-value="TB patients who have completed treatment Total" href="javascript:;">TB patients who have completed treatment Total</a></li>
+                                        <li><a data-value="IP - Average Length of Stay" href="javascript:;">IP - Average Length of Stay</a></li>
+                                        <li><a data-value="Malaria confirmed cases ratio" href="javascript:;">Malaria confirmed cases ratio</a></li> 
+                                    </ul>
+                                </li>
+
+                                <li class="dropdown-submenu">
+                                    <a href="#" class="dropdown-toggle" data-toggle="dropdown">UHC</a>
+                                    <ul class="dropdown-menu rm">
+                                        <li><a data-value="Facility Maternal Mortality Ratio" href="javascript:;">Maternal Mortality Rate</a></li>
+                                        <li><a data-value="Fully immunized Child Coverage" href="javascript:;">Percentage of Children Fully immunized</a></li>
+                                        <li><a data-value="Proportion of pregnant women attending 4" href="javascript:;">Percentage of women aged <br/> 15-49 years with a live birth <br/> 
+                                                in a given time period who received <br/> antenatal care four or more times </a></li>
+                                        <li><a data-value="TB curative Rate" href="javascript:;">TB curative Rate</a></li> 
+                                    </ul>
+                                </li>
+
+
+                                <li class="dropdown-submenu">
+                                    <a href="#" class="dropdown-toggle" data-toggle="dropdown">Human Workforce</a>
+                                    <ul class="dropdown-menu rm">
+
+                                    </ul>
+                                </li>
+
+
+
+                                <li class="dropdown-submenu">
+                                    <a href="#" class="dropdown-toggle" data-toggle="dropdown">Health Infrastructure</a>
+                                    <ul class="dropdown-menu rm">
+
+                                    </ul>
+                                </li>
+
+
+
+                                <li class="dropdown-submenu">
+                                    <a href="#" class="dropdown-toggle" data-toggle="dropdown">Health Products</a>
+                                    <ul class="dropdown-menu rm">
+
+                                    </ul>
+                                </li>
+
                             </ul>
                         </div>
 
@@ -224,8 +355,8 @@
                         <label style="display: block;">Organisation Unit</label>
                         <div style="display: inline-block;" class="dropdown">
                             <button style="position: relative;line-height: 14px;padding-left: 10px;" class="btn btn-default dropdown-toggle" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
-                                    <span style="margin-right: 40px;">Level </span>
-                                    <!--<span style="margin-left:40%;">unit</span></span>-->
+                                <span style="margin-right: 40px;">Level </span>
+                                <!--<span style="margin-left:40%;">unit</span></span>-->
                                 <span class="caret right-caret"></span>
                             </button>
                             <ul style="width: 100%;" id="organisation-unit-level" class="dropdown-menu">
@@ -254,7 +385,10 @@
                                 <span class="caret right-caret"></span>
                             </button>
                             <ul style="width: 100%;" id="period-option" class="dropdown-menu">
+                                <li><a  href="javascript:;">Weekly</a></li>
                                 <li><a  href="javascript:;">Monthly</a></li>
+                                <li><a  href="javascript:;">Quarterly</a></li>
+                                <li><a  href="javascript:;">Six-monthly</a></li>
                                 <li><a  href="javascript:;">Yearly</a></li>
                             </ul>
                         </div>
@@ -333,21 +467,23 @@
 
                     </div>
                     <div class="spliter"></div>
-                    <div class="" style="float: left;margin-top: 12px;margin-left: 20px">
-                        <div style="width:300px;border:1px solid black;padding-left:3px;">
-                            <h4 class="datasources"><label>Display Other Data Sources</label></h4>
-
-                            <span> Ihris </span>
-                            <label class="switch">
-                                <input id="ihris-switch" type="checkbox">
-                                <span class="slider round"></span>
-                            </label>
-
-                            <span> Kemsa </span>
-                            <label class="switch">
-                                <input id="kemsa-switch" type="checkbox">
-                                <span class="slider round"></span>
-                            </label>
+                    <div class="" style="float: left;margin-left: 20px">
+                        <div style="width:300px;padding-left:3px;">
+                            <h4 class="datasources"><label>Dislay Distribution Data</label></h4>
+                            <div style="display: inline-block; margin-right: 5px;">
+                                <span style="display: block;"> Human workforce </span>
+                                <label class="switch">
+                                    <input id="ihris-switch" type="checkbox">
+                                    <span class="slider round"></span>
+                                </label>
+                            </div>
+                            <div style="display: inline-block">
+                                <span style="display: block;"> Drug supplied </span>
+                                <label class="switch">
+                                    <input id="kemsa-switch" type="checkbox">
+                                    <span class="slider round"></span>
+                                </label>
+                            </div>
                         </div>
                     </div>
 
@@ -380,10 +516,21 @@
             <!-- /subnavbar-inner -->
         </div>
         <!-- /subnavbar -->
+
+        <div class="graph-types-list">
+            <a href="#" style="display: inline-block;"> <i class="fa fa-bar-chart" aria-hidden="true"></i></a>
+            <a href="#" style="display: inline-block;"> <i class="fa fa-pie-chart" aria-hidden="true"></i></a>
+            <a href="#" style="display: inline-block;"> <i class="fa fa-line-chart" aria-hidden="true"></i></a>
+            <a href="#" style="display: inline-block;"> <i class="fa fa-area-chart" aria-hidden="true"></i></a>
+        </div>
+
         <div id="table-status">Loading <i class="fas fa-spinner fa-spin" style="font-size: 24px;"></i></div>
         <div class="main">
             <div class="main-inner">
                 <div class="container-fluid">
+
+
+
                     <div class="row">
                         <div id="test-graph" class="col-sm-12"></div>
                         <!--<div id="hiv_status_chart" class="col-sm-6"></div>-->

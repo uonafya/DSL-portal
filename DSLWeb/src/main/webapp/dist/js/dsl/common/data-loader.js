@@ -708,7 +708,7 @@ var updateData = function () {
     console.log("queryParametersList is: " + JSON.stringify(queryParametersList));
     var queryToSubmit = {"query": queryParametersList};
     var x = JSON.stringify(queryToSubmit);
-    console.log(queryToSubmit);
+    console.log(x);
     //    sendQueryParamatersToServer(queryParametersList);
     //$("#table-status").css("display", "block");
     $('#table-status').show();

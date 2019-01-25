@@ -190,7 +190,6 @@ function prepareQueryPropertiesToSubmit(currentIndicator, grapType) {
     var queryToSubmit = {"query": queryParametersList};
     var queryPropertiesToSubmit = JSON.stringify(queryToSubmit);
     console.log(queryToSubmit);
-
     dslGraph.type = grapType;
     dslGraph.elementId = "test-graph";
     dslGraph.indicator = currentIndicator;
@@ -289,11 +288,13 @@ $("#period-option li a").click(function (event) {
         $('#monthly-opt').css('display', 'inline-block');
         $('#yearly-opt').css('display', 'none');
         dslGraph.selectedPeriodType = 'monthly';
-    } else {
+    } else if(periodTypeSelected == 'Yearly'){
         //$('.month').hide();
         $('#yearly-opt').css('display', 'inline-block');
         $('#monthly-opt').css('display', 'none');
         dslGraph.selectedPeriodType = 'yearly';
+    }else{
+        
     }
 
 });
@@ -401,7 +402,7 @@ $(document).ready(function () {
     });
 });
 
-function getQueryValues(x, dslGraph) {
+function getQueryValues(queryToSubmit, dslGraph) {
     $('#table-status').show();
     $.ajax({
         type: 'POST', // define the type of HTTP verb we want to use
@@ -409,14 +410,12 @@ function getQueryValues(x, dslGraph) {
         dataType: 'json', // what type of data do we expect back from the server
         contentType: 'application/json; charset=utf-8',
         encode: true,
-        data: x,
+        data: queryToSubmit,
         success: function (data, textStatus, jqXHR) {
-            console.log("Data is: " + JSON.stringify(data));
             dslGraph.graphData = data;
+            dslGraph.graphType=SETTING.graph_type[1];
             dslGraph.drawGraph();
             populateAnalyticsTable(data);
-
-            //populateAnalyticsTable(data);
             $('#table-status').hide();
         },
         error: function (response, request) {

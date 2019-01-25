@@ -21,7 +21,7 @@ function drawMultipleAxes(elementId, titlee, categoriee, serie) {
                     }
                 },
                 title: {
-                    text: 'commodity count',
+                    text: 'commodity units',
                     style: {
                         color: Highcharts.getOptions().colors[2]
                     }

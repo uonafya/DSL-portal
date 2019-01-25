@@ -8,5 +8,6 @@ var SETTING={
     //graph properties
     graph_year_month:"year-month",
     graph_yearly:"yearly",
-    orgisation_level:['facility','ward','constituency','county','national']
+    orgisation_level:['facility','ward','constituency','county','national'],
+    graph_type: ['pie','multiplex']
 };
