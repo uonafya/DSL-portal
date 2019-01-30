@@ -7,6 +7,7 @@ package com.healthit.metadata.indicators.servicedelivery;
 
 import com.healthit.metadata.Metadata;
 import com.healthit.metadata.model.RequestEntity;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import org.apache.log4j.Logger;
@@ -21,9 +22,10 @@ public class EacArvsToHIV implements Metadata {
     final static Logger log = Logger.getLogger(EacArvsToHIV.class.getCanonicalName());
 
     @Override
-    public String getMetadataData(RequestEntity requestString) {
+    public List<Object> getMetadata(RequestEntity requestString) {
+        List<Object> j =new ArrayList();
        String s="";
-        return s;
+        return j;
     }
 
   
