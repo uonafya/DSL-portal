@@ -9,11 +9,11 @@ package com.healthit.metadata.model;
  *
  * @author duncan
  */
-public enum OrgUnitName {
-    FACILITY,
-    WARD,
-    CONSTITUENCY,
-    SUBCOUNTY,
-    COUNTY,
-    NATIONAL;
+public enum PeriodType {
+    MONTHLY,
+    YEARLY,
+    QUARTELY,
+    WEEKLY,
+    LASTFIVEYEARS,
+    LASTONEYEAR;
 }

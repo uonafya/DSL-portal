@@ -32,8 +32,9 @@ public class QueryProcessor {
         JSONObject jsonObj = new JSONObject(pBody);
         JSONArray array = jsonObj.getJSONArray("query");
         MetadataFetcher metaData=new MetadataFetcher();
-        metaData.getMeta(array);
+        List<Object> components=metaData.getMeta(array);
         Map<String, List<Object>> rsults = queryInterpreterObj.interpretQuery(array);
+        rsults.put("components", components);
         String queryResults = getJSONFromObject(rsults);
         
         return new ResponseEntity<String>(queryResults, HttpStatus.OK);

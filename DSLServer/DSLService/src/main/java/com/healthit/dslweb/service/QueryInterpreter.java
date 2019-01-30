@@ -361,7 +361,7 @@ public class QueryInterpreter {
         return wrapperMap;
     }
 
-    private Map<String, List<Object>> runSqlQuery(String sqlQuery) {
+    public Map<String, List<Object>> runSqlQuery(String sqlQuery) {
         Database db = new Database();
         List<List> reslts1 = null;
         Map<String, List<Object>> wrapperMap = null;

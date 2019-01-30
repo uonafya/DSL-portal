@@ -26,13 +26,15 @@ public class MetadataFetcher {
 
     final static Logger log = Logger.getLogger(MetadataFetcher.class.getCanonicalName());
 
-    public String getMeta(JSONArray requestBody) {
+    public List<Object> getMeta(JSONArray requestBody) {
         log.info("Getmetadata function");
         List<RequestEntity> rqtEntities = _sort(requestBody);
         Iterator i = rqtEntities.iterator();
         Properties metadataMapperFile = null;
         metadataMapperFile = PropertiesLoader.getPropertiesFile(metadataMapperFile, "metadatamapping.properties");
         log.info("All the keys right " + PropertiesLoader.getAllKeys(metadataMapperFile).toString());
+        List<Object> components=null;
+       
         while (i.hasNext()) {
             RequestEntity rstEnty = (RequestEntity) i.next();
             log.info("got one org id" + rstEnty.getOrgUnitID());
@@ -40,7 +42,7 @@ public class MetadataFetcher {
             log.info("got one period" + rstEnty.getPeriod());
             log.info("got one period type" + rstEnty.getPeriodType());
             log.info("got one subject" + rstEnty.getSubject());
-
+            
             try {
                 
                 String classToGetMetadataFrom = metadataMapperFile.getProperty(rstEnty.getSubject().replaceAll("\\s+", ""));
@@ -53,7 +55,7 @@ public class MetadataFetcher {
                 Class<?> cls = Class.forName(classToGetMetadataFrom);
                 Object _instance = cls.newInstance();
                 Method myMethod = cls.getDeclaredMethod(methoName, params);
-                myMethod.invoke(_instance, rstEnty);
+                components=(List<Object>) myMethod.invoke(_instance, rstEnty);
 
             } catch (ClassNotFoundException
                     | NoSuchMethodException | SecurityException
@@ -63,7 +65,7 @@ public class MetadataFetcher {
             }
 
         }
-        return "";
+        return components;
     }
 
     /**
