@@ -415,6 +415,8 @@ function getQueryValues(queryToSubmit, dslGraph) {
             dslGraph.graphData = data;
             dslGraph.graphType=SETTING.graph_type[1];
             dslGraph.drawGraph();
+            console.log("the data");
+            console.log(data);
             populateAnalyticsTable(data);
             $('#table-status').hide();
         },

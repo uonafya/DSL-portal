@@ -6,11 +6,12 @@
 package com.healthit.metadata;
 
 import com.healthit.metadata.model.RequestEntity;
+import java.util.List;
 
 /**
  *
  * @author duncan
  */
 public interface Metadata {
-    public String getMetadataData(RequestEntity requestString);
+    public List<Object> getMetadata(RequestEntity requestString);
 }
