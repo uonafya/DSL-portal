@@ -41,7 +41,8 @@ public class RequestBodyDissolver {
             if (queryNamesFromUI[0].equals("date")) {
                 JSONObject filters = jsoObj.getJSONObject("filter");
                 requestBodyValue.put("period", filters);
-                requestBodyValue.put("periodType", queryNamesFromUI[1]);
+                int len=queryNamesFromUI.length;
+                requestBodyValue.put("periodType", queryNamesFromUI[len-1]);
             }
 
             if (queryNamesFromUI[0].equals("locality")) {
