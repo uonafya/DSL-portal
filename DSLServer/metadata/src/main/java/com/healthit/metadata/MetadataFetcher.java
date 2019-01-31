@@ -51,7 +51,7 @@ public class MetadataFetcher {
                 Class<?> params[] = new Class[obj.length];
                 params[0] = rstEnty.getClass();
 
-                String methoName = "getMetadataData"; // methodname to be invoked
+                String methoName = "getMetadata"; // methodname to be invoked
                 Class<?> cls = Class.forName(classToGetMetadataFrom);
                 Object _instance = cls.newInstance();
                 Method myMethod = cls.getDeclaredMethod(methoName, params);
