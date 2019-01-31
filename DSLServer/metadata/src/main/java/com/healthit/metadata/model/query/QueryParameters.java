@@ -46,13 +46,15 @@ public class QueryParameters {
         return orgId;
     }
 
-    private QueryParameters(String startYear, String endYear, String startMonth, String endMonth, String orgId) {
+    private QueryParameters(String startYear, String endYear, String startMonth, String endMonth, String orgId,OrgUnitName orgUnitName,PeriodType periodType) {
         this.endMonth = endMonth;
         this.startYear = startYear;
         this.endYear = endYear;
         this.startMonth = startMonth;
         this.endMonth = endMonth;
         this.orgId = orgId;
+        this.orgUnitName=orgUnitName;
+        this.periodType=periodType;
     }
 
     public static class QueryParametersBuilder {
@@ -104,7 +106,7 @@ public class QueryParameters {
         }
 
         public QueryParameters build() {
-            return new QueryParameters(startYear, endYear, startMonth, endMonth, orgId);
+            return new QueryParameters(startYear, endYear, startMonth, endMonth, orgId,orgUnitName, periodType);
         }
 
     }
