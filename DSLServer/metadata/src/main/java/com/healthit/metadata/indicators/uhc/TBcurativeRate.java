@@ -22,6 +22,8 @@ import org.json.JSONObject;
 public class TBcurativeRate implements Metadata {
 
     final static Logger log = Logger.getLogger(TBcurativeRate.class.getCanonicalName());
+    String kemsaQueryFile = "kemsa.properties";
+    String commodityList = "['%ethambutol%','%isoniazid%', '%rifampicin%', '%pyrazinamide%']";
 
     @Override
     public List<Object> getMetadata(RequestEntity requestString) {
@@ -110,6 +112,17 @@ public class TBcurativeRate implements Metadata {
             components = getNationalMonthlyMetadata(queryParams.getStartYear(), queryParams.getEndYear(), queryParams.getStartMonth(), queryParams.getEndMonth());
 
         }
+
+        if (queryParams.getPeriodType() == PeriodType.MONTHLY && queryParams.getOrgUnitName() == OrgUnitName.CONSTITUENCY) {
+            log.info("Monthly and Constituency");
+            components = getConstituencyMonthlyMetadata(queryParams.getStartYear(), queryParams.getEndYear(), queryParams.getStartMonth(), queryParams.getEndMonth(), queryParams.getOrgId());
+        }
+
+        if (queryParams.getPeriodType() == PeriodType.YEARLY && queryParams.getOrgUnitName() == OrgUnitName.CONSTITUENCY) {
+            log.info("Monthly and Constituency");
+            components = getConstituencyYearlyMetadata(queryParams.getStartYear(), queryParams.getEndYear(), queryParams.getStartMonth(), queryParams.getEndMonth(), queryParams.getOrgId());
+        }
+
         return components;
     }
 
@@ -121,89 +134,90 @@ public class TBcurativeRate implements Metadata {
         return query;
     }
 
-    private List<Object> getFacilityYearlyMetadata(String startYear, String endYear, String startMonth, String endMonth, String orgId) {
-        Properties kemsaQueryFile = null;
-        kemsaQueryFile = PropertiesLoader.getPropertiesFile(kemsaQueryFile, "kemsa.properties");
-        log.info("The query to run " + kemsaQueryFile.getProperty("commodity_sum_per_year_per_month"));
-        String query = kemsaQueryFile.getProperty("commodity_sum_per_year_per_month");
-        String commodityList = "['%ethambutol%','%isoniazid%', '%rifampicin%', '%pyrazinamide%']";
-
-        query = query.replaceAll("@commodity_list@", commodityList);
-        query = populateYearMonthParametersInQuery(startYear, endYear, startMonth, endMonth, query);
-
-        List<Object> components = new ArrayList();
-
-        QueryInterpreter queryIntpret = new QueryInterpreter();
-        Map<String, List<Object>> data = queryIntpret.runSqlQuery(query);  // run query and bundle in data tables format
-
-        Map<String, Object> component = new HashMap();
-        log.info("Final query " + query);
-        component.put("display", "table");
-        component.put("data", data);
-        log.info("All the keys kemsa " + PropertiesLoader.getAllKeys(kemsaQueryFile).toString());
-
-        Map<String, String> dimension = new HashMap();
-        dimension.put("small", "6");
-        dimension.put("medium", "6");
-        dimension.put("large", "6");
-        component.put("dimension", dimension);
-
-        components.add(component);
-
-        return components;
-    }
-
-    private List<Object> getFacilityMonthlyMetadata() {
+    private List<Object> getFacilityYearlyMetadata(String startYear, String endYear, String startMonth, String endMonth, String facility) {
         List<Object> components = new ArrayList();
         return components;
     }
 
-    private List<Object> getWardYearlyMetadata() {
+    private List<Object> getFacilityMonthlyMetadata(String startYear, String endYear, String startMonth, String endMonth, String facility) {
         List<Object> components = new ArrayList();
         return components;
     }
 
-    private List<Object> getWardMonthlyMetadata() {
-        List<Object> components = new ArrayList();
-        return components;
+    private List<Object> getWardYearlyMetadata(String startYear, String endYear, String startMonth, String endMonth, String ward) {
+        String kemsaQueryName = "commodity_sum_per_ward_per_year_range";
+        String kemsaQuery = getQueryToRun(kemsaQueryName, kemsaQueryFile);
+        kemsaQuery = kemsaQuery.replaceAll("@ward@", ward);
+        return getCommodityData(startYear, endYear, startMonth, endMonth, kemsaQuery, commodityList);
     }
 
-    private List<Object> getSubCountyMonthlyMetadata() {
-        List<Object> components = new ArrayList();
-        return components;
+    private List<Object> getWardMonthlyMetadata(String startYear, String endYear, String startMonth, String endMonth, String ward) {
+        String kemsaQueryName = "commodity_sum_per_ward_per_year_per_monthly";
+        String kemsaQuery = getQueryToRun(kemsaQueryName, kemsaQueryFile);
+        kemsaQuery = kemsaQuery.replaceAll("@ward@", ward);
+        return getCommodityData(startYear, endYear, startMonth, endMonth, kemsaQuery, commodityList);
     }
 
-    private List<Object> getSubCountyYearlyMetadata() {
-        List<Object> components = new ArrayList();
-        return components;
+    private List<Object> getSubCountyMonthlyMetadata(String startYear, String endYear, String startMonth, String endMonth, String subcounty) {
+        String kemsaQueryName = "commodity_sum_per_county_per_year_per_monthly";
+        String kemsaQuery = getQueryToRun(kemsaQueryName, kemsaQueryFile);
+        kemsaQuery = kemsaQuery.replaceAll("@subcounty@", subcounty);
+        return getCommodityData(startYear, endYear, startMonth, endMonth, kemsaQuery, commodityList);
     }
 
-    private List<Object> getConstituencyMonthlyMetadata() {
-        List<Object> components = new ArrayList();
-        return components;
+    private List<Object> getSubCountyYearlyMetadata(String startYear, String endYear, String startMonth, String endMonth, String subcounty) {
+        String kemsaQueryName = "commodity_sum_per_county_per_year_range";
+        String kemsaQuery = getQueryToRun(kemsaQueryName, kemsaQueryFile);
+        kemsaQuery = kemsaQuery.replaceAll("@subcounty@", subcounty);
+        return getCommodityData(startYear, endYear, startMonth, endMonth, kemsaQuery, commodityList);
     }
 
-    private List<Object> getConstituencyYearlyMetadata() {
-        List<Object> components = new ArrayList();
-        return components;
+    private List<Object> getConstituencyMonthlyMetadata(String startYear, String endYear, String startMonth, String endMonth, String constituency) {
+        String kemsaQueryName = "commodity_sum_per_constituency_per_year_per_monthly";
+        String kemsaQuery = getQueryToRun(kemsaQueryName, kemsaQueryFile);
+        kemsaQuery = kemsaQuery.replaceAll("@constituency@", constituency);
+        return getCommodityData(startYear, endYear, startMonth, endMonth, kemsaQuery, commodityList);
+    }
+
+    private List<Object> getConstituencyYearlyMetadata(String startYear, String endYear, String startMonth, String endMonth, String constituency) {
+        String kemsaQueryName = "commodity_sum_per_constituency_per_year_range";
+        String kemsaQuery = getQueryToRun(kemsaQueryName, kemsaQueryFile);
+        kemsaQuery = kemsaQuery.replaceAll("@constituency@", constituency);
+        return getCommodityData(startYear, endYear, startMonth, endMonth, kemsaQuery, commodityList);
     }
 
     private List<Object> getNationalMonthlyMetadata(String startYear, String endYear, String startMonth, String endMonth) {
-        String kemsaQuery = "commodity_sum_per_year_per_monthly";
-        return getCommodityData(startYear, endYear, startMonth, endMonth, kemsaQuery);
+        String kemsaQueryName = "commodity_sum_per_year_per_monthly";
+        String kemsaQuery = getQueryToRun(kemsaQueryName, kemsaQueryFile);
+        return getCommodityData(startYear, endYear, startMonth, endMonth, kemsaQuery, commodityList);
     }
 
-    private List<Object> getNationalYearlyMetadata(String startYear, String endYear, String startMonth, String end_month) {
-        String kemsaQuery = "commodity_sum_year_range";
-        return getCommodityData(startYear, endYear, startMonth, end_month, kemsaQuery);
+    private List<Object> getNationalYearlyMetadata(String startYear, String endYear, String startMonth, String endMonth) {
+        String kemsaQueryName = "commodity_sum_year_range";
+
+        String kemsaQuery = getQueryToRun(kemsaQueryName, kemsaQueryFile);
+        return getCommodityData(startYear, endYear, startMonth, endMonth, kemsaQuery, commodityList);
     }
 
-    private List<Object> getCommodityData(String startYear, String endYear, String startMonth, String endMonth, String kemsaQuery) {
+    private String getQueryToRun(String queryName, String queryFile) {
         Properties kemsaQueryFile = null;
-        kemsaQueryFile = PropertiesLoader.getPropertiesFile(kemsaQueryFile, "kemsa.properties");
-        log.info("The query to run " + kemsaQueryFile.getProperty(kemsaQuery));
-        String query = kemsaQueryFile.getProperty(kemsaQuery);
-        String commodityList = "['%ethambutol%','%isoniazid%', '%rifampicin%', '%pyrazinamide%']";
+        kemsaQueryFile = PropertiesLoader.getPropertiesFile(kemsaQueryFile, queryFile);
+        log.info("The query to run " + kemsaQueryFile.getProperty(queryName));
+        String query = kemsaQueryFile.getProperty(queryName);
+        return query;
+    }
+
+    /**
+     * fetches kemsa commodity issues for tb
+     *
+     * @param startYear
+     * @param endYear
+     * @param startMonth
+     * @param endMonth
+     * @param kemsaQuery
+     * @return
+     */
+    private List<Object> getCommodityData(String startYear, String endYear, String startMonth, String endMonth, String query, String commodityList) {
 
         query = query.replaceAll("@commodity_list@", commodityList);
         query = populateYearMonthParametersInQuery(startYear, endYear, startMonth, endMonth, query);
@@ -211,14 +225,13 @@ public class TBcurativeRate implements Metadata {
         List<Object> components = new ArrayList();
 
         QueryInterpreter queryIntpret = new QueryInterpreter();
-        log.info("Final query tbcurative " + query);
+        log.info("Final query commodity meta " + query);
         Map<String, List<Object>> data = queryIntpret.runSqlQuery(query);  // run query and bundle in data tables format
 
         Map<String, Object> component = new HashMap();
 
         component.put("display", "table");
         component.put("data", data);
-        log.info("All the keys kemsa " + PropertiesLoader.getAllKeys(kemsaQueryFile).toString());
 
         Map<String, String> dimension = new HashMap();
         dimension.put("small", "6");
