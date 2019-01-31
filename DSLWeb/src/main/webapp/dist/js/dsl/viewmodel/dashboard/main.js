@@ -60,7 +60,7 @@ $('#organisation-unit').on('change', function (event) {
     var filter = {};
     filter[organisationUnit.current_level] = new Array(orgunitId);
     setLocality(organisationUnit.current_level, filter);
-    
+
     if (dslGraph.selectedPeriodType == 'yearly') {
         getYearRangeData(_getYearRangeData);
     } else if (dslGraph.selectedPeriodType == 'monthly') {
@@ -87,14 +87,14 @@ $(document).ready(function () {
             destroyChosenDropDownList();
             populateOrgunitList(locationCommon.countiesList);
             initOrganisationUnitChosenDropDown("county");
-            
+
         } else if (orgUnitLevel == 'constituency') {
             organisationUnit.current_level = SETTING.orgisation_level[2];
             destroyChosenDropDownList();
             populateOrgunitList(locationCommon.constituenciesList);
             initOrganisationUnitChosenDropDown("constituency");
             $("label[data-name='organisation-unit']").text("Constituency:");
-            
+
         } else {
             //pass
         }
@@ -281,20 +281,21 @@ function _validateYearRange(startYear, endYear) {
 
 //on click periodicity type
 $("#period-option li a").click(function (event) {
-    var periodTypeSelected = $(event.target).text();
-    console.log("add "+periodTypeSelected);
-    if (periodTypeSelected == 'Monthly') {
+    
+    var periodTypeSelected = $(event.target).attr('data-period_type');
+    console.log("Period type "+periodTypeSelected);
+    if (periodTypeSelected == 'monthly') {
         //$('#monthly-opt').show();
         $('#monthly-opt').css('display', 'inline-block');
         $('#yearly-opt').css('display', 'none');
         dslGraph.selectedPeriodType = 'monthly';
-    } else if(periodTypeSelected == 'Yearly'){
+    } else if (periodTypeSelected == 'yearly') {
         //$('.month').hide();
         $('#yearly-opt').css('display', 'inline-block');
         $('#monthly-opt').css('display', 'none');
         dslGraph.selectedPeriodType = 'yearly';
-    }else{
-        
+    } else {
+
     }
 
 });
@@ -382,15 +383,15 @@ function getYearlyData(_callback) {
 }
 
 function _getYearlyData(year) {
-        var year = yearMonthParameters.currentYear;
-        var indicator = dslGraph.indicator;
-        yearMonthParameters.currentYear = year;
-        setPeriodValues("monthly", year, year);
-        setIndicatorValues("indicator:average:with_filter", indicator);
-        setIhrisValues("human_resource:count");
-        setKemsaValues("commodity:count");
-        var queryPropertiesToSubmit = prepareQueryPropertiesToSubmit(indicator, SETTING.graph_year_month);
-        getQueryValues(queryPropertiesToSubmit, dslGraph);
+    var year = yearMonthParameters.currentYear;
+    var indicator = dslGraph.indicator;
+    yearMonthParameters.currentYear = year;
+    setPeriodValues("monthly", year, year);
+    setIndicatorValues("indicator:average:with_filter", indicator);
+    setIhrisValues("human_resource:count");
+    setKemsaValues("commodity:count");
+    var queryPropertiesToSubmit = prepareQueryPropertiesToSubmit(indicator, SETTING.graph_year_month);
+    getQueryValues(queryPropertiesToSubmit, dslGraph);
 }
 
 // #######END#######
@@ -404,6 +405,8 @@ $(document).ready(function () {
 
 function getQueryValues(queryToSubmit, dslGraph) {
     $('#table-status').show();
+    console.log("submitted data");
+    console.log(queryToSubmit);
     $.ajax({
         type: 'POST', // define the type of HTTP verb we want to use
         url: '/DSLWeb/api/processquery', // the url from server we that we want to use
@@ -413,7 +416,7 @@ function getQueryValues(queryToSubmit, dslGraph) {
         data: queryToSubmit,
         success: function (data, textStatus, jqXHR) {
             dslGraph.graphData = data;
-            dslGraph.graphType=SETTING.graph_type[1];
+            dslGraph.graphType = SETTING.graph_type[1];
             dslGraph.drawGraph();
             console.log("the data");
             console.log(data);
