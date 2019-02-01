@@ -32,8 +32,9 @@ DslGraph.prototype.drawGraph = function draw() {
         drawYearlyGraph(that);
     } else if (this.type == SETTING.graph_yearly && this.graphType == SETTING.graph_type[0]) {
         drawPieChart(that);
+    } else if (this.type == SETTING.graph_year_month && this.graphType == SETTING.graph_type[4]) {
+        drawBarGraph(that);
     }
-
 };
 
 
@@ -55,7 +56,45 @@ function drawPieChart(that) {
             data: data
         }];
 
+        console.log("pie chart data");
+        console.log(that.elementId);
+        console.log(that.indicator);
+        console.log(seriee);
     drawPie(that.elementId, that.indicator, seriee);
+}
+
+
+function drawBarGraph(that) {
+    console.log("drawing bar graph");
+     //var elementId = "test-graph1";
+    var elementId = that.elementId;
+    var titlee = that.indicator + ' - ' + yearMonthParameters.currentYear;
+    var categoriee = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+
+    var dataAttributes = {};
+    var monthPosition = 0;
+    var yearPosition = '';
+    var indicatorName = that.indicator;
+    var headerPositionMapping = {};
+    $.each(that.graphData['columns'], function (index, objValue) {
+
+        if (!(objValue['title'] == 'month' || objValue['title'] == 'year' || objValue['title'] == 'indicator_name')) {
+            dataAttributes[objValue['title']] = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
+            headerPositionMapping[index] = objValue['title'];
+        }
+        if (objValue['title'] == 'month') {
+            monthPosition = index;
+        }
+        if (objValue['title'] == 'year') {
+            yearPosition = index;
+        }
+
+    });
+    dataAttributes = getDataValuesForChartDisplay(that, yearPosition, monthPosition, headerPositionMapping, dataAttributes);
+    var serie = getBarGraphSeries(dataAttributes);
+    console.log("seriee "+serie);
+    console.log(serie);
+    drawBarChart(elementId, indicatorName + "-" + yearMonthParameters.currentYear, categoriee, serie);
 }
 
 
@@ -129,6 +168,8 @@ function drawYearMonthGraph(that) {
     });
     dataAttributes = getDataValuesForChartDisplay(that, yearPosition, monthPosition, headerPositionMapping, dataAttributes);
     var serie = getGraphSeries(dataAttributes);
+    console.log("seriee "+serie);
+    console.log(serie);
     drawMultipleAxes(elementId, indicatorName + "-" + yearMonthParameters.currentYear, categoriee, serie);
 }
 
@@ -209,6 +250,16 @@ function getGraphSeries(dataAttributes) {
             tooltip: {
                 valueSuffix: ' units'
             }
+        }];
+    return serie;
+}
+
+function getBarGraphSeries(dataAttributes) {
+    var serie = [{
+            type: 'column',
+            colorByPoint: true,
+            data: dataAttributes['indicator_average']
+            
         }];
     return serie;
 }

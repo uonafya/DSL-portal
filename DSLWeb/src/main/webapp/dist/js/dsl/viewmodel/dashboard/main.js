@@ -281,9 +281,9 @@ function _validateYearRange(startYear, endYear) {
 
 //on click periodicity type
 $("#period-option li a").click(function (event) {
-    
+
     var periodTypeSelected = $(event.target).attr('data-period_type');
-    console.log("Period type "+periodTypeSelected);
+    console.log("Period type " + periodTypeSelected);
     if (periodTypeSelected == 'monthly') {
         //$('#monthly-opt').show();
         $('#monthly-opt').css('display', 'inline-block');
@@ -416,10 +416,21 @@ function getQueryValues(queryToSubmit, dslGraph) {
         data: queryToSubmit,
         success: function (data, textStatus, jqXHR) {
             dslGraph.graphData = data;
-            dslGraph.graphType = SETTING.graph_type[1];
+            var graphType=1;
+            $.each(data.components, function (index, value) {
+
+                if ('graph-type' in value) {
+                    graphType=value['graph-type'];
+                    console.log("the graph type is "+graphType);
+                }
+            });
+            dslGraph.graphType = SETTING.graph_type[graphType];
+
             dslGraph.drawGraph();
             console.log("the data");
             console.log(data);
+            console.log(data.components);
+
             populateAnalyticsTable(data);
             $('#table-status').hide();
         },
@@ -427,9 +438,7 @@ function getQueryValues(queryToSubmit, dslGraph) {
             //   console.log("got an error fetching cadregroups");
             $('#table-status').hide();
             var parsed_data = response.responseText;
-
         }
-
     });
     queryParametersList = [];
 }
