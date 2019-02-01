@@ -36,9 +36,10 @@ public class Commodity {
         log.info("Final query commodity meta " + query);
         Map<String, List<Object>> data = queryIntpret.runSqlQuery(query);  // run query and bundle in data tables format
 
-        Map<String, Object> component = new HashMap();
-
-        component.put("display", "table");
+        Map<String, Object> component = new HashMap(); //carries info/data for indicator components
+        
+        
+        component.put("display", "line-year-month");
         component.put("data", data);
 
         Map<String, String> dimension = new HashMap();
@@ -46,7 +47,11 @@ public class Commodity {
         dimension.put("medium", "6");
         dimension.put("large", "6");
         component.put("dimension", dimension);
-
+        
+        Map<String, String> indicator = new HashMap(); //carries metadata for main indicator
+        indicator.put("graph-type", "4");
+        
+        components.add(indicator);
         components.add(component);
 
         return components;
