@@ -257,7 +257,7 @@ function getGraphSeries(dataAttributes) {
 function getBarGraphSeries(dataAttributes) {
     var serie = [{
             type: 'column',
-            colorByPoint: true,
+            colorByPoint: false,
             data: dataAttributes['indicator_average']
             
         }];

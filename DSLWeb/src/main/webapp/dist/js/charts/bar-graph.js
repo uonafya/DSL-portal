@@ -1,6 +1,9 @@
 function drawBarChart(elementId, titlee, categoriee, serie) {
     var chart = Highcharts.chart(elementId, {
 
+        chart: {
+            type: 'column'
+        },
         title: {
             text: titlee
         },
@@ -8,10 +11,15 @@ function drawBarChart(elementId, titlee, categoriee, serie) {
         subtitle: {
 //            text: 'Plain'
         },
-
+        legend: {
+            enabled: false
+        },
         xAxis: {
             //  categories: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec']
-            categories: categoriee
+            categories: categoriee,
+            title: {
+                text: 'Period'
+            }
         },
 
 //        series: [{
@@ -25,3 +33,55 @@ function drawBarChart(elementId, titlee, categoriee, serie) {
 
     });
 }
+
+//function drawBarChart(elementId, titlee, categoriee, serie) {
+//    var chart = Highcharts.chart(elementId, {
+//        chart: {
+//            type: 'column'
+//        },
+//        title: {
+//            text: titlee
+//        },
+//        subtitle: {
+//            text: ''
+//        },
+//        xAxis: {
+//            type: 'category',
+//            labels: {
+//                rotation: -45,
+//                style: {
+//                    fontSize: '13px',
+//                    fontFamily: 'Verdana, sans-serif'
+//                }
+//            }
+//        },
+//        yAxis: {
+//            min: 0,
+//            title: {
+//                text: 'Value'
+//            }
+//        },
+//        legend: {
+//            enabled: false
+//        },
+//        tooltip: {
+////        pointFormat: 'Population in 2017: <b>{point.y:.1f} millions</b>'
+//        },
+//        series: [{
+//
+//                data: serie,
+//                dataLabels: {
+//                    enabled: true,
+//                    rotation: -90,
+//                    color: '#FFFFFF',
+//                    align: 'right',
+//                    format: '{point.y:.1f}', // one decimal
+//                    y: 10, // 10 pixels down from the top
+//                    style: {
+//                        fontSize: '13px',
+//                        fontFamily: 'Verdana, sans-serif'
+//                    }
+//                }
+//            }]
+//    });
+//}
