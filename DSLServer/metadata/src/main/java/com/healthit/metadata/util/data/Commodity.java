@@ -25,7 +25,7 @@ public class Commodity {
      * @param kemsaQuery
      * @return
      */
-    public static List<Object> getCommodityData(String startYear, String endYear, String startMonth, String endMonth, String query, String commodityList) {
+    public static List<Object> getCommodityData(String startYear, String endYear, String startMonth, String endMonth, String query, String commodityList,String xaxis) {
 
         query = query.replaceAll("@commodity_list@", commodityList);
         query = populateYearMonthParametersInQuery(startYear, endYear, startMonth, endMonth, query);
@@ -39,21 +39,28 @@ public class Commodity {
         Map<String, Object> component = new HashMap(); //carries info/data for indicator components
         
         
-        component.put("display", "line-year-month");
+        component.put("display", "6");
         component.put("data", data);
-
+        component.put("subject", "product"); // converter helper data
+        component.put("dataname", "commodity_count"); // converter helper data
+        component.put("xaxis",xaxis);// converter helper data
+        
+       
         Map<String, String> dimension = new HashMap();
-        dimension.put("small", "6");
-        dimension.put("medium", "6");
-        dimension.put("large", "6");
+        dimension.put("small", "4");
+        dimension.put("medium", "4");
+        dimension.put("large", "4");
         component.put("dimension", dimension);
         
         Map<String, String> indicator = new HashMap(); //carries metadata for main indicator
         indicator.put("graph-type", "4");
         
+        
+        
+        
         components.add(indicator);
         components.add(component);
-
+        log.info("components returned " + components);
         return components;
     }
 
