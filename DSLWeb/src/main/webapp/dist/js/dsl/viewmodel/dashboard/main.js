@@ -235,31 +235,92 @@ $(document).ready(function () {
     });
 });
 
+
+
+/**
+ * Random string generator
+ * @returns {String} random string
+ */
+function makeid() {
+    var text = "";
+    var possible = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+
+    for (var i = 0; i < 5; i++)
+        text += possible.charAt(Math.floor(Math.random() * possible.length));
+
+    return text;
+}
+
+
 //populate table with data
 var table = null;
-function populateAnalyticsTable(data) {
-    if ($.fn.dataTable.isDataTable('#analytics-table')) {
-        try {
-            table.destroy();
-        } catch (err) {
-        }
-        table = populate(data);
-    } else {
-        table = populate(data);
-    }
-}
+function insertMetadataComponents(data) {
 
-function populate(data) {
-    $('#analytics-table').empty();
-    table = $('#analytics-table').DataTable({
-        data: data.data,
-        columns: data.columns,
-        colReorder: true,
-        searching: false
+    console.log("the data");
+    console.log(data);
+    console.log(data.components);
+
+
+    $.each(data.components, function (index, value) {
+        // sm md lg
+        console.log("check components");
+        console.log(data.components);
+        if (!('graph-type' in value)) {
+            var theId = makeid();
+            var parent = $("#components-area").append("<div id='" + theId + "'></div>");
+            var dimensions = value['dimension'];
+            var small = dimensions['small'];
+            var medium = dimensions['medium'];
+            var large = dimensions['large'];
+
+            var gridClasses = "col-sm-" + small + " col-md-" + medium + " col-lg-" + large + " ";
+
+            $('#' + theId).addClass(gridClasses);
+
+            var graphType = value['display'];
+            console.log("type of graph");
+            console.log(graphType);
+            if (graphType == 4) { //table
+                $('#' + theId).append("<table class='display'></table>");
+                var elem = $('#' + theId + ' > table');
+                console.log("the element ")
+                console.log(elem);
+                //drawDataTable(value['data'], elem);
+                drawMultiLineGraph("components-area","titlee", "categoriee", "serie");
+            }
+            
+            if(graphType == 6){
+                convertToMultiLine(value);
+        
+            }
+
+            //graphType = value['graph-type'];
+            //console.log("the graph type is " + graphType);
+        }
     });
 
-    return table;
+//    if ($.fn.dataTable.isDataTable('#analytics-table')) {
+//        try {
+//            table.destroy();
+//        } catch (err) {
+//        }
+//        table = populate(data);
+//    } else {
+//        table = populate(data);
+//    }
 }
+
+//function drawDataTable(data,theId) {
+//    $('#analytics-table').empty();
+//    var table = $('#'+theId).DataTable({
+//        data: data.data,
+//        columns: data.columns,
+//        colReorder: true,
+//        searching: false
+//    });
+//
+//    return table;
+//}
 
 //validate selected year range
 function _validateYearRange(startYear, endYear) {
@@ -416,22 +477,20 @@ function getQueryValues(queryToSubmit, dslGraph) {
         data: queryToSubmit,
         success: function (data, textStatus, jqXHR) {
             dslGraph.graphData = data;
-            var graphType=1;
+            var graphType = 1;
             $.each(data.components, function (index, value) {
 
                 if ('graph-type' in value) {
-                    graphType=value['graph-type'];
-                    console.log("the graph type is "+graphType);
+                    graphType = value['graph-type'];
+                    console.log("the graph type is " + graphType);
                 }
             });
             dslGraph.graphType = SETTING.graph_type[graphType];
 
             dslGraph.drawGraph();
-            console.log("the data");
-            console.log(data);
-            console.log(data.components);
 
-            populateAnalyticsTable(data);
+
+            insertMetadataComponents(data);
             $('#table-status').hide();
         },
         error: function (response, request) {
