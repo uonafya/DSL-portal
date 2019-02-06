@@ -9,5 +9,5 @@ var SETTING={
     graph_year_month:"year-month",
     graph_yearly:"yearly",
     orgisation_level:['facility','ward','constituency','county','national'],
-    graph_type: ['pie','multiplex','simple-line','line-year-month','bar-graph']
+    graph_type: ['pie','multiplex','simple-line','line-year-month','bar-graph','table','multiline']
 };
