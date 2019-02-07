@@ -267,7 +267,8 @@ function insertMetadataComponents(data) {
         console.log(data.components);
         if (!('graph-type' in value)) {
             var theId = makeid();
-            var parent = $("#components-area").append("<div id='" + theId + "'></div>");
+            $( "#components-area" ).empty();
+            $("#components-area").append("<div id='" + theId + "'></div>");
             var dimensions = value['dimension'];
             var small = dimensions['small'];
             var medium = dimensions['medium'];
@@ -280,18 +281,17 @@ function insertMetadataComponents(data) {
             var graphType = value['display'];
             console.log("type of graph");
             console.log(graphType);
-            if (graphType == 4) { //table
+            if (graphType == 5) { //table
                 $('#' + theId).append("<table class='display'></table>");
                 var elem = $('#' + theId + ' > table');
                 console.log("the element ")
                 console.log(elem);
-                //drawDataTable(value['data'], elem);
-                drawMultiLineGraph("components-area","titlee", "categoriee", "serie");
+                drawDataTable(value['data'], elem);
             }
-            
-            if(graphType == 6){
-                convertToMultiLine(value);
-        
+
+            if (graphType == 6) {
+                var convertedData = convertToMultiLine(value);
+                drawMultiLineGraph(theId, convertedData[2], convertedData[1], convertedData[0]);
             }
 
             //graphType = value['graph-type'];
