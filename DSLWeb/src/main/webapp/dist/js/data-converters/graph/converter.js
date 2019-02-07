@@ -37,22 +37,8 @@ function convertToMultiLine(componentMetaData) {
 
     });
 
-    var subjects = [];
-    var lineData = [];
-    var graphData = {};
-    $.each(data['data'], function (index, dataArray) {
-        var sub = dataArray[subjectIndex];
-        if ($.inArray(sub, subjects) != -1) {
-            graphData['' + sub + ''].push(dataArray[datanameIndex]);
-        } else {
-            subjects.push(sub);
-            graphData['' + sub + ''] = [];
-            graphData['' + sub + ''].push(dataArray[datanameIndex]);
-        }
 
-    });
-    console.log("final dataa");
-    console.log(graphData);
+    var convertedData = getMetaData(componentMetaData, xaxisIndex, subjectIndex, datanameIndex);
 //    subject - (Installation,Manufacturing,Other)
 //    dataname (column with raw data)
 //    xaxis what to put in xaxis
@@ -60,22 +46,49 @@ function convertToMultiLine(componentMetaData) {
 
 
 
-//    [{
-//        name: 'Installation',
-//        data: [43934, 52503, 57177, 69658, 97031, 119931, 137133, 154175]
-//    }, {
-//        name: 'Manufacturing',
-//        data: [24916, 24064, 29742, 29851, 32490, 30282, 38121, 40434]
-//    }, {
-//        name: 'Sales & Distribution',
-//        data: [11744, 17722, 16005, 19771, 20185, 24377, 32147, 39387]
-//    }, {
-//        name: 'Project Development',
-//        data: [null, null, 7988, 12169, 15112, 22452, 34400, 34227]
-//    }, {
-//        name: 'Other',
-//        data: [12908, 5948, 8105, 11248, 8989, 11816, 18274, 18111]
-//    }]
-    var convertedData;
+
+
     return convertedData;
+}
+
+function getMetaData(componentMetaData, xaxisIndex, subjectIndex, datanameIndex) {
+    var xaxis = componentMetaData['xaxis'];
+    var data = componentMetaData['data'];
+    var title=componentMetaData['title'];
+    if (xaxis == 'month') {
+        var subjects = [];
+        var graphData = {};
+        $.each(data['data'], function (index, dataArray) {
+            var sub = dataArray[subjectIndex];
+
+            if ($.inArray(sub, subjects) != -1) {
+                graphData['' + sub + ''][dataArray[xaxisIndex] - 1] = Number(dataArray[datanameIndex]);
+            } else {
+                subjects.push(sub);
+                graphData['' + sub + ''] = [null, null, null, null, null, null, null, null, null, null, null, null];
+                graphData['' + sub + ''][dataArray[xaxisIndex] - 1] = Number(dataArray[datanameIndex]);
+            }
+
+        });
+
+        var categories = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+        var processedGraphData = [];
+
+        $.each(graphData, function (key, value) {
+            console.log("dic name " + key);
+            console.log("data val " + value);
+            var t = {}
+            t['name'] = key;
+            t['data'] = value;
+            processedGraphData.push(t);
+        });
+        
+        
+        console.log("final dataa");
+        console.log(processedGraphData);
+        return [processedGraphData, categories,title];
+    }
+
+    return categories;
+
 }
