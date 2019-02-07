@@ -44,12 +44,12 @@ public class Commodity {
         component.put("subject", "product"); // converter helper data
         component.put("dataname", "commodity_count"); // converter helper data
         component.put("xaxis",xaxis);// converter helper data
-        
+        component.put("title", "commodity issue");
        
         Map<String, String> dimension = new HashMap();
-        dimension.put("small", "4");
-        dimension.put("medium", "4");
-        dimension.put("large", "4");
+        dimension.put("small", "12");
+        dimension.put("medium", "6");
+        dimension.put("large", "6");
         component.put("dimension", dimension);
         
         Map<String, String> indicator = new HashMap(); //carries metadata for main indicator
