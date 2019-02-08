@@ -254,6 +254,23 @@ function makeid() {
 
 //populate table with data
 var table = null;
+
+
+function prepareComponentHolder(value) {
+    var componentId = makeid();
+    //$("#components-area").empty();
+    $("#components-area").append("<div style='margin-bottom: 5px;' id='" + componentId + "'></div>");
+    var dimensions = value['dimension'];
+    var small = dimensions['small'];
+    var medium = dimensions['medium'];
+    var large = dimensions['large'];
+
+    var gridClasses = "col-sm-" + small + " col-md-" + medium + " col-lg-" + large + " ";
+
+    $('#' + componentId).addClass(gridClasses);
+    return componentId;
+}
+
 function insertMetadataComponents(data) {
 
     console.log("the data");
@@ -263,25 +280,16 @@ function insertMetadataComponents(data) {
 
     $.each(data.components, function (index, value) {
         // sm md lg
+
         console.log("check components");
         console.log(data.components);
         if (!('graph-type' in value)) {
-            var theId = makeid();
-            $( "#components-area" ).empty();
-            $("#components-area").append("<div id='" + theId + "'></div>");
-            var dimensions = value['dimension'];
-            var small = dimensions['small'];
-            var medium = dimensions['medium'];
-            var large = dimensions['large'];
-
-            var gridClasses = "col-sm-" + small + " col-md-" + medium + " col-lg-" + large + " ";
-
-            $('#' + theId).addClass(gridClasses);
 
             var graphType = value['display'];
             console.log("type of graph");
             console.log(graphType);
             if (graphType == 5) { //table
+                var theId = prepareComponentHolder(value);
                 $('#' + theId).append("<table class='display'></table>");
                 var elem = $('#' + theId + ' > table');
                 console.log("the element ")
@@ -290,37 +298,28 @@ function insertMetadataComponents(data) {
             }
 
             if (graphType == 6) {
+                var theId = prepareComponentHolder(value);
                 var convertedData = convertToMultiLine(value);
+
                 drawMultiLineGraph(theId, convertedData[2], convertedData[1], convertedData[0]);
             }
+            if (graphType == 0) { // piechart
+                var pieCharts = convertToPieChart(value);
 
-            //graphType = value['graph-type'];
-            //console.log("the graph type is " + graphType);
+                $.each(pieCharts, function (index, chart) {
+                    var theId = prepareComponentHolder(value);
+
+                    drawPie(theId, "titlee", [{data: chart}]);
+                });
+
+
+            }
+           
         }
     });
 
-//    if ($.fn.dataTable.isDataTable('#analytics-table')) {
-//        try {
-//            table.destroy();
-//        } catch (err) {
-//        }
-//        table = populate(data);
-//    } else {
-//        table = populate(data);
-//    }
-}
 
-//function drawDataTable(data,theId) {
-//    $('#analytics-table').empty();
-//    var table = $('#'+theId).DataTable({
-//        data: data.data,
-//        columns: data.columns,
-//        colReorder: true,
-//        searching: false
-//    });
-//
-//    return table;
-//}
+}
 
 //validate selected year range
 function _validateYearRange(startYear, endYear) {

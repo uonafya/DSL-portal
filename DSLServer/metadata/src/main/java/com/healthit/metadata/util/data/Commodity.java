@@ -53,7 +53,7 @@ public class Commodity {
         component.put("dimension", dimension);
         
         Map<String, String> indicator = new HashMap(); //carries metadata for main indicator
-        indicator.put("graph-type", "4");
+        indicator.put("graph-type", "0");
         
         
         
