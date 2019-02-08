@@ -28,3 +28,5 @@ function drawPie(elementId, titlee, seriee) {
         series: seriee
     });
 }
+
+

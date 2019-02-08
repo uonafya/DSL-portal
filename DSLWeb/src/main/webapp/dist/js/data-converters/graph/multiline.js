@@ -38,20 +38,17 @@ function convertToMultiLine(componentMetaData) {
     });
 
 
-    var convertedData = getMetaData(componentMetaData, xaxisIndex, subjectIndex, datanameIndex);
+    var convertedData = getMultilineMetaData(componentMetaData, xaxisIndex, subjectIndex, datanameIndex);
 //    subject - (Installation,Manufacturing,Other)
 //    dataname (column with raw data)
 //    xaxis what to put in xaxis
 
 
 
-
-
-
     return convertedData;
 }
 
-function getMetaData(componentMetaData, xaxisIndex, subjectIndex, datanameIndex) {
+function getMultilineMetaData(componentMetaData, xaxisIndex, subjectIndex, datanameIndex) {
     var xaxis = componentMetaData['xaxis'];
     var data = componentMetaData['data'];
     var title=componentMetaData['title'];
