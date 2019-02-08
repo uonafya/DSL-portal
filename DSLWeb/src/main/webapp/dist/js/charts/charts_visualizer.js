@@ -34,6 +34,8 @@ DslGraph.prototype.drawGraph = function draw() {
         drawPieChart(that);
     } else if (this.type == SETTING.graph_year_month && this.graphType == SETTING.graph_type[4]) {
         drawBarGraph(that);
+    }else if(this.type == SETTING.graph_year_month && this.graphType == SETTING.graph_type[0]){
+        drawPieChart(that);
     }
 };
 
