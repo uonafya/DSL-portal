@@ -272,15 +272,11 @@ function prepareComponentHolder(value) {
 }
 
 function insertMetadataComponents(data) {
-
     console.log("the data");
     console.log(data);
     console.log(data.components);
-
-
     $.each(data.components, function (index, value) {
         // sm md lg
-
         console.log("check components");
         console.log(data.components);
         if (!('graph-type' in value)) {
@@ -292,33 +288,28 @@ function insertMetadataComponents(data) {
                 var theId = prepareComponentHolder(value);
                 $('#' + theId).append("<table class='display'></table>");
                 var elem = $('#' + theId + ' > table');
-                console.log("the element ")
+                console.log("the element ");
                 console.log(elem);
                 drawDataTable(value['data'], elem);
             }
 
             if (graphType == 6) {
                 var theId = prepareComponentHolder(value);
-                var convertedData = convertToMultiLine(value);
+                var convertedData = convertToMultiLine(value, value['data']);
 
                 drawMultiLineGraph(theId, convertedData[2], convertedData[1], convertedData[0]);
             }
             if (graphType == 0) { // piechart
-                var pieCharts = convertToPieChart(value);
+                var pieCharts = convertToPieChart(value, value['data']);
 
                 $.each(pieCharts, function (index, chart) {
                     var theId = prepareComponentHolder(value);
 
                     drawPie(theId, "titlee", [{data: chart}]);
                 });
-
-
             }
-           
         }
     });
-
-
 }
 
 //validate selected year range

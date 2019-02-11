@@ -11,26 +11,23 @@ function convertToYearly() {
 
 
 }
+function convertToPieChart(metadataData, valueData) {
 
-function convertToPieChart(componentMetaData) {
-
-    console.log("piechart converter called " + componentMetaData);
-    console.log(componentMetaData);
-
-    var data = componentMetaData['data'];
+    console.log("piechart converter called " + metadataData);
+    console.log(metadataData);
 
     var subjectIndex = 0, datanameIndex = 0, xaxisIndex = 0;
 
 
 
-    $.each(data['columns'], function (index, column) {
-        if (column['title'] == componentMetaData['subject']) {
+    $.each(valueData['columns'], function (index, column) {
+        if (column['title'] == metadataData['subject']) {
             subjectIndex = index;
         }
-        if (column['title'] == componentMetaData['dataname']) {
+        if (column['title'] == metadataData['dataname']) {
             datanameIndex = index;
         }
-        if (column['title'] == componentMetaData['xaxis']) {
+        if (column['title'] == metadataData['xaxis']) {
             xaxisIndex = index;
         }
 
@@ -38,7 +35,7 @@ function convertToPieChart(componentMetaData) {
     });
 
 
-    var convertedData = getPieMetaData(componentMetaData, xaxisIndex, subjectIndex, datanameIndex);
+    var convertedData = getPieMetaData(metadataData, valueData, xaxisIndex, subjectIndex, datanameIndex);
 //    subject - (Installation,Manufacturing,Other)
 //    dataname (column with raw data)
 //    xaxis what to put in xaxis
@@ -46,14 +43,13 @@ function convertToPieChart(componentMetaData) {
     return convertedData;
 }
 
-function getPieMetaData(componentMetaData, xaxisIndex, subjectIndex, datanameIndex) {
+function getPieMetaData(componentMetaData, valueData, xaxisIndex, subjectIndex, datanameIndex) {
     var xaxis = componentMetaData['xaxis'];
-    var data = componentMetaData['data'];
     var title = componentMetaData['title'];
     if (xaxis == 'month') {
         var subjects = [];
         var graphData = {};
-        $.each(data['data'], function (index, dataArray) {
+        $.each(valueData['data'], function (index, dataArray) {
             var sub = dataArray[subjectIndex];
 
             if ($.inArray(sub, subjects) != -1) {

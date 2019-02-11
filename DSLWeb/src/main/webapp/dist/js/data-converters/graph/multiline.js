@@ -12,25 +12,30 @@ function convertToYearlyColumn() {
 
 }
 
-function convertToMultiLine(componentMetaData) {
+function convertToMultiLine(metadataData,valueData) {
 
-    console.log("converter called " + componentMetaData);
-    console.log(componentMetaData);
-
-    var data = componentMetaData['data'];
-
+    console.log("converter called " + metadataData);
+    console.log(metadataData);
     var subjectIndex = 0, datanameIndex = 0, xaxisIndex = 0;
 
 
 
-    $.each(data['columns'], function (index, column) {
-        if (column['title'] == componentMetaData['subject']) {
+    $.each(valueData['columns'], function (index, column) {
+        console.log("all "+column['title']);
+        console.log(metadataData['subject']);
+        console.log(metadataData['dataname']);
+        console.log(metadataData['xaxis']);
+        if (column['title'] == metadataData['subject']) {
+            console.log("index 1");
+            console.log(index);
             subjectIndex = index;
         }
-        if (column['title'] == componentMetaData['dataname']) {
+        if (column['title'] == metadataData['dataname']) {
+            console.log("index 2");
             datanameIndex = index;
         }
-        if (column['title'] == componentMetaData['xaxis']) {
+        if (column['title'] == metadataData['xaxis']) {
+            console.log("index 3");
             xaxisIndex = index;
         }
 
@@ -38,7 +43,7 @@ function convertToMultiLine(componentMetaData) {
     });
 
 
-    var convertedData = getMultilineMetaData(componentMetaData, xaxisIndex, subjectIndex, datanameIndex);
+    var convertedData = getMultilineMetaData(metadataData,valueData, xaxisIndex, subjectIndex, datanameIndex);
 //    subject - (Installation,Manufacturing,Other)
 //    dataname (column with raw data)
 //    xaxis what to put in xaxis
@@ -48,14 +53,13 @@ function convertToMultiLine(componentMetaData) {
     return convertedData;
 }
 
-function getMultilineMetaData(componentMetaData, xaxisIndex, subjectIndex, datanameIndex) {
+function getMultilineMetaData(componentMetaData,valueData, xaxisIndex, subjectIndex, datanameIndex) {
     var xaxis = componentMetaData['xaxis'];
-    var data = componentMetaData['data'];
     var title=componentMetaData['title'];
     if (xaxis == 'month') {
         var subjects = [];
         var graphData = {};
-        $.each(data['data'], function (index, dataArray) {
+        $.each(valueData['data'], function (index, dataArray) {
             var sub = dataArray[subjectIndex];
 
             if ($.inArray(sub, subjects) != -1) {

@@ -52,13 +52,7 @@ public class Commodity {
         dimension.put("large", "6");
         component.put("dimension", dimension);
         
-        Map<String, String> indicator = new HashMap(); //carries metadata for main indicator
-        indicator.put("graph-type", "0");
         
-        
-        
-        
-        components.add(indicator);
         components.add(component);
         log.info("components returned " + components);
         return components;

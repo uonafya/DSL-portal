@@ -34,11 +34,37 @@ DslGraph.prototype.drawGraph = function draw() {
         drawPieChart(that);
     } else if (this.type == SETTING.graph_year_month && this.graphType == SETTING.graph_type[4]) {
         drawBarGraph(that);
-    }else if(this.type == SETTING.graph_year_month && this.graphType == SETTING.graph_type[0]){
-        drawPieChart(that);
+    } else if (this.type == SETTING.graph_year_month && this.graphType == SETTING.graph_type[0]) {
+        var metadataData = getMetadataObject(that.graphData);
+        console.log("running draw graph");
+        console.log(metadataData);
+        console.log("running tow");
+        console.log(that.graphData);
+        var convertedData = convertToMultiLine(metadataData, that.graphData);
+        console.log("running tow22");
+        console.log(convertedData);
+        drawMultiLineGraph(that.elementId, convertedData[2], convertedData[1], convertedData[0]);
+        console.log("finishing draw graph");
+        //drawPieChart(that);
     }
 };
 
+
+function getMetadataObject(data) {
+    var val = null;
+    $.each(data.components, function (index, value) {
+        // sm md lg
+        console.log("check components");
+        console.log(data.components);
+        if ('graph-type' in value) {
+            console.log("graph iko");
+            console.log(value);
+            val = value;
+            return;
+        }
+    });
+    return val;
+}
 
 function drawPieChart(that) {
     console.log("data outut");
@@ -58,17 +84,17 @@ function drawPieChart(that) {
             data: data
         }];
 
-        console.log("pie chart data");
-        console.log(that.elementId);
-        console.log(that.indicator);
-        console.log(seriee);
+    console.log("pie chart data");
+    console.log(that.elementId);
+    console.log(that.indicator);
+    console.log(seriee);
     drawPie(that.elementId, that.indicator, seriee);
 }
 
 
 function drawBarGraph(that) {
     console.log("drawing bar graph");
-     //var elementId = "test-graph1";
+    //var elementId = "test-graph1";
     var elementId = that.elementId;
     var titlee = that.indicator + ' - ' + yearMonthParameters.currentYear;
     var categoriee = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
@@ -94,7 +120,7 @@ function drawBarGraph(that) {
     });
     dataAttributes = getDataValuesForChartDisplay(that, yearPosition, monthPosition, headerPositionMapping, dataAttributes);
     var serie = getBarGraphSeries(dataAttributes);
-    console.log("seriee "+serie);
+    console.log("seriee " + serie);
     console.log(serie);
     drawBarChart(elementId, indicatorName + "-" + yearMonthParameters.currentYear, categoriee, serie);
 }
@@ -170,7 +196,7 @@ function drawYearMonthGraph(that) {
     });
     dataAttributes = getDataValuesForChartDisplay(that, yearPosition, monthPosition, headerPositionMapping, dataAttributes);
     var serie = getGraphSeries(dataAttributes);
-    console.log("seriee "+serie);
+    console.log("seriee " + serie);
     console.log(serie);
     drawMultipleAxes(elementId, indicatorName + "-" + yearMonthParameters.currentYear, categoriee, serie);
 }
@@ -261,7 +287,7 @@ function getBarGraphSeries(dataAttributes) {
             type: 'column',
             colorByPoint: false,
             data: dataAttributes['indicator_average']
-            
+
         }];
     return serie;
 }
