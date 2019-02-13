@@ -455,6 +455,9 @@ public class QueryInterpreter {
         //String alias = (String) _queriesToRun.get(0).get("alias");
         log.debug("the join length " + sqlJoinValues.size());
         for (int x = 0; x <= sqlJoinValues.get(1).length - 1; x++) {
+            if(sqlJoinValues.get(1)[x].trim().length()==0){ //check if join value is empty
+                continue;
+            }
             StringBuilder addCoalesce = new StringBuilder();
             addCoalesce.append("coalesce(");
             boolean isFirstAppend = true;
@@ -475,7 +478,8 @@ public class QueryInterpreter {
         log.debug("The coalesed string " + finalQueryToRun);
         return finalQueryToRun;
     }
-
+    
+    
     /**
      *
      * @param finalQueryToRun String builder object for stiching different parts
@@ -630,6 +634,8 @@ public class QueryInterpreter {
     private Map<String, Object> getQueryAndItsAttributesFromFile(Properties prop, String propertyFileKey) {
         PropertiesLoader propLoader = new PropertiesLoader();
         String queryAttributes = prop.getProperty(propertyFileKey); //get the properties file of the query and the key(name)
+        log.info("the query attributes 2 "+queryAttributes);
+        log.info("Properties file of the query "+propertyFileKey);
         String[] qAttributes = queryAttributes.split(":");
         Properties queryFile = null;
         prop = propLoader.getPropertiesFile(queryFile, qAttributes[1]);
