@@ -26,6 +26,9 @@ var organisationUnit = {
 
 DslGraph.prototype.drawGraph = function draw() {
     that = this;
+    console.log("drawing graph");
+    console.log(this.graphType);
+    console.log(this.type);
     if (this.type == SETTING.graph_year_month && this.graphType == SETTING.graph_type[1]) {
         drawYearMonthGraph(that);
     } else if (this.type == SETTING.graph_yearly && this.graphType == SETTING.graph_type[1]) {

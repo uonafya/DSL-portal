@@ -133,6 +133,13 @@ function setIndicatorValues(indicatorType, indicator, filter) {
     return queryParametersList;
 }
 
+function setFacilityValues(indicatorType, facilities) {
+    var indicatorValuesToQuery = {};
+    indicatorValuesToQuery['what'] = indicatorType;
+    indicatorValuesToQuery['filter'] = {'facility': new Array(facilities)};
+    queryParametersList.push(indicatorValuesToQuery);
+    return queryParametersList;
+}
 
 function setLocality(org_level, filter) {
     var localityValuesToQuery = {};
@@ -215,26 +222,54 @@ $(document).ready(function () {
 //on change indicator
 $(document).ready(function () {
     $("#indicators li a").click(function (event) {
-        var indicator = $(event.target).attr('data-value');
+        var filter = $(event.target).attr('data-value');
         $("#indicator-name-label").text($(event.target).text());
         if (dslGraph.selectedPeriodType == 'yearly') {
-            dslGraph.indicator = indicator;
-            console.log("indicator " + indicator);
+            dslGraph.indicator = filter;
+            console.log("indicator " + filter);
             getYearRangeData(_getYearRangeData);
         } else {
             var year = yearMonthParameters.currentYear;
             yearMonthParameters.currentYear = year;
             setPeriodValues("monthly", year, year);
-            setIndicatorValues("indicator:average:with_filter", indicator);
+            var dataName = $(event.target).attr('data-name');
+            console.log("pulbic data " + dataName);
+            indicatorHandler(dataName, filter);
+
             setIhrisValues("human_resource:count");
             setKemsaValues("commodity:count");
-            var queryPropertiesToSubmit = prepareQueryPropertiesToSubmit(indicator, SETTING.graph_year_month);
+            var queryPropertiesToSubmit = prepareQueryPropertiesToSubmit(filter, SETTING.graph_year_month);
             getQueryValues(queryPropertiesToSubmit, dslGraph);
 
         }
     });
 });
 
+
+
+function facilityHanlder(dataName, filter) {
+    setFacilityValues(dataName, filter);
+}
+
+
+
+function commodityHanlder(dataName, indicator) {
+
+}
+
+
+function dhisHanlder(dataName, indicator) {
+    setIndicatorValues(dataName, filter);
+}
+
+
+function indicatorHandler(dataName, filter) {
+    if (dataName.indexOf("facility") != -1) {
+        facilityHanlder(dataName, filter);
+    } else if (dataName.indexOf("indicator") != -1) {
+        dhisHanlder(dataName, filter);
+    }
+}
 
 
 /**
