@@ -2,23 +2,12 @@
  * functions to convert data source to another for graph display
  */
 
-function convertToMonthly() {
+function convertToPieChart(metadataData, valueData, numm) {
 
-
-}
-
-function convertToYearly() {
-
-
-}
-function convertToPieChart(metadataData, valueData) {
-
-    console.log("piechart converter called " + metadataData);
+    console.log("piechart converter called " + numm + " " + metadataData);
     console.log(metadataData);
 
     var subjectIndex = 0, datanameIndex = 0, xaxisIndex = 0;
-
-
 
     $.each(valueData['columns'], function (index, column) {
         if (column['title'] == metadataData['subject']) {
@@ -31,9 +20,7 @@ function convertToPieChart(metadataData, valueData) {
             xaxisIndex = index;
         }
 
-
     });
-
 
     var convertedData = getPieMetaData(metadataData, valueData, xaxisIndex, subjectIndex, datanameIndex);
 //    subject - (Installation,Manufacturing,Other)
@@ -43,50 +30,70 @@ function convertToPieChart(metadataData, valueData) {
     return convertedData;
 }
 
-function getPieMetaData(componentMetaData, valueData, xaxisIndex, subjectIndex, datanameIndex) {
+function getPieMetaData(componentMetaData, valueData, xaxisIndex, subjectIndex, datavalueIndex) {
     var xaxis = componentMetaData['xaxis'];
     var title = componentMetaData['title'];
-    if (xaxis == 'month') {
-        var subjects = [];
-        var graphData = {};
-        $.each(valueData['data'], function (index, dataArray) {
-            var sub = dataArray[subjectIndex];
+    var xaxisProcess = componentMetaData['xaxis-process'];
 
-            if ($.inArray(sub, subjects) != -1) {
-                graphData['' + sub + ''][dataArray[xaxisIndex] - 1] = Number(dataArray[datanameIndex]);
-            } else {
-                subjects.push(sub);
-                graphData['' + sub + ''] = [null, null, null, null, null, null, null, null, null, null, null, null];
-                graphData['' + sub + ''][dataArray[xaxisIndex] - 1] = Number(dataArray[datanameIndex]);
-            }
-
-        });
-
-        var pieCharts = [];
-        var month = 1;
-        while (month <= 12) {
-            var chartPoints = [];
-            $.each(graphData, function (key, value) {
-                console.log("dic name " + key);
-                console.log("data val " + value);
-
-                var dataPoint = {};
-                dataPoint['name'] = key;
-                dataPoint['y'] = value[month];
-                chartPoints.push(dataPoint);
-
-                var t = {}
-                t['name'] = key;
-                t['y'] = value;
-            });
-            month = month + 1;
-            pieCharts.push(chartPoints);
-        }
-
-        console.log("final dataa");
-        console.log(pieCharts);
-        return pieCharts;
+    if (xaxisProcess != null && xaxisProcess == 'false') {
+        return _getPieDataWIthoutPeriodOption(valueData, subjectIndex, datavalueIndex);
     }
-    console.log("the pie charts data");
+
+    if (xaxis == 'month') {
+        return _getPieDataWithMonthPeriodOption(valueData, xaxisIndex, subjectIndex, datavalueIndex);
+    }
+}
+
+function _getPieDataWIthoutPeriodOption(valueData, subjectIndex, datavalueIndex) {
+    var chartPoints = [];
+    var pieCharts = [];
+    $.each(valueData['data'], function (key, value) {
+        var dataPoint = {};
+        dataPoint['name'] = value[subjectIndex];
+        dataPoint['y'] = Number(value[datavalueIndex]);
+        chartPoints.push(dataPoint);
+
+    });
+    pieCharts.push(chartPoints);
+    return pieCharts;
+
+}
+
+function _getPieDataWithMonthPeriodOption(valueData, xaxisIndex, subjectIndex, datavalueIndex) {
+
+    var subjects = [];
+    var graphData = {};
+    console.log("valued data ");
+    console.log(valueData);
+    $.each(valueData['data'], function (index, dataArray) {
+        var sub = dataArray[subjectIndex];
+        if ($.inArray(sub, subjects) != -1) {
+            graphData['' + sub + ''][dataArray[xaxisIndex] - 1] = Number(dataArray[datavalueIndex]);
+        } else {
+            subjects.push(sub);
+            graphData['' + sub + ''] = [null, null, null, null, null, null, null, null, null, null, null, null];
+            graphData['' + sub + ''][dataArray[xaxisIndex] - 1] = Number(dataArray[datavalueIndex]);
+        }
+    });
+
+    console.log("graph data " + graphData);
+    console.log(graphData);
+    var pieCharts = [];
+    var month = 1;
+    while (month <= 12) {
+        var chartPoints = [];
+        $.each(graphData, function (key, value) {
+            var dataPoint = {};
+            dataPoint['name'] = key;
+            dataPoint['y'] = value[month];
+            chartPoints.push(dataPoint);
+        });
+        month = month + 1;
+        pieCharts.push(chartPoints);
+    }
+
+    console.log("final dataa");
     console.log(pieCharts);
+    return pieCharts;
+
 }

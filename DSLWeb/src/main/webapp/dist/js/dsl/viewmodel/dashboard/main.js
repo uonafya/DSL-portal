@@ -233,7 +233,6 @@ $(document).ready(function () {
             yearMonthParameters.currentYear = year;
             setPeriodValues("monthly", year, year);
             var dataName = $(event.target).attr('data-name');
-            console.log("pulbic data " + dataName);
             indicatorHandler(dataName, filter);
 
             setIhrisValues("human_resource:count");
@@ -258,15 +257,18 @@ function commodityHanlder(dataName, indicator) {
 }
 
 
-function dhisHanlder(dataName, indicator) {
+function dhisHanlder(dataName, filter) {
     setIndicatorValues(dataName, filter);
 }
 
 
 function indicatorHandler(dataName, filter) {
+    
     if (dataName.indexOf("facility") != -1) {
+        console.log("facility handler");
         facilityHanlder(dataName, filter);
     } else if (dataName.indexOf("indicator") != -1) {
+        console.log("indicator handler");
         dhisHanlder(dataName, filter);
     }
 }
@@ -335,7 +337,7 @@ function insertMetadataComponents(data) {
                 drawMultiLineGraph(theId, convertedData[2], convertedData[1], convertedData[0]);
             }
             if (graphType == 0) { // piechart
-                var pieCharts = convertToPieChart(value, value['data']);
+                var pieCharts = convertToPieChart(value, value['data'],1);
 
                 $.each(pieCharts, function (index, chart) {
                     var theId = prepareComponentHolder(value);
@@ -501,8 +503,12 @@ function getQueryValues(queryToSubmit, dslGraph) {
         encode: true,
         data: queryToSubmit,
         success: function (data, textStatus, jqXHR) {
+            $( "#components-area" ).empty();
             dslGraph.graphData = data;
-            var graphType = 1;
+            var graphType = 6;
+            console.log("the graph  object");
+            console.log(dslGraph);
+            console.log(data.components);
             $.each(data.components, function (index, value) {
 
                 if ('graph-type' in value) {
@@ -513,8 +519,6 @@ function getQueryValues(queryToSubmit, dslGraph) {
             dslGraph.graphType = SETTING.graph_type[graphType];
 
             dslGraph.drawGraph();
-
-
             insertMetadataComponents(data);
             $('#table-status').hide();
         },

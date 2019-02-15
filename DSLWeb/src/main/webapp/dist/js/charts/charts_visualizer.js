@@ -29,15 +29,49 @@ DslGraph.prototype.drawGraph = function draw() {
     console.log("drawing graph");
     console.log(this.graphType);
     console.log(this.type);
-    if (this.type == SETTING.graph_year_month && this.graphType == SETTING.graph_type[1]) {
-        drawYearMonthGraph(that);
+    if (this.type == SETTING.graph_year_month && this.graphType == SETTING.graph_type[0]) {
+        console.log("converting to pie chart");
+
+        var metadataData = getMetadataObject(that.graphData);
+        var dat = {};
+        dat['data'] = that.graphData['data'];
+        dat['columns'] = that.graphData['columns'];
+        console.log("the pie data");
+        console.log(that.graphData['components']);
+        console.log("the pie data data");
+        console.log(dat);
+        var componts=null;
+        var title="";
+        $.each(that.graphData['components'], function (index, value) {
+            // sm md lg
+            console.log("check components");
+            console.log(value);
+            if ('graph-type' in value) {
+                 componts=value;
+                 title=value['title'];
+            }
+        });
+
+        var pieCharts = convertToPieChart(componts, dat,2);
+
+
+        console.log("the pie data 2");
+        console.log(pieCharts);
+
+        $.each(pieCharts, function (index, chart) {
+            console.log("the pie data long ");
+            console.log(chart);
+            drawPie(that.elementId, title, [{data: chart}]);
+        });
+
+        // drawYearMonthGraph(that);
     } else if (this.type == SETTING.graph_yearly && this.graphType == SETTING.graph_type[1]) {
         drawYearlyGraph(that);
     } else if (this.type == SETTING.graph_yearly && this.graphType == SETTING.graph_type[0]) {
         drawPieChart(that);
     } else if (this.type == SETTING.graph_year_month && this.graphType == SETTING.graph_type[4]) {
         drawBarGraph(that);
-    } else if (this.type == SETTING.graph_year_month && this.graphType == SETTING.graph_type[0]) {
+    } else if (this.type == SETTING.graph_year_month && this.graphType == SETTING.graph_type[6]) {
         var metadataData = getMetadataObject(that.graphData);
         console.log("running draw graph");
         console.log(metadataData);

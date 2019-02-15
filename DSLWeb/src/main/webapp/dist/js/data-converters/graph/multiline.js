@@ -11,7 +11,12 @@ function convertToYearlyColumn() {
 
 
 }
-
+/**
+ * 
+ * @param {type} metadataData the metadata object within the received json data
+ * @param {type} valueData the actual data for the indicator
+ * @returns {Array}
+ */
 function convertToMultiLine(metadataData,valueData) {
 
     console.log("converter called " + metadataData);
