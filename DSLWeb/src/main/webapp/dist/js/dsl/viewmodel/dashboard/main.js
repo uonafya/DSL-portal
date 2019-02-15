@@ -99,7 +99,7 @@ $(document).ready(function () {
             organisationUnit.current_level = SETTING.orgisation_level[2];
             destroyChosenDropDownList();
             populateOrgunitList(locationCommon.constituenciesList);
-            initOrganisationUnitChosenDropDown("constituency");
+            initOrganisationUnitChosenDropDown("Sub County");
             $("label[data-name='organisation-unit']").text("Constituency:");
 
         } else {
