@@ -1,4 +1,7 @@
 var dslGraph;
+var indicatorName="";
+var indicatorType="";
+
 
 var initOrganisationUnitChosenDropDown = function initOrganisationUnitChosenDropDown(orgType) {
     $("#organisation-unit").chosen({
@@ -68,7 +71,12 @@ $('#organisation-unit').on('change', function (event) {
         var indicator = dslGraph.indicator;
         yearMonthParameters.currentYear = year;
         setPeriodValues("monthly", year, year);
-        setIndicatorValues("indicator:average:with_filter", indicator);
+        console.log("got few ");
+        console.log(indicatorType);
+        console.log("got few 2");
+        //setIndicatorValues("indicator:average:with_filter", indicator);
+        indicatorHandler(indicatorType, indicator);
+        
         setIhrisValues("human_resource:count");
         setKemsaValues("commodity:count");
         var queryPropertiesToSubmit = prepareQueryPropertiesToSubmit(indicator, SETTING.graph_year_month);
@@ -79,7 +87,6 @@ $('#organisation-unit').on('change', function (event) {
 //on click organisation unit level eg county, counstituency
 $(document).ready(function () {
     $("#organisation-unit-level li a").click(function (event) {
-
         var orgUnitLevel = $(event.target).attr('data-org_unit');
         if (orgUnitLevel == 'county') {
             organisationUnit.current_level = SETTING.orgisation_level[3];
@@ -182,10 +189,11 @@ function setKemsaValues(commodityType) {
 
 function initGraph() {
     dslGraph = new DslGraph();
-
+    indicatorName="TB curative Rate";
+    indicatorType="indicator:average:with_filter";
     yearMonthParameters.currentYear = '2015';
     setPeriodValues("monthly", '2015', '2015');
-    setIndicatorValues("indicator:average:with_filter", "TB curative Rate");
+    indicatorHandler("indicator:average:with_filter", indicatorName);
     setIhrisValues("human_resource:count");
     setKemsaValues("commodity:count");
     var queryPropertiesToSubmit = prepareQueryPropertiesToSubmit("TB curative Rate", SETTING.graph_year_month);
@@ -223,6 +231,8 @@ $(document).ready(function () {
 $(document).ready(function () {
     $("#indicators li a").click(function (event) {
         var filter = $(event.target).attr('data-value');
+        indicatorType=$(event.target).attr('data-name');
+        indicatorName=filter;
         $("#indicator-name-label").text($(event.target).text());
         if (dslGraph.selectedPeriodType == 'yearly') {
             dslGraph.indicator = filter;
@@ -263,7 +273,7 @@ function dhisHanlder(dataName, filter) {
 
 
 function indicatorHandler(dataName, filter) {
-    
+
     if (dataName.indexOf("facility") != -1) {
         console.log("facility handler");
         facilityHanlder(dataName, filter);
@@ -337,7 +347,7 @@ function insertMetadataComponents(data) {
                 drawMultiLineGraph(theId, convertedData[2], convertedData[1], convertedData[0]);
             }
             if (graphType == 0) { // piechart
-                var pieCharts = convertToPieChart(value, value['data'],1);
+                var pieCharts = convertToPieChart(value, value['data'], 1);
 
                 $.each(pieCharts, function (index, chart) {
                     var theId = prepareComponentHolder(value);
@@ -503,11 +513,12 @@ function getQueryValues(queryToSubmit, dslGraph) {
         encode: true,
         data: queryToSubmit,
         success: function (data, textStatus, jqXHR) {
-            $( "#components-area" ).empty();
+            $("#components-area").empty();
             dslGraph.graphData = data;
             var graphType = 6;
             console.log("the graph  object");
             console.log(dslGraph);
+            console.log(data);
             console.log(data.components);
             $.each(data.components, function (index, value) {
 
