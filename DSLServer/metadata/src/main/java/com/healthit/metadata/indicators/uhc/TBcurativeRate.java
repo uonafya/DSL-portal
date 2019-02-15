@@ -91,7 +91,7 @@ public class TBcurativeRate implements Metadata {
         indicator.put("subject", "indicator_name"); // converter helper data
         indicator.put("dataname", "indicator_average"); // converter helper data
         indicator.put("title", "Tb Curative Rate");
-        indicator.put("graph-type", "0");
+        indicator.put("graph-type", "6");
         QueryParameters queryParams = new QueryParameters.QueryParametersBuilder()
                 .setEndMonth(endMonth)
                 .setEndYear(endYear)
