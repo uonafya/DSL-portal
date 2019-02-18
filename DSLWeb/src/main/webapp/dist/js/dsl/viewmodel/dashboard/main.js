@@ -85,23 +85,27 @@ $('#organisation-unit').on('change', function (event) {
 $(document).ready(function () {
     $("#organisation-unit-level li a").click(function (event) {
         var orgUnitLevel = $(event.target).attr('data-org_unit');
+        var orgunitLabel='Organisation Unit';
+        var orgUnitLevelName="";
         if (orgUnitLevel == 'county') {
             organisationUnit.current_level = SETTING.orgisation_level[3];
             $("label[data-name='organisation-unit']").text("County:");
             destroyChosenDropDownList();
             populateOrgunitList(locationCommon.countiesList);
             initOrganisationUnitChosenDropDown("county");
-
+            orgUnitLevelName='County';
         } else if (orgUnitLevel == 'constituency') {
             organisationUnit.current_level = SETTING.orgisation_level[2];
             destroyChosenDropDownList();
             populateOrgunitList(locationCommon.constituenciesList);
             initOrganisationUnitChosenDropDown("Sub County");
             $("label[data-name='organisation-unit']").text("Constituency:");
-
-        } else {
-            //pass
+            orgUnitLevelName='Sub-County';
+        } else if(orgUnitLevel=='national'){
+            orgUnitLevelName='National';
         }
+        $('#orgunitLabel').empty();
+        $('#orgunitLabel').text(orgunitLabel+" - " +orgUnitLevelName);
     });
 
 });
@@ -372,7 +376,8 @@ $("#period-option li a").click(function (event) {
     } else {
 
     }
-
+    $('#periodTypeLabel').empty();
+    $('#periodTypeLabel').text("Period  - "+ dslGraph.selectedPeriodType);
 });
 
 function reRunQuery() {
