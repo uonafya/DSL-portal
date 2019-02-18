@@ -2,7 +2,6 @@ function drawPie(elementId, titlee, seriee,formatt) {
     console.log("format is "+formatt);
     
     if(formatt==null){
-        console.log("------------------------ using");
         formatt='<b>{point.name}</b>: {point.percentage:.1f} %';
     }
     
