@@ -1,6 +1,6 @@
 var dslGraph;
-var indicatorName="";
-var indicatorType="";
+var indicatorName = "";
+var indicatorType = "";
 
 
 var initOrganisationUnitChosenDropDown = function initOrganisationUnitChosenDropDown(orgType) {
@@ -76,9 +76,6 @@ $('#organisation-unit').on('change', function (event) {
         console.log("got few 2");
         //setIndicatorValues("indicator:average:with_filter", indicator);
         indicatorHandler(indicatorType, indicator);
-        
-        setIhrisValues("human_resource:count");
-        setKemsaValues("commodity:count");
         var queryPropertiesToSubmit = prepareQueryPropertiesToSubmit(indicator, SETTING.graph_year_month);
         getQueryValues(queryPropertiesToSubmit, dslGraph);
     }
@@ -132,7 +129,7 @@ function setPeriodValues(periodType, startDate, endDate) {
 }
 
 
-function setIndicatorValues(indicatorType, indicator, filter) {
+function setIndicatorValues(indicatorType, indicator) {
     var indicatorValuesToQuery = {};
     indicatorValuesToQuery['what'] = indicatorType;
     indicatorValuesToQuery['filter'] = {'indicator': new Array(indicator)};
@@ -148,6 +145,14 @@ function setFacilityValues(indicatorType, facilities) {
     return queryParametersList;
 }
 
+function setIhrisValues(indicatorType, cadre) {
+    var humanResourceValuesToQuery = {};
+    humanResourceValuesToQuery['what'] = indicatorType;
+    humanResourceValuesToQuery['filter'] = {'cadre': new Array(cadre)};
+    queryParametersList.push(humanResourceValuesToQuery);
+    return queryParametersList;
+}
+
 function setLocality(org_level, filter) {
     var localityValuesToQuery = {};
     localityValuesToQuery['what'] = "locality:" + org_level;
@@ -158,18 +163,6 @@ function setLocality(org_level, filter) {
     return queryParametersList;
 }
 
-function setIhrisValues(cadreType) {
-    if (dslGraph.fetchIhrisData) {
-        var humanResourceValuesToQuery = {};
-        humanResourceValuesToQuery['what'] = cadreType;
-        humanResourceValuesToQuery['filter'] = {};
-        var what = '';
-        humanResourceValuesToQuery['what'] = humanResourceValuesToQuery['what'] + what;
-        queryParametersList.push(humanResourceValuesToQuery);
-    }
-    return queryParametersList;
-}
-
 
 function setKemsaValues(commodityType) {
     if (dslGraph.fetchKemsaData) {
@@ -177,9 +170,7 @@ function setKemsaValues(commodityType) {
         commodityValuesToQuery['what'] = commodityType;
         queryParametersList.push(commodityValuesToQuery);
     }
-
     return queryParametersList;
-
 }
 
 // ########### init function ##########
@@ -189,13 +180,11 @@ function setKemsaValues(commodityType) {
 
 function initGraph() {
     dslGraph = new DslGraph();
-    indicatorName="TB curative Rate";
-    indicatorType="indicator:average:with_filter";
+    indicatorName = "TB curative Rate";
+    indicatorType = "indicator:average:with_filter";
     yearMonthParameters.currentYear = '2015';
     setPeriodValues("monthly", '2015', '2015');
     indicatorHandler("indicator:average:with_filter", indicatorName);
-    setIhrisValues("human_resource:count");
-    setKemsaValues("commodity:count");
     var queryPropertiesToSubmit = prepareQueryPropertiesToSubmit("TB curative Rate", SETTING.graph_year_month);
     getQueryValues(queryPropertiesToSubmit, dslGraph);
 }
@@ -219,8 +208,6 @@ $(document).ready(function () {
         yearMonthParameters.currentYear = year;
         setPeriodValues("monthly", year, year);
         setIndicatorValues("indicator:average:with_filter", indicator);
-        setIhrisValues("human_resource:count");
-        setKemsaValues("commodity:count");
         var queryPropertiesToSubmit = prepareQueryPropertiesToSubmit(indicator, SETTING.graph_year_month);
         getQueryValues(queryPropertiesToSubmit, dslGraph);
 
@@ -231,8 +218,8 @@ $(document).ready(function () {
 $(document).ready(function () {
     $("#indicators li a").click(function (event) {
         var filter = $(event.target).attr('data-value');
-        indicatorType=$(event.target).attr('data-name');
-        indicatorName=filter;
+        indicatorType = $(event.target).attr('data-name');
+        indicatorName = filter;
         $("#indicator-name-label").text($(event.target).text());
         if (dslGraph.selectedPeriodType == 'yearly') {
             dslGraph.indicator = filter;
@@ -244,9 +231,6 @@ $(document).ready(function () {
             setPeriodValues("monthly", year, year);
             var dataName = $(event.target).attr('data-name');
             indicatorHandler(dataName, filter);
-
-            setIhrisValues("human_resource:count");
-            setKemsaValues("commodity:count");
             var queryPropertiesToSubmit = prepareQueryPropertiesToSubmit(filter, SETTING.graph_year_month);
             getQueryValues(queryPropertiesToSubmit, dslGraph);
 
@@ -266,6 +250,9 @@ function commodityHanlder(dataName, indicator) {
 
 }
 
+function cadreHanlder(dataName, indicator) {
+    setIhrisValues(dataName, indicator);
+}
 
 function dhisHanlder(dataName, filter) {
     setIndicatorValues(dataName, filter);
@@ -276,26 +263,18 @@ function indicatorHandler(dataName, filter) {
 
     if (dataName.indexOf("facility") != -1) {
         console.log("facility handler");
+        console.log(dataName);
+        console.log(filter);
         facilityHanlder(dataName, filter);
     } else if (dataName.indexOf("indicator") != -1) {
         console.log("indicator handler");
         dhisHanlder(dataName, filter);
+    }else if(dataName.indexOf("human_resource") != -1){
+        console.log("cadre handler");
+        console.log(dataName);
+        console.log(filter);
+        cadreHanlder(dataName, filter);
     }
-}
-
-
-/**
- * Random string generator
- * @returns {String} random string
- */
-function makeid() {
-    var text = "";
-    var possible = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
-
-    for (var i = 0; i < 5; i++)
-        text += possible.charAt(Math.floor(Math.random() * possible.length));
-
-    return text;
 }
 
 
@@ -407,8 +386,6 @@ function reRunQuery() {
         yearMonthParameters.currentYear = year;
         setPeriodValues("monthly", year, year);
         setIndicatorValues("indicator:average:with_filter", indicator);
-        setIhrisValues("human_resource:count");
-        setKemsaValues("commodity:count");
         var queryPropertiesToSubmit = prepareQueryPropertiesToSubmit(indicator, SETTING.graph_year_month);
         getQueryValues(queryPropertiesToSubmit, dslGraph);
     } else {
@@ -464,8 +441,6 @@ function _getYearRangeData(startYear, endYear, valid) {
         yearlyParameters.endYear = endYear
         setPeriodValues("yearly", startYear, endYear);
         setIndicatorValues("indicator:average:with_filter", indicator);
-        setIhrisValues("human_resource:count");
-        setKemsaValues("commodity:count");
         var queryPropertiesToSubmit = prepareQueryPropertiesToSubmit(indicator, SETTING.graph_yearly);
         getQueryValues(queryPropertiesToSubmit, dslGraph);
     }
@@ -486,8 +461,6 @@ function _getYearlyData(year) {
     yearMonthParameters.currentYear = year;
     setPeriodValues("monthly", year, year);
     setIndicatorValues("indicator:average:with_filter", indicator);
-    setIhrisValues("human_resource:count");
-    setKemsaValues("commodity:count");
     var queryPropertiesToSubmit = prepareQueryPropertiesToSubmit(indicator, SETTING.graph_year_month);
     getQueryValues(queryPropertiesToSubmit, dslGraph);
 }
