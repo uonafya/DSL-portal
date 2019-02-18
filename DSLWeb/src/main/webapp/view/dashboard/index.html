@@ -322,7 +322,7 @@
                                         <li><a data-name="facility_status:count" data-value="facility_status" href="javascript:;">Facilities by Status</a></li>
                                         <!--<li><a data-name="facility_owner:count" data-value="facility_owner" href="javascript:;">Number of Beds and Cots</a></li>-->
                                         <!--<li><a data-name="facility_owner:count" data-value="facility_owner" href="javascript:;">Services offered in Facilities</a></li>-->
-                                        
+
                                     </ul>
                                 </li>
 
@@ -534,11 +534,12 @@
         </div>
         <!-- /subnavbar -->
 
-        <div class="graph-types-list">
-            <a href="#" style="display: inline-block;"> <i class="fa fa-bar-chart" aria-hidden="true"></i></a>
-            <a href="#" style="display: inline-block;"> <i class="fa fa-pie-chart" aria-hidden="true"></i></a>
-            <a href="#" style="display: inline-block;"> <i class="fa fa-line-chart" aria-hidden="true"></i></a>
-            <a href="#" style="display: inline-block;"> <i class="fa fa-area-chart" aria-hidden="true"></i></a>
+        <div id="graph-options" class="graph-types-list">
+            <a href="#" data-toggle="tooltip" title="Bar Chart" class="dsl-bar" style="display: inline-block;"> <i class="fa fa-bar-chart" aria-hidden="true"></i></a>
+            <a href="#" data-toggle="tooltip" title="Pie Chart" class="dsl-pie" style="display: inline-block;"> <i class="fa fa-pie-chart" aria-hidden="true"></i></a>
+            <a href="#" data-toggle="tooltip" title="Line Chart" class="dsl-line" style="display: inline-block;"> <i class="fa fa-line-chart" aria-hidden="true"></i></a>
+            <!--<a href="#" data-toggle="tooltip" title="Area Chart" class="dsl-area" style="display: inline-block;"> <i class="fa fa-area-chart" aria-hidden="true"></i></a>-->
+            <a href="#" data-toggle="tooltip" title="Table" class="dsl-table" style="display: inline-block;"> <i class="fa fa-table" aria-hidden="true"></i></a>
         </div>
 
         <div id="table-status">Loading <i class="fas fa-spinner fa-spin" style="font-size: 24px;"></i></div>

@@ -113,7 +113,6 @@ function drawBarGraph(that) {
     var indicatorName = that.indicator;
     var headerPositionMapping = {};
     $.each(that.graphData['columns'], function (index, objValue) {
-
         if (!(objValue['title'] == 'month' || objValue['title'] == 'year' || objValue['title'] == 'indicator_name')) {
             dataAttributes[objValue['title']] = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
             headerPositionMapping[index] = objValue['title'];
@@ -124,12 +123,13 @@ function drawBarGraph(that) {
         if (objValue['title'] == 'year') {
             yearPosition = index;
         }
-
     });
     dataAttributes = getDataValuesForChartDisplay(that, yearPosition, monthPosition, headerPositionMapping, dataAttributes);
     var serie = getBarGraphSeries(dataAttributes);
     console.log("seriee " + serie);
     console.log(serie);
+    console.log(that.graphData['columns']);
+    console.log(that.graphData['data']);
     drawBarChart(elementId, indicatorName + "-" + yearMonthParameters.currentYear, categoriee, serie);
 }
 
@@ -235,13 +235,14 @@ function getYearlyDataValuesForChartDisplay(that, yearPosition, yearPositionMapp
 function getDataValuesForChartDisplay(that, yearPosition, monthPosition, headerPositionMapping, dataAttributes) {
     var position = "";
     if (that.type == SETTING.graph_year_month) {
-        position = monthPosition;
+        position = Number(monthPosition);
     } else if (that.type == SETTING.graph_yearly) {
-        position = yearPosition;
+        position = Number(yearPosition);
     }
     $.each(that.graphData['data'], function (index, individualArrayWithData) {
         var year = individualArrayWithData[yearPosition];
         $.each(individualArrayWithData, function (dataRowIndex, dataRow) {
+            
             try {
 
                 var valueName = headerPositionMapping[dataRowIndex];
@@ -253,6 +254,8 @@ function getDataValuesForChartDisplay(that, yearPosition, monthPosition, headerP
         });
 
     });
+    console.log("data row");
+            console.log(dataAttributes);
     return dataAttributes;
 }
 

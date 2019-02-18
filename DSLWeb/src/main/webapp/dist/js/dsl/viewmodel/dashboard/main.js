@@ -531,3 +531,30 @@ $(document).ready(function () {
     dslGraph.selectedPeriodType = "monthly";
 
 });
+
+
+
+//$('#graph-options > a').on('click', '*', function(event) {
+//    alert(event.target);
+//});
+
+$('#graph-options > a').click(function (event) {
+    var className = $(event.target).parent().attr('class');
+    if (className == 'dsl-bar') {
+        console.log("Drawing  graph");
+        dslGraph.graphType = SETTING.graph_type[4];
+        dslGraph.drawGraph();
+    } else if (className == 'dsl-pie') {
+        console.log("Drawing  graph");
+        dslGraph.graphType = SETTING.graph_type[0];
+        dslGraph.drawGraph();
+    } else if (className == 'dsl-line') {
+        console.log("Drawing  graph");
+        dslGraph.graphType = SETTING.graph_type[6];
+        dslGraph.drawGraph();
+    } else if (className == 'dsl-table') {
+        console.log("Drawing  graph");
+        dslGraph.graphType = SETTING.graph_type[5];
+        dslGraph.drawGraph();
+    }
+});
