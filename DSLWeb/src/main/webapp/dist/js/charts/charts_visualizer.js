@@ -30,40 +30,8 @@ DslGraph.prototype.drawGraph = function draw() {
     console.log(this.graphType);
     console.log(this.type);
     if (this.type == SETTING.graph_year_month && this.graphType == SETTING.graph_type[0]) {
-        console.log("converting to pie chart");
-
-        var metadataData = getMetadataObject(that.graphData);
-        var dat = {};
-        dat['data'] = that.graphData['data'];
-        dat['columns'] = that.graphData['columns'];
-        console.log("the pie data");
-        console.log(that.graphData['components']);
-        console.log("the pie data data");
-        console.log(dat);
-        var componts=null;
-        var title="";
-        $.each(that.graphData['components'], function (index, value) {
-            // sm md lg
-            console.log("check components");
-            console.log(value);
-            if ('graph-type' in value) {
-                 componts=value;
-                 title=value['title'];
-            }
-        });
-
-        var pieCharts = convertToPieChart(componts, dat,2);
-
-
-        console.log("the pie data 2");
-        console.log(pieCharts);
-
-        $.each(pieCharts, function (index, chart) {
-            console.log("the pie data long ");
-            console.log(chart);
-            drawPie(that.elementId, title, [{data: chart}]);
-        });
-
+        console.log("drawing monthly pie chart");
+        drawMontlyPieChart(that);
         // drawYearMonthGraph(that);
     } else if (this.type == SETTING.graph_yearly && this.graphType == SETTING.graph_type[1]) {
         drawYearlyGraph(that);
@@ -327,4 +295,41 @@ function getBarGraphSeries(dataAttributes) {
 
         }];
     return serie;
+}
+
+
+function drawMontlyPieChart(that) {
+    var metadataData = getMetadataObject(that.graphData);
+    var processMonths = metadataData['xaxis-process'];
+    var dat = {};
+    dat['data'] = that.graphData['data'];
+    dat['columns'] = that.graphData['columns'];
+    console.log("the pie data");
+    console.log(that.graphData['components']);
+    console.log("the pie data data");
+    console.log(dat);
+    var componts = null;
+    var title = "";
+    $.each(that.graphData['components'], function (index, value) {
+        console.log("check components");
+        console.log(value);
+        if ('graph-type' in value) {
+            componts = value;
+            title = value['title'];
+        }
+    });
+
+    var pieCharts = convertToPieChart(componts, dat, 2);
+    var months = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
+    $("#" + that.elementId).empty();
+    $.each(pieCharts, function (index, chart) {
+        if (processMonths == 'false') { //do not split by month, draw only one pie chart
+            drawPie(that.elementId, title, [{data: chart}]);
+            return false;
+        }
+
+        var componentId = makeid();
+        $("#" + that.elementId).append("<div class='col-sm-6 col-lg-6 col-xm-12' style='margin-bottom: 5px;' id='" + componentId + "'></div>");
+        drawPie(componentId, title + " ( month - " + months[index] + " )", [{data: chart}]);
+    });
 }
