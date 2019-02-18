@@ -40,7 +40,7 @@ function getPieMetaData(componentMetaData, valueData, xaxisIndex, subjectIndex, 
     }
 
     if (xaxis == 'month') {
-        return _getPieDataWithMonthPeriodOption(valueData, xaxisIndex, subjectIndex, datavalueIndex);
+        return _getPieDataWithMonthPeriodOption(valueData, componentMetaData, xaxisIndex, subjectIndex, datavalueIndex);
     }
 }
 
@@ -59,8 +59,8 @@ function _getPieDataWIthoutPeriodOption(valueData, subjectIndex, datavalueIndex)
 
 }
 
-function _getPieDataWithMonthPeriodOption(valueData, xaxisIndex, subjectIndex, datavalueIndex) {
-
+function _getPieDataWithMonthPeriodOption(valueData, componentMetaData, xaxisIndex, subjectIndex, datavalueIndex) {
+    var dissagregatedSubjects = componentMetaData['dissagregated-subjects'];
     var subjects = [];
     var graphData = {};
     console.log("valued data ");
@@ -84,9 +84,22 @@ function _getPieDataWithMonthPeriodOption(valueData, xaxisIndex, subjectIndex, d
         var chartPoints = [];
         $.each(graphData, function (key, value) {
             var dataPoint = {};
-            dataPoint['name'] = key;
-            dataPoint['y'] = value[month];
-            chartPoints.push(dataPoint);
+            if (dissagregatedSubjects == 'false') {
+                dataPoint['name'] = key + " - coverage";
+                dataPoint['y'] = Number(value[month]);
+                console.log("-------------------------- " + value[month]);
+                chartPoints.push(dataPoint);
+                dataPoint={};
+                dataPoint['name'] = key;
+                console.log("nop ---------------------------------- ");
+                console.log(100 - Number(value[month]));
+                dataPoint['y'] = 100 - Number(value[month]);
+                chartPoints.push(dataPoint);
+            } else {
+                dataPoint['name'] = key;
+                dataPoint['y'] = value[month];
+                chartPoints.push(dataPoint);
+            }
         });
         month = month + 1;
         pieCharts.push(chartPoints);
