@@ -17,16 +17,13 @@ function convertToYearlyColumn() {
  * @param {type} valueData the actual data for the indicator
  * @returns {Array}
  */
-function convertToMultiLine(metadataData,valueData) {
-
+function convertToMultiLine(metadataData, valueData) {
     console.log("converter called " + metadataData);
     console.log(metadataData);
     var subjectIndex = 0, datanameIndex = 0, xaxisIndex = 0;
 
-
-
     $.each(valueData['columns'], function (index, column) {
-        console.log("all "+column['title']);
+        console.log("all " + column['title']);
         console.log(metadataData['subject']);
         console.log(metadataData['dataname']);
         console.log(metadataData['xaxis']);
@@ -43,24 +40,19 @@ function convertToMultiLine(metadataData,valueData) {
             console.log("index 3");
             xaxisIndex = index;
         }
-
-
     });
 
-
-    var convertedData = getMultilineMetaData(metadataData,valueData, xaxisIndex, subjectIndex, datanameIndex);
+    var convertedData = getMultilineMetaData(metadataData, valueData, xaxisIndex, subjectIndex, datanameIndex);
 //    subject - (Installation,Manufacturing,Other)
 //    dataname (column with raw data)
 //    xaxis what to put in xaxis
 
-
-
     return convertedData;
 }
 
-function getMultilineMetaData(componentMetaData,valueData, xaxisIndex, subjectIndex, datanameIndex) {
+function getMultilineMetaData(componentMetaData, valueData, xaxisIndex, subjectIndex, datanameIndex) {
     var xaxis = componentMetaData['xaxis'];
-    var title=componentMetaData['title'];
+    var title = componentMetaData['title'];
     if (xaxis == 'month') {
         var subjects = [];
         var graphData = {};
@@ -88,11 +80,10 @@ function getMultilineMetaData(componentMetaData,valueData, xaxisIndex, subjectIn
             t['data'] = value;
             processedGraphData.push(t);
         });
-        
-        
+
         console.log("final dataa");
         console.log(processedGraphData);
-        return [processedGraphData, categories,title];
+        return [processedGraphData, categories, title];
     }
 
     return categories;

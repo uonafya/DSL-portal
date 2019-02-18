@@ -1,4 +1,11 @@
-function drawPie(elementId, titlee, seriee) {
+function drawPie(elementId, titlee, seriee,formatt) {
+    console.log("format is "+formatt);
+    
+    if(formatt==null){
+        console.log("------------------------ using");
+        formatt='<b>{point.name}</b>: {point.percentage:.1f} %';
+    }
+    
     Highcharts.chart(elementId, {
         chart: {
             plotBackgroundColor: null,
@@ -9,8 +16,11 @@ function drawPie(elementId, titlee, seriee) {
         title: {
             text: titlee
         },
+//        tooltip: {
+//            pointFormat: '{series.name}: <b>{point.percentage:.1f}%</b>'
+//        }
         tooltip: {
-            pointFormat: '{series.name}: <b>{point.percentage:.1f}%</b>'
+            pointFormat: '<b>{point.percentage:.2f}%</b>'
         },
         plotOptions: {
             pie: {
@@ -18,7 +28,7 @@ function drawPie(elementId, titlee, seriee) {
                 cursor: 'pointer',
                 dataLabels: {
                     enabled: true,
-                    format: '<b>{point.name}</b>: {point.percentage:.1f} %',
+                    format: formatt,
                     style: {
                         color: (Highcharts.theme && Highcharts.theme.contrastTextColor) || 'black'
                     }

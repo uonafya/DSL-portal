@@ -244,8 +244,6 @@ function facilityHanlder(dataName, filter) {
     setFacilityValues(dataName, filter);
 }
 
-
-
 function commodityHanlder(dataName, indicator) {
 
 }
@@ -269,7 +267,7 @@ function indicatorHandler(dataName, filter) {
     } else if (dataName.indexOf("indicator") != -1) {
         console.log("indicator handler");
         dhisHanlder(dataName, filter);
-    }else if(dataName.indexOf("human_resource") != -1){
+    } else if (dataName.indexOf("human_resource") != -1) {
         console.log("cadre handler");
         console.log(dataName);
         console.log(filter);
