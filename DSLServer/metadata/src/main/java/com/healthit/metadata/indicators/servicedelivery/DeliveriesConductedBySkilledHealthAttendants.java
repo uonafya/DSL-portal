@@ -28,7 +28,7 @@ public class DeliveriesConductedBySkilledHealthAttendants implements Metadata {
 
     @Override
     public List<Object> getMetadata(RequestEntity requestString) {
-        log.info("Tb curative rate metadata fetcher");
+        log.info("Deliveries Conducted By Skilled Health Attendants metadata fetcher");
         Map<String, String> indicator = new HashMap(); //carries metadata for main indicator
         String pType="month";
         OrgUnitName orgUnit = OrgUnitName.NATIONAL;
@@ -90,7 +90,7 @@ public class DeliveriesConductedBySkilledHealthAttendants implements Metadata {
         indicator.put("xaxis", pType);
         indicator.put("subject", "indicator_name"); // converter helper data
         indicator.put("dataname", "indicator_average"); // converter helper data
-        indicator.put("title", "Tb Curative Rate");
+        indicator.put("title", "Deliveries conducted by skilled health attendants");
         indicator.put("graph-type", "5");
         indicator.put("dissagregated-subjects", "false"); //weather the name of the subjects (eg, can be dissagragated as facility by type)
         QueryParameters queryParams = new QueryParameters.QueryParametersBuilder()

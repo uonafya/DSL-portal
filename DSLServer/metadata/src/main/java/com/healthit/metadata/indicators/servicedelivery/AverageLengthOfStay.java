@@ -22,13 +22,13 @@ import org.json.JSONObject;
  */
 public class AverageLengthOfStay implements Metadata {
 
-    final static Logger log = Logger.getLogger(MalariaConfirmedCasesRatio.class.getCanonicalName());
+    final static Logger log = Logger.getLogger(AverageLengthOfStay.class.getCanonicalName());
     String kemsaQueryFile = "kemsa.properties";
     String commodityList = "['%ethambutol%','%isoniazid%', '%rifampicin%', '%pyrazinamide%']";
 
     @Override
     public List<Object> getMetadata(RequestEntity requestString) {
-        log.info("Tb curative rate metadata fetcher");
+        log.info("Average length of stay metadata fetcher");
         Map<String, String> indicator = new HashMap(); //carries metadata for main indicator
         String pType="month";
         OrgUnitName orgUnit = OrgUnitName.NATIONAL;
@@ -90,7 +90,7 @@ public class AverageLengthOfStay implements Metadata {
         indicator.put("xaxis", pType);
         indicator.put("subject", "indicator_name"); // converter helper data
         indicator.put("dataname", "indicator_average"); // converter helper data
-        indicator.put("title", "Tb Curative Rate");
+        indicator.put("title", "IP - Average Length of Stay");
         indicator.put("graph-type", "5");
         indicator.put("dissagregated-subjects", "false"); //weather the name of the subjects (eg, can be dissagragated as facility by type)
         QueryParameters queryParams = new QueryParameters.QueryParametersBuilder()

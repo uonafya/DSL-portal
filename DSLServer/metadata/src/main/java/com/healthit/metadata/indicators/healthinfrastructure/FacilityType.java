@@ -29,7 +29,7 @@ public class FacilityType implements Metadata {
 
     @Override
     public List<Object> getMetadata(RequestEntity requestString) {
-        log.info("Tb curative rate metadata fetcher");
+        log.info("Facility Type metadata fetcher");
         Map<String, String> indicator = new HashMap(); //carries metadata for main indicator
         String pType="month";
         OrgUnitName orgUnit = OrgUnitName.NATIONAL;

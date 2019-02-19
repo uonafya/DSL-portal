@@ -23,13 +23,13 @@ import org.json.JSONObject;
  */
 public class FacilityOwner implements Metadata {
 
-    final static Logger log = Logger.getLogger(FacilityType.class.getCanonicalName());
+    final static Logger log = Logger.getLogger(FacilityOwner.class.getCanonicalName());
     String kemsaQueryFile = "kemsa.properties";
     String commodityList = "['%ethambutol%','%isoniazid%', '%rifampicin%', '%pyrazinamide%']";
 
     @Override
     public List<Object> getMetadata(RequestEntity requestString) {
-        log.info("Tb curative rate metadata fetcher");
+        log.info("Facility Owner metadata fetcher");
         Map<String, String> indicator = new HashMap(); //carries metadata for main indicator
         String pType="month";
         OrgUnitName orgUnit = OrgUnitName.NATIONAL;

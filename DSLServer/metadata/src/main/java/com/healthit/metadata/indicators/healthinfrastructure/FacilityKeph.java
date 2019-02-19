@@ -24,13 +24,13 @@ import org.json.JSONObject;
  */
 public class FacilityKeph implements Metadata {
 
-    final static Logger log = Logger.getLogger(FacilityType.class.getCanonicalName());
+    final static Logger log = Logger.getLogger(FacilityKeph.class.getCanonicalName());
     String kemsaQueryFile = "kemsa.properties";
     String commodityList = "['%ethambutol%','%isoniazid%', '%rifampicin%', '%pyrazinamide%']";
 
     @Override
     public List<Object> getMetadata(RequestEntity requestString) {
-        log.info("Tb curative rate metadata fetcher");
+        log.info("Facility Keph level metadata fetcher");
         Map<String, String> indicator = new HashMap(); //carries metadata for main indicator
         String pType="month";
         OrgUnitName orgUnit = OrgUnitName.NATIONAL;
