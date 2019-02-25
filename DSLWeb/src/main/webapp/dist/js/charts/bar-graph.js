@@ -12,7 +12,7 @@ function drawBarChart(elementId, titlee, categoriee, serie) {
 //            text: 'Plain'
         },
         legend: {
-            enabled: false
+            enabled: true
         },
         xAxis: {
             //  categories: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec']
