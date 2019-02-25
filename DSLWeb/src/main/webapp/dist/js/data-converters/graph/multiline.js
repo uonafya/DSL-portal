@@ -22,6 +22,8 @@ function convertToMultiLine(metadataData, valueData) {
     console.log(metadataData);
     var subjectIndex = 0, datanameIndex = 0, xaxisIndex = 0;
 
+
+
     $.each(valueData['columns'], function (index, column) {
         console.log("all " + column['title']);
         console.log(metadataData['subject']);
@@ -36,10 +38,18 @@ function convertToMultiLine(metadataData, valueData) {
             console.log("index 2");
             datanameIndex = index;
         }
-        if (column['title'] == metadataData['xaxis']) {
+
+        if (metadataData['xaxis-process'] == 'false' && column['title'] == metadataData['xaxis-alternative']) {
             console.log("index 3");
             xaxisIndex = index;
+        } else if (column['title'] == metadataData['xaxis']) {
+            console.log("index 3");
+            xaxisIndex = index;
+        } else {
+            console.log("no multiline metadata");
         }
+
+
     });
 
     var convertedData = getMultilineMetaData(metadataData, valueData, xaxisIndex, subjectIndex, datanameIndex);
@@ -55,15 +65,18 @@ function getMultilineMetaData(componentMetaData, valueData, xaxisIndex, subjectI
     var title = componentMetaData['title'];
     var xaxisProcess = componentMetaData['xaxis-process'];
     if (xaxis == 'month' && xaxisProcess != 'false') {
-        return _getMonthlyMultilineMetaData(valueData, subjectIndex, xaxisIndex, datanameIndex,title)
+        return _getMonthlyMultilineMetaData(valueData, subjectIndex, xaxisIndex, datanameIndex, title)
     }
-
+    if (xaxisProcess == 'false') {
+        xaxis = componentMetaData['xaxis-alternative'];
+        return _getNoAxixProcessMultilineMetaData(valueData, subjectIndex, xaxisIndex, datanameIndex, title)
+    }
     return categories;
 
 }
 
 
-function _getMonthlyMultilineMetaData(valueData, subjectIndex, xaxisIndex, datanameIndex,title) {
+function _getMonthlyMultilineMetaData(valueData, subjectIndex, xaxisIndex, datanameIndex, title) {
     var subjects = [];
     var graphData = {};
     $.each(valueData['data'], function (index, dataArray) {
@@ -85,6 +98,52 @@ function _getMonthlyMultilineMetaData(valueData, subjectIndex, xaxisIndex, datan
     $.each(graphData, function (key, value) {
         console.log("dic name " + key);
         console.log("data val " + value);
+        var t = {}
+        t['name'] = key;
+        t['data'] = value;
+        processedGraphData.push(t);
+    });
+
+    console.log("final dataa");
+    console.log(processedGraphData);
+    return [processedGraphData, categories, title];
+}
+
+//generate multiline metadata for graph with no time period xaxis
+function _getNoAxixProcessMultilineMetaData(valueData, subjectIndex, xaxisIndex, datanameIndex, title) {
+    var subjects = [];
+    var graphData = {};
+
+    var categories = [];
+    var arryWithData = []; //array to be used by all subjects to initialize individial arrays
+    $.each(valueData['data'], function (index, dataArray) {
+        var sub = dataArray[subjectIndex];
+        if ($.inArray(sub, categories) != -1) {
+            // graphData['' + sub + ''][dataArray[xaxisIndex] - 1] = Number(dataArray[datanameIndex]);
+        } else {
+            categories.push(sub);
+            arryWithData.push(null);
+        }
+
+    });
+
+    $.each(valueData['data'], function (index, dataArray) {
+        var sub = dataArray[subjectIndex];
+        if ($.inArray(sub, subjects) != -1) {
+            var subIndex = categories.indexOf(sub);
+            graphData['' + sub + ''][subIndex] = Number(dataArray[datanameIndex]);
+        } else {
+            subjects.push(sub);
+            graphData['' + sub + ''] = JSON.parse(JSON.stringify(arryWithData));
+            var subIndex = categories.indexOf(sub);
+            graphData['' + sub + ''][subIndex] = Number(dataArray[datanameIndex]);
+        }
+
+    });
+
+    var processedGraphData = [];
+
+    $.each(graphData, function (key, value) {
         var t = {}
         t['name'] = key;
         t['data'] = value;
