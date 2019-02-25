@@ -16,6 +16,7 @@ function convertToPieChart(metadataData, valueData, numm) {
         if (column['title'] == metadataData['dataname']) {
             datanameIndex = index;
         }
+        
         if (column['title'] == metadataData['xaxis']) {
             xaxisIndex = index;
         }
@@ -67,12 +68,13 @@ function _getPieDataWithMonthPeriodOption(valueData, componentMetaData, xaxisInd
     console.log(valueData);
     $.each(valueData['data'], function (index, dataArray) {
         var sub = dataArray[subjectIndex];
+        console.log("The month "+dataArray[xaxisIndex]);
         if ($.inArray(sub, subjects) != -1) {
-            graphData['' + sub + ''][dataArray[xaxisIndex] - 1] = Number(dataArray[datavalueIndex]);
+            graphData['' + sub + ''][dataArray[xaxisIndex]] = Number(dataArray[datavalueIndex]);
         } else {
             subjects.push(sub);
             graphData['' + sub + ''] = [null, null, null, null, null, null, null, null, null, null, null, null];
-            graphData['' + sub + ''][dataArray[xaxisIndex] - 1] = Number(dataArray[datavalueIndex]);
+            graphData['' + sub + ''][dataArray[xaxisIndex]] = Number(dataArray[datavalueIndex]);
         }
     });
 
