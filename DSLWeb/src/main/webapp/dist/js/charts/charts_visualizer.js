@@ -33,16 +33,16 @@ DslGraph.prototype.drawGraph = function draw() {
         console.log("drawing monthly pie chart");
         drawMontlyPieChart(that);
         // drawYearMonthGraph(that);
-    } else if (this.type == SETTING.graph_year_month && this.graphType == SETTING.graph_type[5]) {
+    } else if (this.type == SETTING.graph_year_month && this.graphType == SETTING.graph_type[5]) { //table
         console.log("drawing monthly  table");
         drawTable(that);
-    } else if (this.type == SETTING.graph_yearly && this.graphType == SETTING.graph_type[1]) {
+    } else if (this.type == SETTING.graph_yearly && this.graphType == SETTING.graph_type[1]) { //multiplex
         drawYearlyGraph(that);
-    } else if (this.type == SETTING.graph_yearly && this.graphType == SETTING.graph_type[0]) {
+    } else if (this.type == SETTING.graph_yearly && this.graphType == SETTING.graph_type[0]) { //yearly pie chart
         drawPieChart(that);
-    } else if (this.type == SETTING.graph_year_month && this.graphType == SETTING.graph_type[4]) {
+    } else if (this.type == SETTING.graph_year_month && this.graphType == SETTING.graph_type[4]) {  //bar graph
         drawBarGraph(that);
-    } else if (this.type == SETTING.graph_year_month && this.graphType == SETTING.graph_type[6]) {
+    } else if (this.type == SETTING.graph_year_month && this.graphType == SETTING.graph_type[6]) { //monthly multiline
         var metadataData = getMetadataObject(that.graphData);
         console.log("running draw graph");
         console.log(metadataData);
@@ -57,7 +57,7 @@ DslGraph.prototype.drawGraph = function draw() {
     }
 };
 
-
+//gets the metadata object part from the received data
 function getMetadataObject(data) {
     var val = null;
     $.each(data.components, function (index, value) {

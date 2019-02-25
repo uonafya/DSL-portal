@@ -53,39 +53,45 @@ function convertToMultiLine(metadataData, valueData) {
 function getMultilineMetaData(componentMetaData, valueData, xaxisIndex, subjectIndex, datanameIndex) {
     var xaxis = componentMetaData['xaxis'];
     var title = componentMetaData['title'];
-    if (xaxis == 'month') {
-        var subjects = [];
-        var graphData = {};
-        $.each(valueData['data'], function (index, dataArray) {
-            var sub = dataArray[subjectIndex];
-
-            if ($.inArray(sub, subjects) != -1) {
-                graphData['' + sub + ''][dataArray[xaxisIndex] - 1] = Number(dataArray[datanameIndex]);
-            } else {
-                subjects.push(sub);
-                graphData['' + sub + ''] = [null, null, null, null, null, null, null, null, null, null, null, null];
-                graphData['' + sub + ''][dataArray[xaxisIndex] - 1] = Number(dataArray[datanameIndex]);
-            }
-
-        });
-
-        var categories = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
-        var processedGraphData = [];
-
-        $.each(graphData, function (key, value) {
-            console.log("dic name " + key);
-            console.log("data val " + value);
-            var t = {}
-            t['name'] = key;
-            t['data'] = value;
-            processedGraphData.push(t);
-        });
-
-        console.log("final dataa");
-        console.log(processedGraphData);
-        return [processedGraphData, categories, title];
+    var xaxisProcess = componentMetaData['xaxis-process'];
+    if (xaxis == 'month' && xaxisProcess != 'false') {
+        return _getMonthlyMultilineMetaData(valueData, subjectIndex, xaxisIndex, datanameIndex,title)
     }
 
     return categories;
 
+}
+
+
+function _getMonthlyMultilineMetaData(valueData, subjectIndex, xaxisIndex, datanameIndex,title) {
+    var subjects = [];
+    var graphData = {};
+    $.each(valueData['data'], function (index, dataArray) {
+        var sub = dataArray[subjectIndex];
+
+        if ($.inArray(sub, subjects) != -1) {
+            graphData['' + sub + ''][dataArray[xaxisIndex] - 1] = Number(dataArray[datanameIndex]);
+        } else {
+            subjects.push(sub);
+            graphData['' + sub + ''] = [null, null, null, null, null, null, null, null, null, null, null, null];
+            graphData['' + sub + ''][dataArray[xaxisIndex] - 1] = Number(dataArray[datanameIndex]);
+        }
+
+    });
+
+    var categories = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+    var processedGraphData = [];
+
+    $.each(graphData, function (key, value) {
+        console.log("dic name " + key);
+        console.log("data val " + value);
+        var t = {}
+        t['name'] = key;
+        t['data'] = value;
+        processedGraphData.push(t);
+    });
+
+    console.log("final dataa");
+    console.log(processedGraphData);
+    return [processedGraphData, categories, title];
 }
