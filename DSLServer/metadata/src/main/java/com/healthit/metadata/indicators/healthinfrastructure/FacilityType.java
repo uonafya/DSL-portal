@@ -94,6 +94,7 @@ public class FacilityType implements Metadata {
         indicator.put("title", "Facilities By Type");
         indicator.put("graph-type", "0");
         indicator.put("xaxis-process", "false"); // weather the time ("xaxis", pType <-- above) should be used in graphing
+        indicator.put("xaxis-alternative", "Facilities By Type");
         QueryParameters queryParams = new QueryParameters.QueryParametersBuilder()
                 .setEndMonth(endMonth)
                 .setEndYear(endYear)
