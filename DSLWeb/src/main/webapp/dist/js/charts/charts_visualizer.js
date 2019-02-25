@@ -41,7 +41,15 @@ DslGraph.prototype.drawGraph = function draw() {
     } else if (this.type == SETTING.graph_yearly && this.graphType == SETTING.graph_type[0]) { //yearly pie chart
         drawPieChart(that);
     } else if (this.type == SETTING.graph_year_month && this.graphType == SETTING.graph_type[4]) {  //bar graph
-        drawBarGraph(that);
+        console.log("drawing bar chart");
+        var metadataData = getMetadataObject(that.graphData);
+        console.log("metadata bar chart");
+        var convertedData = convertToBarGraph(metadataData, that.graphData);
+        console.log("converterd bar chart");
+        drawBarChart(that.elementId, convertedData[2], convertedData[1], convertedData[0]);
+        
+        
+    //    drawBarGraph(that);
     } else if (this.type == SETTING.graph_year_month && this.graphType == SETTING.graph_type[6]) { //monthly multiline
         var metadataData = getMetadataObject(that.graphData);
         console.log("running draw graph");
@@ -126,12 +134,13 @@ function drawBarGraph(that) {
     });
     dataAttributes = getDataValuesForChartDisplay(that, yearPosition, monthPosition, headerPositionMapping, dataAttributes);
     var serie = getBarGraphSeries(dataAttributes);
-    console.log("seriee " + serie);
+    
+    console.log("-------------------");
     console.log(serie);
-    console.log(that.graphData['columns']);
-    console.log(that.graphData['data']);
+    
     drawBarChart(elementId, indicatorName + "-" + yearMonthParameters.currentYear, categoriee, serie);
 }
+
 
 
 function drawYearlyGraph(that) {
