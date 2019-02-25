@@ -91,7 +91,7 @@ public class FacilityMaternalMortalityRatio implements Metadata {
         indicator.put("subject", "indicator_name"); // converter helper data
         indicator.put("dataname", "indicator_average"); // converter helper data
         indicator.put("title", "Facility Maternal Mortality Ratio");
-        indicator.put("graph-type", "5");
+        indicator.put("graph-type", "4");
         indicator.put("dissagregated-subjects", "false"); //weather the name of the subjects (eg, can be dissagragated as facility by type)
         QueryParameters queryParams = new QueryParameters.QueryParametersBuilder()
                 .setEndMonth(endMonth)
