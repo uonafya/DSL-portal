@@ -24,7 +24,7 @@ public class EacArvsToHIVMotherDuringPregnancy implements Metadata {
 
     final static Logger log = Logger.getLogger(EacArvsToHIVMotherDuringPregnancy.class.getCanonicalName());
     String kemsaQueryFile = "kemsa.properties";
-    String commodityList = "['%ethambutol%','%isoniazid%', '%rifampicin%', '%pyrazinamide%']";
+    String commodityList = "['%abacavir%','%lamivudine%','%zidovudine%','%retrovir%','%lamivudine%','%emtriva%']";
 
     @Override
     public List<Object> getMetadata(RequestEntity requestString) {

@@ -24,7 +24,7 @@ public class HivPositiveTestRateDTCInPatients implements Metadata {
 
     final static Logger log = Logger.getLogger(HivPositiveTestRateDTCInPatients.class.getCanonicalName());
     String kemsaQueryFile = "kemsa.properties";
-    String commodityList = "['%ethambutol%','%isoniazid%', '%rifampicin%', '%pyrazinamide%']";
+    String commodityList = "['%abacavir%','%lamivudine%','%zidovudine%','%retrovir%','%lamivudine%','%emtriva%']";
 
     @Override
     public List<Object> getMetadata(RequestEntity requestString) {
@@ -176,6 +176,7 @@ public class HivPositiveTestRateDTCInPatients implements Metadata {
         String kemsaQuery = getQueryToRun(kemsaQueryName, kemsaQueryFile);
         kemsaQuery = kemsaQuery.replaceAll("@ward@", ward);
         return Commodity.getCommodityData(startYear, endYear, startMonth, endMonth, kemsaQuery, commodityList, "year");
+     
     }
 
     private List<Object> getWardMonthlyMetadata(String startYear, String endYear, String startMonth, String endMonth, String ward) {
@@ -183,6 +184,7 @@ public class HivPositiveTestRateDTCInPatients implements Metadata {
         String kemsaQuery = getQueryToRun(kemsaQueryName, kemsaQueryFile);
         kemsaQuery = kemsaQuery.replaceAll("@ward@", ward);
         return Commodity.getCommodityData(startYear, endYear, startMonth, endMonth, kemsaQuery, commodityList, "monthly");
+     
     }
 
     private List<Object> getCountyMonthlyMetadata(String startYear, String endYear, String startMonth, String endMonth, String county) {
@@ -190,6 +192,7 @@ public class HivPositiveTestRateDTCInPatients implements Metadata {
         String kemsaQuery = getQueryToRun(kemsaQueryName, kemsaQueryFile);
         kemsaQuery = kemsaQuery.replaceAll("@county@", county);
         return Commodity.getCommodityData(startYear, endYear, startMonth, endMonth, kemsaQuery, commodityList, "month");
+      
     }
 
     private List<Object> getCountyYearlyMetadata(String startYear, String endYear, String startMonth, String endMonth, String county) {
@@ -197,6 +200,7 @@ public class HivPositiveTestRateDTCInPatients implements Metadata {
         String kemsaQuery = getQueryToRun(kemsaQueryName, kemsaQueryFile);
         kemsaQuery = kemsaQuery.replaceAll("@county@", county);
         return Commodity.getCommodityData(startYear, endYear, startMonth, endMonth, kemsaQuery, commodityList, "year");
+     
     }
 
     private List<Object> getConstituencyMonthlyMetadata(String startYear, String endYear, String startMonth, String endMonth, String constituency) {
@@ -204,6 +208,7 @@ public class HivPositiveTestRateDTCInPatients implements Metadata {
         String kemsaQuery = getQueryToRun(kemsaQueryName, kemsaQueryFile);
         kemsaQuery = kemsaQuery.replaceAll("@constituency@", constituency);
         return Commodity.getCommodityData(startYear, endYear, startMonth, endMonth, kemsaQuery, commodityList, "month");
+      
     }
 
     private List<Object> getConstituencyYearlyMetadata(String startYear, String endYear, String startMonth, String endMonth, String constituency) {
@@ -211,12 +216,14 @@ public class HivPositiveTestRateDTCInPatients implements Metadata {
         String kemsaQuery = getQueryToRun(kemsaQueryName, kemsaQueryFile);
         kemsaQuery = kemsaQuery.replaceAll("@constituency@", constituency);
         return Commodity.getCommodityData(startYear, endYear, startMonth, endMonth, kemsaQuery, commodityList, "year");
+      
     }
 
     private List<Object> getNationalMonthlyMetadata(String startYear, String endYear, String startMonth, String endMonth) {
         String kemsaQueryName = "commodity_sum_per_year_per_monthly";
         String kemsaQuery = getQueryToRun(kemsaQueryName, kemsaQueryFile);
         return Commodity.getCommodityData(startYear, endYear, startMonth, endMonth, kemsaQuery, commodityList, "month");
+     
     }
 
     private List<Object> getNationalYearlyMetadata(String startYear, String endYear, String startMonth, String endMonth) {
@@ -224,6 +231,7 @@ public class HivPositiveTestRateDTCInPatients implements Metadata {
 
         String kemsaQuery = getQueryToRun(kemsaQueryName, kemsaQueryFile);
         return Commodity.getCommodityData(startYear, endYear, startMonth, endMonth, kemsaQuery, commodityList, "year");
+      
     }
 
     private String getQueryToRun(String queryName, String queryFile) {

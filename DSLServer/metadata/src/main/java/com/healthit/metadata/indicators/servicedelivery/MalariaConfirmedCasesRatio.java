@@ -24,7 +24,7 @@ public class MalariaConfirmedCasesRatio implements Metadata {
 
     final static Logger log = Logger.getLogger(MalariaConfirmedCasesRatio.class.getCanonicalName());
     String kemsaQueryFile = "kemsa.properties";
-    String commodityList = "['%ethambutol%','%isoniazid%', '%rifampicin%', '%pyrazinamide%']";
+    String commodityList = "['%phosphate%','%quinine%']";
 
     @Override
     public List<Object> getMetadata(RequestEntity requestString) {
