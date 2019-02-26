@@ -1,7 +1,7 @@
 var dslGraph;
 var indicatorName = "";
 var indicatorType = "";
-
+var compareIndicatorMode = false;
 
 var initOrganisationUnitChosenDropDown = function initOrganisationUnitChosenDropDown(orgType) {
     $("#organisation-unit").chosen({
@@ -85,27 +85,27 @@ $('#organisation-unit').on('change', function (event) {
 $(document).ready(function () {
     $("#organisation-unit-level li a").click(function (event) {
         var orgUnitLevel = $(event.target).attr('data-org_unit');
-        var orgunitLabel='Organisation Unit';
-        var orgUnitLevelName="";
+        var orgunitLabel = 'Organisation Unit';
+        var orgUnitLevelName = "";
         if (orgUnitLevel == 'county') {
             organisationUnit.current_level = SETTING.orgisation_level[3];
             $("label[data-name='organisation-unit']").text("County:");
             destroyChosenDropDownList();
             populateOrgunitList(locationCommon.countiesList);
             initOrganisationUnitChosenDropDown("county");
-            orgUnitLevelName='County';
+            orgUnitLevelName = 'County';
         } else if (orgUnitLevel == 'constituency') {
             organisationUnit.current_level = SETTING.orgisation_level[2];
             destroyChosenDropDownList();
             populateOrgunitList(locationCommon.constituenciesList);
             initOrganisationUnitChosenDropDown("Sub County");
             $("label[data-name='organisation-unit']").text("Constituency:");
-            orgUnitLevelName='Sub-County';
-        } else if(orgUnitLevel=='national'){
-            orgUnitLevelName='National';
+            orgUnitLevelName = 'Sub-County';
+        } else if (orgUnitLevel == 'national') {
+            orgUnitLevelName = 'National';
         }
         $('#orgunitLabel').empty();
-        $('#orgunitLabel').text(orgunitLabel+" - " +orgUnitLevelName);
+        $('#orgunitLabel').text(orgunitLabel + " - " + orgUnitLevelName);
     });
 
 });
@@ -199,7 +199,8 @@ function prepareQueryPropertiesToSubmit(currentIndicator, grapType) {
     var queryPropertiesToSubmit = JSON.stringify(queryToSubmit);
     console.log(queryToSubmit);
     dslGraph.type = grapType;
-    dslGraph.elementId = "test-graph";
+    if (!compareIndicatorMode)
+        dslGraph.elementId = "test-graph";
     dslGraph.indicator = currentIndicator;
     return queryPropertiesToSubmit;
 }
@@ -377,7 +378,7 @@ $("#period-option li a").click(function (event) {
 
     }
     $('#periodTypeLabel').empty();
-    $('#periodTypeLabel').text("Period  - "+ dslGraph.selectedPeriodType);
+    $('#periodTypeLabel').text("Period  - " + dslGraph.selectedPeriodType);
 });
 
 function reRunQuery() {
@@ -506,7 +507,8 @@ function getQueryValues(queryToSubmit, dslGraph) {
             dslGraph.graphType = SETTING.graph_type[graphType];
 
             dslGraph.drawGraph();
-            insertMetadataComponents(data);
+            if (!compareIndicatorMode)
+                insertMetadataComponents(data);
             $('#table-status').hide();
         },
         error: function (response, request) {
@@ -538,10 +540,63 @@ $(document).ready(function () {
 });
 
 
+//---> start building compare graph <---//
 
-//$('#graph-options > a').on('click', '*', function(event) {
-//    alert(event.target);
-//});
+var intitialGraphState = {
+    currentDslGraphState: "",
+    currenIndicatorType: ""
+};
+
+function cloneObject(obj) {
+    var clone = {};
+    for (var i in obj) {
+        if (obj[i] != null && typeof (obj[i]) == "object")
+            clone[i] = cloneObject(obj[i]);
+        else
+            clone[i] = obj[i];
+    }
+    return clone;
+}
+
+function buildCompareGraph() {
+    $('#exit-compare-mode').show();
+    var id = "test-graph2";
+    intitialGraphState.currentDslGraphState = cloneObject(dslGraph);
+    $('#test-graph').after('<div style="margin-top: 5px;color: red" id="' + id + '" class="col-sm-12">Compare graph will build here</div>');
+    compareIndicatorMode = true;
+    var periodType = dslGraph.selectedPeriodType;
+    dslGraph = new DslGraph();
+    dslGraph.elementId = id;
+    dslGraph.selectedPeriodType = periodType;
+    if (periodType = 'monthly')
+        setPeriodValues('monthly', '2015', '2015');
+    else
+        setPeriodValues('yearly', '2015', '2015');
+    yearMonthParameters.currentYear = '2015';
+}
+
+function exitComapreMode() {
+    $('#exit-compare-mode').hide();
+    console.log(intitialGraphState.currentDslGraphState);
+    compareIndicatorMode = false;
+    dslGraph = intitialGraphState.currentDslGraphState;
+    $("#test-graph2").remove();
+}
+
+
+$('#build-compare-graph').click(function (event) {
+    if (!compareIndicatorMode)
+        buildCompareGraph();
+});
+
+$('#exit-compare-mode').click(function (event) {
+    exitComapreMode();
+});
+
+
+//----> exit build comapare graph mode <----//
+
+
 
 $('#graph-options > a').click(function (event) {
     var className = $(event.target).parent().attr('class');
