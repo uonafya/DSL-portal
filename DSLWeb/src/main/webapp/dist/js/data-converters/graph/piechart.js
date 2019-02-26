@@ -45,6 +45,7 @@ function getPieMetaData(componentMetaData, valueData, xaxisIndex, subjectIndex, 
     }
 }
 
+
 function _getPieDataWIthoutPeriodOption(valueData, subjectIndex, datavalueIndex) {
     var chartPoints = [];
     var pieCharts = [];
