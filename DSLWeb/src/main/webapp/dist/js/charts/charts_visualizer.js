@@ -13,7 +13,7 @@ var yearMonthParameters = {
     currentYear: 2015
 };
 
-var yearlyParameters = {
+window.yearlyParameters = {
     startYear: "",
     endYear: ""
 };
@@ -26,42 +26,36 @@ var organisationUnit = {
 
 DslGraph.prototype.drawGraph = function draw() {
     that = this;
-    console.log("drawing graph");
-    console.log(this.graphType);
-    console.log(this.type);
     if (this.type == SETTING.graph_year_month && this.graphType == SETTING.graph_type[0]) { //monthly pie chart
-        console.log("drawing monthly pie chart");
         drawMontlyPieChart(that);
         // drawYearMonthGraph(that);
     } else if (this.type == SETTING.graph_year_month && this.graphType == SETTING.graph_type[5]) { //table
-        console.log("drawing monthly  table");
+        drawTable(that);
+    } else if (this.type == SETTING.graph_yearly && this.graphType == SETTING.graph_type[5]) { //table
         drawTable(that);
     } else if (this.type == SETTING.graph_yearly && this.graphType == SETTING.graph_type[1]) { //multiplex
         drawYearlyGraph(that);
     } else if (this.type == SETTING.graph_yearly && this.graphType == SETTING.graph_type[0]) { //yearly pie chart
         drawPieChart(that);
     } else if (this.type == SETTING.graph_year_month && this.graphType == SETTING.graph_type[4]) {  //bar graph
-        console.log("drawing bar chart");
         var metadataData = getMetadataObject(that.graphData);
-        console.log("metadata bar chart");
         var convertedData = convertToBarGraph(metadataData, that.graphData);
-        console.log("converterd bar chart");
         drawBarChart(that.elementId, convertedData[2], convertedData[1], convertedData[0]);
-        
-        
-    //    drawBarGraph(that);
+
     } else if (this.type == SETTING.graph_year_month && this.graphType == SETTING.graph_type[6]) { //monthly multiline
         var metadataData = getMetadataObject(that.graphData);
-        console.log("running draw graph");
-        console.log(metadataData);
-        console.log("running tow");
-        console.log(that.graphData);
         var convertedData = convertToMultiLine(metadataData, that.graphData);
-        console.log("running tow22");
-        console.log(convertedData);
         drawMultiLineGraph(that.elementId, convertedData[2], convertedData[1], convertedData[0]);
-        console.log("finishing draw graph");
-        //drawPieChart(that);
+        
+    }  else if (this.type == SETTING.graph_yearly && this.graphType == SETTING.graph_type[6]) { //yearly multiline
+        var metadataData = getMetadataObject(that.graphData);
+        var convertedData = convertToMultiLine(metadataData, that.graphData);
+        drawMultiLineGraph(that.elementId, convertedData[2], convertedData[1], convertedData[0]);
+        
+    } else if (this.type == SETTING.graph_yearly && this.graphType == SETTING.graph_type[4]) {
+        var metadataData = getMetadataObject(that.graphData);
+        var convertedData = convertToBarGraph(metadataData, that.graphData);
+        drawBarChart(that.elementId, convertedData[2], convertedData[1], convertedData[0]);
     }
 };
 
@@ -99,11 +93,6 @@ function drawPieChart(that) {
             colorByPoint: true,
             data: data
         }];
-
-    console.log("pie chart data");
-    console.log(that.elementId);
-    console.log(that.indicator);
-    console.log(seriee);
     drawPie(that.elementId, that.indicator, seriee);
 }
 
@@ -134,10 +123,10 @@ function drawBarGraph(that) {
     });
     dataAttributes = getDataValuesForChartDisplay(that, yearPosition, monthPosition, headerPositionMapping, dataAttributes);
     var serie = getBarGraphSeries(dataAttributes);
-    
+
     console.log("-------------------");
     console.log(serie);
-    
+
     drawBarChart(elementId, indicatorName + "-" + yearMonthParameters.currentYear, categoriee, serie);
 }
 
@@ -251,7 +240,7 @@ function getDataValuesForChartDisplay(that, yearPosition, monthPosition, headerP
     $.each(that.graphData['data'], function (index, individualArrayWithData) {
         var year = individualArrayWithData[yearPosition];
         $.each(individualArrayWithData, function (dataRowIndex, dataRow) {
-            
+
             try {
 
                 var valueName = headerPositionMapping[dataRowIndex];
@@ -264,53 +253,19 @@ function getDataValuesForChartDisplay(that, yearPosition, monthPosition, headerP
 
     });
     console.log("data row");
-            console.log(dataAttributes);
+    console.log(dataAttributes);
     return dataAttributes;
 }
 
-function getGraphSeries(dataAttributes) {
-    var serie = [{
-            name: 'indicator_value',
-            type: 'column',
-            yAxis: 1,
-            data: dataAttributes['indicator_average'],
-            tooltip: {
-                valueSuffix: ''
-            }
 
-        }, {
-            name: 'cadre_count',
-            type: 'spline',
-            yAxis: 2,
-            data: dataAttributes['cadre_count'],
-            marker: {
-                enabled: false
-            },
-            dashStyle: 'shortdot',
-            tooltip: {
-                valueSuffix: ''
-            }
 
-        }, {
-            name: 'commodity_count',
-            type: 'spline',
-            data: dataAttributes['commodity_count'],
-            tooltip: {
-                valueSuffix: ' units'
-            }
-        }];
-    return serie;
-}
+//        series: [{
+//                type: 'column',
+//                colorByPoint: true,
+//                data: [29.9, 71.5, 106.4, 129.2, 144.0, 176.0, 135.6, 148.5, 216.4, 194.1, 95.6, 54.4],
+//                showInLegend: false
+//            }]
 
-function getBarGraphSeries(dataAttributes) {
-    var serie = [{
-            type: 'column',
-            colorByPoint: false,
-            data: dataAttributes['indicator_average']
-
-        }];
-    return serie;
-}
 
 
 function drawMontlyPieChart(that) {
@@ -377,5 +332,5 @@ function drawTable(that) {
         }
     });
     drawDataTable(that.elementId, dat, title);
-    
+
 }

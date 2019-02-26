@@ -18,38 +18,24 @@ function convertToYearlyColumn() {
  * @returns {Array}
  */
 function convertToMultiLine(metadataData, valueData) {
-    console.log("converter called " + metadataData);
-    console.log(metadataData);
+    console.log("converter called ");
     var subjectIndex = 0, datanameIndex = 0, xaxisIndex = 0;
 
-
-
     $.each(valueData['columns'], function (index, column) {
-        console.log("all " + column['title']);
-        console.log(metadataData['subject']);
-        console.log(metadataData['dataname']);
-        console.log(metadataData['xaxis']);
         if (column['title'] == metadataData['subject']) {
-            console.log("index 1");
-            console.log(index);
             subjectIndex = index;
         }
         if (column['title'] == metadataData['dataname']) {
             console.log("index 2");
             datanameIndex = index;
         }
-
         if (metadataData['xaxis-process'] == 'false' && column['title'] == metadataData['xaxis-alternative']) {
-            console.log("index 3");
             xaxisIndex = index;
         } else if (column['title'] == metadataData['xaxis']) {
-            console.log("index 3");
             xaxisIndex = index;
         } else {
             console.log("no multiline metadata");
         }
-
-
     });
 
     var convertedData = getMultilineMetaData(metadataData, valueData, xaxisIndex, subjectIndex, datanameIndex);
@@ -67,6 +53,10 @@ function getMultilineMetaData(componentMetaData, valueData, xaxisIndex, subjectI
     if (xaxis == 'month' && xaxisProcess != 'false') {
         return _getMonthlyMultilineMetaData(valueData, subjectIndex, xaxisIndex, datanameIndex, title)
     }
+    if (xaxis == 'year' && xaxisProcess != 'false') {
+        console.log("year here");
+        return _getYearlyBarGraphMetaData(componentMetaData, valueData, subjectIndex, xaxisIndex, datanameIndex, title);
+    }
     if (xaxisProcess == 'false') {
         xaxis = componentMetaData['xaxis-alternative'];
         return _getNoAxixProcessMultilineMetaData(valueData, subjectIndex, xaxisIndex, datanameIndex, title)
@@ -76,12 +66,75 @@ function getMultilineMetaData(componentMetaData, valueData, xaxisIndex, subjectI
 }
 
 
+function _getYearlyMultilineGraphMetaData(metadataData, valueData, subjectIndex, xaxisIndex, datanameIndex, title) {
+
+    console.log("process line chart yearly");
+    var categoriee = [];
+    var initDataValues = [];
+    var yearPositionMapper = {};
+
+    var x;
+    var count = 0;
+    for (x = yearlyParameters.startYear; x <= yearlyParameters.endYear; x++) {
+        categoriee.push(x.toString());
+        initDataValues.push("0");
+
+        yearPositionMapper[x] = count;
+        count = count + 1;
+    }
+
+    var dataAttributess = {};
+    var yearPosition = '';
+    var headerPositionMapping = {};
+
+    $.each(valueData['columns'], function (index, objValue) {
+        if (!(objValue['title'] == 'year' || objValue['title'] == metadataData['subject'])) {
+            dataAttributess[objValue['title']] = initDataValues.slice(0); //clone array to avoid same object reference
+            headerPositionMapping[index] = objValue['title'];
+        }
+        if (objValue['title'] == 'year') {
+            yearPosition = index;
+        }
+
+    });
+
+    $.each(valueData['data'], function (index, individualArrayWithData) {
+        $.each(individualArrayWithData, function (dataRowIndex, dataRow) {
+            var yr = individualArrayWithData[yearPosition];
+            var yrIndex = yearPositionMapper[yr];
+            try {
+                var valueName = headerPositionMapping[dataRowIndex];
+                if (dataRow.trim().length != 0) {
+                    dataAttributess[valueName].splice(yrIndex, 1, Number(dataRow));
+                }
+            } catch (err) {
+
+            }
+
+        });
+    });
+
+    var processedGraphData = [];
+    //make into a highcharts format
+    $.each(dataAttributess, function (key, value) {
+        console.log("dic name " + key);
+        console.log("data val " + value);
+        var t = {}
+        t['name'] = key;
+        t['data'] = value;
+        processedGraphData.push(t);
+    });
+
+    return [processedGraphData, categoriee, title];
+}
+
+
+
 function _getMonthlyMultilineMetaData(valueData, subjectIndex, xaxisIndex, datanameIndex, title) {
     var subjects = [];
     var graphData = {};
     $.each(valueData['data'], function (index, dataArray) {
         var sub = dataArray[subjectIndex];
-
         if ($.inArray(sub, subjects) != -1) {
             graphData['' + sub + ''][dataArray[xaxisIndex] - 1] = Number(dataArray[datanameIndex]);
         } else {
