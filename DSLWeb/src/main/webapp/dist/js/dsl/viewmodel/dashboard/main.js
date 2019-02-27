@@ -561,22 +561,24 @@ function cloneObject(obj) {
 function buildCompareGraph() {
     $('#exit-compare-mode').show();
     var id = "test-graph2";
+    intitialGraphState.currenIndicatorType=indicatorType;
     intitialGraphState.currentDslGraphState = cloneObject(dslGraph);
     $('#test-graph').after('<div style="margin-top: 5px;color: red" id="' + id + '" class="col-sm-12">Compare graph will build here</div>');
     compareIndicatorMode = true;
     var periodType = dslGraph.selectedPeriodType;
-    dslGraph = new DslGraph();
+    dslGraph = cloneObject(dslGraph);;
     dslGraph.elementId = id;
-    dslGraph.selectedPeriodType = periodType;
-    if (periodType = 'monthly')
-        setPeriodValues('monthly', '2015', '2015');
-    else
-        setPeriodValues('yearly', '2015', '2015');
-    yearMonthParameters.currentYear = '2015';
+//    dslGraph.selectedPeriodType = periodType;
+//    if (periodType = 'monthly')
+//        setPeriodValues('monthly', '2015', '2015');
+//    else
+//        setPeriodValues('yearly', '2015', '2015');
+//    yearMonthParameters.currentYear = '2015';
 }
 
 function exitComapreMode() {
     $('#exit-compare-mode').hide();
+    indicatorType=intitialGraphState.currenIndicatorType;
     console.log(intitialGraphState.currentDslGraphState);
     compareIndicatorMode = false;
     dslGraph = intitialGraphState.currentDslGraphState;
