@@ -258,14 +258,50 @@ function getDataValuesForChartDisplay(that, yearPosition, monthPosition, headerP
 }
 
 
+function getGraphSeries(dataAttributes) {
+    var serie = [{
+            name: 'indicator_value',
+            type: 'column',
+            yAxis: 1,
+            data: dataAttributes['indicator_average'],
+            tooltip: {
+                valueSuffix: ''
+            }
 
-//        series: [{
-//                type: 'column',
-//                colorByPoint: true,
-//                data: [29.9, 71.5, 106.4, 129.2, 144.0, 176.0, 135.6, 148.5, 216.4, 194.1, 95.6, 54.4],
-//                showInLegend: false
-//            }]
+        }, {
+            name: 'cadre_count',
+            type: 'spline',
+            yAxis: 2,
+            data: dataAttributes['cadre_count'],
+            marker: {
+                enabled: false
+            },
+            dashStyle: 'shortdot',
+            tooltip: {
+                valueSuffix: ''
+            }
 
+        }, {
+            name: 'commodity_count',
+            type: 'spline',
+            data: dataAttributes['commodity_count'],
+            tooltip: {
+                valueSuffix: ' units'
+            }
+        }];
+    return serie;
+}
+
+
+function getBarGraphSeries(dataAttributes) {
+    var serie = [{
+            type: 'column',
+            colorByPoint: false,
+            data: dataAttributes['indicator_average']
+
+        }];
+    return serie;
+}
 
 
 function drawMontlyPieChart(that) {
