@@ -1,6 +1,4 @@
-function drawPie(elementId, titlee, seriee,formatt) {
-    console.log("format is "+formatt);
-    
+function drawPie(elementId, titlee, seriee,formatt) {    
     if(formatt==null){
         formatt='<b>{point.name}</b>: {point.percentage:.1f} %';
     }

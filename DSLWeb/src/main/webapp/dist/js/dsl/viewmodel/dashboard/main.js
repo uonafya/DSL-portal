@@ -65,7 +65,7 @@ $('#organisation-unit').on('change', function (event) {
     setLocality(organisationUnit.current_level, filter);
 
     if (dslGraph.selectedPeriodType == 'yearly') {
-        getYearRangeData(_getYearRangeData);
+        getYearlyData();
     } else if (dslGraph.selectedPeriodType == 'monthly') {
         var year = yearMonthParameters.currentYear;
         var indicator = dslGraph.indicator;
@@ -212,7 +212,7 @@ $(document).ready(function () {
         var indicator = dslGraph.indicator;
         yearMonthParameters.currentYear = year;
         setPeriodValues("monthly", year, year);
-        setIndicatorValues("indicator:average:with_filter", indicator);
+        indicatorHandler(indicatorType, indicator);
         var queryPropertiesToSubmit = prepareQueryPropertiesToSubmit(indicator, SETTING.graph_year_month);
         getQueryValues(queryPropertiesToSubmit, dslGraph);
 
@@ -222,19 +222,19 @@ $(document).ready(function () {
 //on change indicator
 $(document).ready(function () {
     $("#indicators li a").click(function (event) {
+        var dataName = $(event.target).attr('data-name');
         var filter = $(event.target).attr('data-value');
         indicatorType = $(event.target).attr('data-name');
         indicatorName = filter;
         $("#indicator-name-label").text($(event.target).text());
         if (dslGraph.selectedPeriodType == 'yearly') {
-            dslGraph.indicator = filter;
-            console.log("indicator " + filter);
-            getYearRangeData(_getYearRangeData);
+            dslGraph.indicator= filter;
+            getYearlyData();
         } else {
             var year = yearMonthParameters.currentYear;
             yearMonthParameters.currentYear = year;
             setPeriodValues("monthly", year, year);
-            var dataName = $(event.target).attr('data-name');
+            dslGraph.indicator = filter;
             indicatorHandler(dataName, filter);
             var queryPropertiesToSubmit = prepareQueryPropertiesToSubmit(filter, SETTING.graph_year_month);
             getQueryValues(queryPropertiesToSubmit, dslGraph);
@@ -383,7 +383,7 @@ $("#period-option li a").click(function (event) {
 
 function reRunQuery() {
     if (dslGraph.selectedPeriodType == 'yearly') {
-        getYearRangeData(_getYearRangeData);
+        getYearlyData();
     } else if (dslGraph.selectedPeriodType == 'monthly') {
         var year = yearMonthParameters.currentYear;
         var indicator = dslGraph.indicator;
@@ -444,7 +444,7 @@ function _getYearRangeData(startYear, endYear, valid) {
         yearlyParameters.startYear = startYear;
         yearlyParameters.endYear = endYear
         setPeriodValues("yearly", startYear, endYear);
-        setIndicatorValues("indicator:average:with_filter", indicator);
+        //setIndicatorValues("indicator:average:with_filter", indicator);
         var queryPropertiesToSubmit = prepareQueryPropertiesToSubmit(indicator, SETTING.graph_yearly);
         getQueryValues(queryPropertiesToSubmit, dslGraph);
     }
@@ -474,9 +474,16 @@ function _getYearlyData(year) {
 //get year range data
 $(document).ready(function () {
     $("#filter").click(function () {
-        getYearRangeData(_getYearRangeData);
+        getYearlyData();
     });
 });
+
+
+function getYearlyData() {
+    var indicator = dslGraph.indicator;
+    indicatorHandler(indicatorType, indicator);
+    getYearRangeData(_getYearRangeData);
+}
 
 function getQueryValues(queryToSubmit, dslGraph) {
     $('#table-status').show();
@@ -561,12 +568,13 @@ function cloneObject(obj) {
 function buildCompareGraph() {
     $('#exit-compare-mode').show();
     var id = "test-graph2";
-    intitialGraphState.currenIndicatorType=indicatorType;
+    intitialGraphState.currenIndicatorType = indicatorType;
     intitialGraphState.currentDslGraphState = cloneObject(dslGraph);
     $('#test-graph').after('<div style="margin-top: 5px;color: red" id="' + id + '" class="col-sm-12">Compare graph will build here</div>');
     compareIndicatorMode = true;
     var periodType = dslGraph.selectedPeriodType;
-    dslGraph = cloneObject(dslGraph);;
+    dslGraph = cloneObject(dslGraph);
+    ;
     dslGraph.elementId = id;
 //    dslGraph.selectedPeriodType = periodType;
 //    if (periodType = 'monthly')
@@ -578,7 +586,7 @@ function buildCompareGraph() {
 
 function exitComapreMode() {
     $('#exit-compare-mode').hide();
-    indicatorType=intitialGraphState.currenIndicatorType;
+    indicatorType = intitialGraphState.currenIndicatorType;
     console.log(intitialGraphState.currentDslGraphState);
     compareIndicatorMode = false;
     dslGraph = intitialGraphState.currentDslGraphState;
