@@ -27,6 +27,7 @@ public class QueryProcessor {
     @ResponseBody
     @RequestMapping(value = "/processquery", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<?> processQuery(@RequestBody String pBody, HttpSession session) {
+                
         QueryInterpreter queryInterpreterObj = new QueryInterpreter();
         JSONObject jsonObj = new JSONObject(pBody);
         JSONArray array = jsonObj.getJSONArray("query");
