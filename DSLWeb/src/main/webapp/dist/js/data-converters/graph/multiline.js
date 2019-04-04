@@ -61,7 +61,7 @@ function getMultilineMetaData(componentMetaData, valueData, xaxisIndex, subjectI
         xaxis = componentMetaData['xaxis-alternative'];
         return _getNoAxixProcessMultilineMetaData(valueData, subjectIndex, xaxisIndex, datanameIndex, title)
     }
-    return categories;
+    return categories; //if error thrown here, check if name was monthly instead of month, or yearly instead of year
 
 }
 
