@@ -5,6 +5,7 @@ var SETTING={
     county_api: '/DSLWeb/api/county',
     commodity_names:'/DSLWeb/api/commodity_names',
     cadre:'/DSLWeb/api/cadre',
+    facilities_api: '/DSLWeb/api/facilities',
     //graph properties
     graph_year_month:"year-month",
     graph_yearly:"yearly",

@@ -25,6 +25,13 @@ var locationViewModel = {
     chosenCountys: ko.observableArray()
 };
 
+function loadFacilities() {
+    $.each(locationCommon.facilitiesList, function (index, objValue) {
+        var elementToAppend = '<a href="#" class="list-group-item"><strong>' + objValue.name + '</strong>\n\
+                        <input data-constituency-id="' + objValue.id + '" data-id="' + objValue.id + '" data-name="' + objValue.name + '" class="pull-right" type="checkbox"></a>';
+        $(".facility-list").append(elementToAppend);
+    });
+}
 
 function loadWards() {
     $.each(locationCommon.wardsList, function (index, objValue) {

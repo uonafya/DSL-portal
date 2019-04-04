@@ -19,7 +19,6 @@ function populateCounty() {
     initOrganisationUnitChosenDropDown("county");
 }
 
-
 //load commodity names list
 function populateCommodity() {
     $("#organisation-unit").empty();
@@ -101,6 +100,20 @@ $(document).ready(function () {
             initOrganisationUnitChosenDropDown("Sub County");
             $("label[data-name='organisation-unit']").text("Constituency:");
             orgUnitLevelName = 'Sub-County';
+        }else if (orgUnitLevel == 'ward') {
+            organisationUnit.current_level = SETTING.orgisation_level[1];
+            destroyChosenDropDownList();
+            populateOrgunitList(locationCommon.wardsList);
+            initOrganisationUnitChosenDropDown("Ward");
+            $("label[data-name='organisation-unit']").text("Ward:");
+            orgUnitLevelName = 'Ward';
+        }else if (orgUnitLevel == 'facility') {
+            organisationUnit.current_level = SETTING.orgisation_level[0];
+            destroyChosenDropDownList();
+            populateOrgunitList(locationCommon.facilitiesList);
+            initOrganisationUnitChosenDropDown("Facility");
+            $("label[data-name='organisation-unit']").text("Facility:");
+            orgUnitLevelName = 'Facility';
         } else if (orgUnitLevel == 'national') {
             orgUnitLevelName = 'National';
         }
@@ -532,6 +545,8 @@ $(document).ready(function () {
     fetchCadre(populateCadres);
     fetchCounties(populateCounty);
     fetchConstituency($.noop);
+    fetchFacilities($.noop);
+    fetchWard($.noop);
 
     initGraph();
     //initialise initial values
