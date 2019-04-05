@@ -23,10 +23,10 @@ function convertToBarGraph(metadataData, valueData) {
 
     $.each(valueData['columns'], function (index, column) {
      
-        if (column['title'] == metadataData['subject']) {
+        if (column['title'].toLowerCase() == metadataData['subject'].toLowerCase()) {
             subjectIndex = index;
         }
-        if (column['title'] == metadataData['dataname']) {
+        if (column['title'].toLowerCase() == metadataData['dataname'].toLowerCase()) {
             datanameIndex = index;
         }
         //does not use period when plotting (uses xaxis-alternative for xaxis)

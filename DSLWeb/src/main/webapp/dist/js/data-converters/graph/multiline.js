@@ -22,10 +22,10 @@ function convertToMultiLine(metadataData, valueData) {
     var subjectIndex = 0, datanameIndex = 0, xaxisIndex = 0;
 
     $.each(valueData['columns'], function (index, column) {
-        if (column['title'] == metadataData['subject']) {
+        if (column['title'].toLowerCase() == metadataData['subject'].toLowerCase()) {
             subjectIndex = index;
         }
-        if (column['title'] == metadataData['dataname']) {
+        if (column['title'].toLowerCase() == metadataData['dataname'].toLowerCase()) {
             console.log("index 2");
             datanameIndex = index;
         }

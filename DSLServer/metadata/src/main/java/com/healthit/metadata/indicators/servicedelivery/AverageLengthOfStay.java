@@ -88,8 +88,8 @@ public class AverageLengthOfStay implements Metadata {
             log.error(ex);
         }
         indicator.put("xaxis", pType);
-        indicator.put("subject", "indicator_name"); // converter helper data
-        indicator.put("dataname", "indicator_average"); // converter helper data
+        indicator.put("subject", "Indicator"); // converter helper data
+        indicator.put("dataname", "value"); // converter helper data
         indicator.put("title", "IP - Average Length of Stay");
         indicator.put("graph-type", "4");
         indicator.put("dissagregated-subjects", "false"); //weather the name of the subjects (eg, can be dissagragated as facility by type)

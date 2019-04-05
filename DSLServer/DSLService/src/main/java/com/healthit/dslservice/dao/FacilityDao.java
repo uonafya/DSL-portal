@@ -30,8 +30,7 @@ import org.apache.log4j.Logger;
 public class FacilityDao {
 
     final static Logger log = Logger.getLogger(FacilityDao.class);
-    private String getALlFacilties = "Select id,name,code as kmflcode,kephlevel_sk, owner_sk as owner_id, ward_id, sub_county_id "
-            + "from facilities_facility";
+    private String getALlFacilties = "Select dhis_organisation_unit_id as id,dhis_organisation_unit_name as name,parentid from common_organisation_unit where level='facility' order by name desc";
     
     private String getFacilityLevels = "SELECT kephlevel_sk as id,name  FROM public.facilities_kephlevel";
     
@@ -53,13 +52,13 @@ public class FacilityDao {
             try {
                 while (rs.next()) {
                     Facility facility = new Facility();
-                    facility.setWardId(rs.getString("ward_id"));
-                    facility.setFacilityOwner(rs.getString("owner_id"));
-                    facility.setId(rs.getString("kmflcode"));
-                    KephLevel l = KephLevel.getKephLevel(Integer.parseInt(rs.getString("kephlevel_sk")));
-                    facility.setKephLevel(l);
+                    //facility.setWardId(rs.getString("ward_id"));
+                    //facility.setFacilityOwner(rs.getString("owner_id"));
+                    facility.setId(rs.getString("id"));
+                    //KephLevel l = KephLevel.getKephLevel(Integer.parseInt(rs.getString("kephlevel_sk")));
+                    //facility.setKephLevel(l);
                     facility.setName(rs.getString("name"));
-                    facility.setSubCountyId(rs.getString("sub_county_id"));
+                    //facility.setSubCountyId(rs.getString("sub_county_id"));
                     facilityList.add(facility);
                 }
                 cache.put(new Element(CacheKeys.facilityList, facilityList));
