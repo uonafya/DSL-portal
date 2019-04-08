@@ -86,7 +86,7 @@ function resetOrgunitDrillToNational() {
     destroyChosenDropDownList();
     $("#organisation-unit").empty();
     $("#organisation-unit-span").hide();
-    orgUnitLevelName = 'National';
+    var orgUnitLevelName = 'National';
     $("#orgunitLabel").css("margin-bottom", "10px");
     $('#orgunitLabel').empty();
     $('#orgunitLabel').text("Organisation Unit" + " - " + orgUnitLevelName);
@@ -137,8 +137,11 @@ $(document).ready(function () {
         } else if (orgUnitLevel == 'national') {
             resetOrgunitDrillToNational()
         }
-        $('#orgunitLabel').empty();
-        $('#orgunitLabel').text(orgunitLabel + " - " + orgUnitLevelName);
+        if (orgUnitLevel != 'national') {
+            $('#orgunitLabel').empty();
+            $('#orgunitLabel').text(orgunitLabel + " - " + orgUnitLevelName);
+        }
+
     });
 
 });
@@ -246,7 +249,7 @@ function setLocalityOption() {
         var orgunitFilter = {};
         orgunitFilter[organisationUnit.current_level] = new Array(orgunitId);
         setLocality(organisationUnit.current_level, orgunitFilter);
-    }else{
+    } else {
         resetOrgunitDrillToNational();
     }
 }

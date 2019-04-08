@@ -157,7 +157,17 @@ public class UnderFiveAttendingCW implements Metadata {
             log.info("Monthly and County");
             components = getWardYearlyMetadata(queryParams.getStartYear(), queryParams.getEndYear(), queryParams.getStartMonth(), queryParams.getEndMonth(), queryParams.getOrgId());
         }
+        
+        if (queryParams.getPeriodType() == PeriodType.MONTHLY && queryParams.getOrgUnitName() == OrgUnitName.FACILITY) {
+            log.info("Monthly and Facility");
+            components = getFacilityMonthlyMetadata(queryParams.getStartYear(), queryParams.getEndYear(), queryParams.getStartMonth(), queryParams.getEndMonth(), queryParams.getOrgId());
+        }
 
+        if (queryParams.getPeriodType() == PeriodType.YEARLY && queryParams.getOrgUnitName() == OrgUnitName.FACILITY) {
+            log.info("Monthly and Facility");
+            components = getFacilityYearlyMetadata(queryParams.getStartYear(), queryParams.getEndYear(), queryParams.getStartMonth(), queryParams.getEndMonth(), queryParams.getOrgId());
+        }
+        
         return components;
     }
 
