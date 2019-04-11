@@ -46,6 +46,16 @@ function stackedBar(elementId,titlee,categoriee,serie){
                 }
             }
         },
+        colors: [
+                '#F2784B',
+                '#1BA39C',
+                '#913D88',
+                '#4d79ff',
+                '#80ff00',
+                '#ff8000',
+                '#00ffff',
+                '#ff4000'
+            ],     
         series: serie
 
 

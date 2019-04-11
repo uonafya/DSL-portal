@@ -32,6 +32,11 @@ function drawPie(elementId, titlee, seriee,formatt) {
                 }
             }
         },
+        colors: [
+                '#F2784B',
+                '#1BA39C',
+                '#913D88'
+            ],     
         series: seriee
     });
 }
