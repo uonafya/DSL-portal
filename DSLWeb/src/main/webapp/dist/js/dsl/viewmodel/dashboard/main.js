@@ -70,9 +70,7 @@ $('#organisation-unit').on('change', function (event) {
         var indicator = dslGraph.indicator;
         yearMonthParameters.currentYear = year;
         setPeriodValues("monthly", year, year);
-        console.log("got few ");
         console.log(indicatorType);
-        console.log("got few 2");
         //setIndicatorValues("indicator:average:with_filter", indicator);
         indicatorHandler(indicatorType, indicator);
         var queryPropertiesToSubmit = prepareQueryPropertiesToSubmit(indicator, SETTING.graph_year_month);
