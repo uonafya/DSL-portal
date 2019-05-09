@@ -88,8 +88,8 @@ public class TBcurativeRate implements Metadata {
             log.error(ex);
         }
         indicator.put("xaxis", pType);
-        indicator.put("subject", "indicator_name"); // converter helper data
-        indicator.put("dataname", "indicator_average"); // converter helper data
+        indicator.put("subject", "Indicator"); // converter helper data
+        indicator.put("dataname", "value"); // converter helper data
         indicator.put("title", "Tb Curative Rate");
         indicator.put("graph-type", "4");
         indicator.put("dissagregated-subjects", "false"); //weather the name of the subjects (eg, can be dissagragated as facility by type)
@@ -115,6 +115,7 @@ public class TBcurativeRate implements Metadata {
         log.info("Running response manager");
         log.info("period type " + queryParams.getPeriodType());
         log.info("org unit type " + queryParams.getOrgUnitName());
+        log.info("org unit id " + queryParams.getOrgId());
 
         if (queryParams.getPeriodType() == PeriodType.YEARLY && queryParams.getOrgUnitName() == OrgUnitName.NATIONAL) {
             log.info("Yearly and National");
@@ -157,18 +158,34 @@ public class TBcurativeRate implements Metadata {
             log.info("Monthly and County");
             components = getWardYearlyMetadata(queryParams.getStartYear(), queryParams.getEndYear(), queryParams.getStartMonth(), queryParams.getEndMonth(), queryParams.getOrgId());
         }
+        
+        if (queryParams.getPeriodType() == PeriodType.MONTHLY && queryParams.getOrgUnitName() == OrgUnitName.FACILITY) {
+            log.info("Monthly and Facility");
+            components = getFacilityMonthlyMetadata(queryParams.getStartYear(), queryParams.getEndYear(), queryParams.getStartMonth(), queryParams.getEndMonth(), queryParams.getOrgId());
+        }
+
+        if (queryParams.getPeriodType() == PeriodType.YEARLY && queryParams.getOrgUnitName() == OrgUnitName.FACILITY) {
+            log.info("Monthly and Facility");
+            components = getFacilityYearlyMetadata(queryParams.getStartYear(), queryParams.getEndYear(), queryParams.getStartMonth(), queryParams.getEndMonth(), queryParams.getOrgId());
+        }
 
         return components;
     }
 
     private List<Object> getFacilityYearlyMetadata(String startYear, String endYear, String startMonth, String endMonth, String facility) {
-        List<Object> components = new ArrayList();
-        return components;
+        String kemsaQueryName = "commodity_sum_per_facility_yearly";
+        String kemsaQuery = getQueryToRun(kemsaQueryName, kemsaQueryFile);
+        kemsaQuery = kemsaQuery.replaceAll("@facility@", facility);
+        return Commodity.getCommodityData(startYear, endYear, startMonth, endMonth, kemsaQuery, commodityList, "year");
+        
     }
 
     private List<Object> getFacilityMonthlyMetadata(String startYear, String endYear, String startMonth, String endMonth, String facility) {
-        List<Object> components = new ArrayList();
-        return components;
+        String kemsaQueryName = "commodity_sum_per_facility_monthly";
+        String kemsaQuery = getQueryToRun(kemsaQueryName, kemsaQueryFile);
+        kemsaQuery = kemsaQuery.replaceAll("@facility@", facility);
+        return Commodity.getCommodityData(startYear, endYear, startMonth, endMonth, kemsaQuery, commodityList, "month");
+        
     }
 
     private List<Object> getWardYearlyMetadata(String startYear, String endYear, String startMonth, String endMonth, String ward) {
@@ -182,7 +199,7 @@ public class TBcurativeRate implements Metadata {
         String kemsaQueryName = "commodity_sum_per_ward_per_year_per_monthly";
         String kemsaQuery = getQueryToRun(kemsaQueryName, kemsaQueryFile);
         kemsaQuery = kemsaQuery.replaceAll("@ward@", ward);
-        return Commodity.getCommodityData(startYear, endYear, startMonth, endMonth, kemsaQuery, commodityList, "monthly");
+        return Commodity.getCommodityData(startYear, endYear, startMonth, endMonth, kemsaQuery, commodityList, "month");
     }
 
     private List<Object> getCountyMonthlyMetadata(String startYear, String endYear, String startMonth, String endMonth, String county) {

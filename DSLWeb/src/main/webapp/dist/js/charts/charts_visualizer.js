@@ -36,7 +36,8 @@ DslGraph.prototype.drawGraph = function draw() {
     } else if (this.type == SETTING.graph_yearly && this.graphType == SETTING.graph_type[1]) { //multiplex
         drawYearlyGraph(that);
     } else if (this.type == SETTING.graph_yearly && this.graphType == SETTING.graph_type[0]) { //yearly pie chart
-        drawPieChart(that);
+        drawYearlyPieChart(that);
+        //drawPieChart(that);
     } else if (this.type == SETTING.graph_year_month && this.graphType == SETTING.graph_type[4]) {  //bar graph
         var metadataData = getMetadataObject(that.graphData);
         var convertedData = convertToBarGraph(metadataData, that.graphData);
@@ -304,6 +305,42 @@ function getBarGraphSeries(dataAttributes) {
 }
 
 
+
+function drawYearlyPieChart(that) {
+    console.log("to draw yearly pie chart");
+    var metadataData = getMetadataObject(that.graphData);
+    var dissagregatedSubjects = metadataData['dissagregated-subjects'];
+    var dat = {};
+    dat['data'] = that.graphData['data'];
+    dat['columns'] = that.graphData['columns'];
+    var componts = null;
+    var title = "";
+    $.each(that.graphData['components'], function (index, value) { 
+        if ('graph-type' in value) {
+            componts = value;
+            title = value['title'];
+        }
+    });
+    var pieCharts = convertToPieChart(componts, dat, 2);
+    
+    $("#" + that.elementId).empty();
+    var pies=pieCharts['chart'];
+    var years=pieCharts['years'];
+    $.each(pies, function (index, chart) {
+        
+        
+        var componentId = makeid();
+        $("#" + that.elementId).append("<div class='col-sm-6 col-lg-6 col-xm-12' style='margin-bottom: 5px;' id='" + componentId + "'></div>");
+
+//        if (dissagregatedSubjects == 'false') {
+//            drawPie(componentId, title + " ( month - " + index + " )", [{data: chart}], '<b>{point.name}</b>: {point.y:.2f}');
+//        } else {
+            drawPie(componentId, title + " ( Year - " + years[index] + " )", [{data: chart}]);
+//        }
+    });
+}
+
+
 function drawMontlyPieChart(that) {
     var metadataData = getMetadataObject(that.graphData);
     var processMonths = metadataData['xaxis-process'];
@@ -311,10 +348,6 @@ function drawMontlyPieChart(that) {
     var dat = {};
     dat['data'] = that.graphData['data'];
     dat['columns'] = that.graphData['columns'];
-    console.log("the pie data");
-    console.log(that.graphData['components']);
-    console.log("the pie data data");
-    console.log(dat);
     var componts = null;
     var title = "";
     $.each(that.graphData['components'], function (index, value) {

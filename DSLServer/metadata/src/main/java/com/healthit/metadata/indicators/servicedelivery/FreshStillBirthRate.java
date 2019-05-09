@@ -88,8 +88,8 @@ public class FreshStillBirthRate implements Metadata {
             log.error(ex);
         }
         indicator.put("xaxis", pType);
-        indicator.put("subject", "indicator_name"); // converter helper data
-        indicator.put("dataname", "indicator_average"); // converter helper data
+        indicator.put("subject", "Indicator"); // converter helper data
+        indicator.put("dataname", "value"); // converter helper data
         indicator.put("title", "Fresh still Birth Rate");
         indicator.put("graph-type", "4");
         indicator.put("dissagregated-subjects", "false"); //weather the name of the subjects (eg, can be dissagragated as facility by type)
@@ -156,6 +156,16 @@ public class FreshStillBirthRate implements Metadata {
         if (queryParams.getPeriodType() == PeriodType.YEARLY && queryParams.getOrgUnitName() == OrgUnitName.WARD) {
             log.info("Monthly and County");
             components = getWardYearlyMetadata(queryParams.getStartYear(), queryParams.getEndYear(), queryParams.getStartMonth(), queryParams.getEndMonth(), queryParams.getOrgId());
+        }
+        
+        if (queryParams.getPeriodType() == PeriodType.MONTHLY && queryParams.getOrgUnitName() == OrgUnitName.FACILITY) {
+            log.info("Monthly and Facility");
+            components = getFacilityMonthlyMetadata(queryParams.getStartYear(), queryParams.getEndYear(), queryParams.getStartMonth(), queryParams.getEndMonth(), queryParams.getOrgId());
+        }
+
+        if (queryParams.getPeriodType() == PeriodType.YEARLY && queryParams.getOrgUnitName() == OrgUnitName.FACILITY) {
+            log.info("Monthly and Facility");
+            components = getFacilityYearlyMetadata(queryParams.getStartYear(), queryParams.getEndYear(), queryParams.getStartMonth(), queryParams.getEndMonth(), queryParams.getOrgId());
         }
 
         return components;

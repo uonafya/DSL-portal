@@ -29,6 +29,16 @@ function drawBarChart(elementId, titlee, categoriee, serie) {
 //                showInLegend: false
 //            }]
 //        
+        colors: [
+                '#F2784B',
+                '#1BA39C',
+                '#913D88',
+                '#4d79ff',
+                '#80ff00',
+                '#ff8000',
+                '#00ffff',
+                '#ff4000'
+            ],     
         series: serie
 
     });

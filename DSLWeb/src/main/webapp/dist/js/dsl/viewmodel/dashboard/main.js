@@ -19,7 +19,6 @@ function populateCounty() {
     initOrganisationUnitChosenDropDown("county");
 }
 
-
 //load commodity names list
 function populateCommodity() {
     $("#organisation-unit").empty();
@@ -71,15 +70,25 @@ $('#organisation-unit').on('change', function (event) {
         var indicator = dslGraph.indicator;
         yearMonthParameters.currentYear = year;
         setPeriodValues("monthly", year, year);
-        console.log("got few ");
         console.log(indicatorType);
-        console.log("got few 2");
         //setIndicatorValues("indicator:average:with_filter", indicator);
         indicatorHandler(indicatorType, indicator);
         var queryPropertiesToSubmit = prepareQueryPropertiesToSubmit(indicator, SETTING.graph_year_month);
         getQueryValues(queryPropertiesToSubmit, dslGraph);
     }
 });
+
+// changes the orgunit selection on ui to national eg if ward, county was not selected on fetch data process
+function resetOrgunitDrillToNational() {
+    organisationUnit.current_level = SETTING.orgisation_level[4];
+    destroyChosenDropDownList();
+    $("#organisation-unit").empty();
+    $("#organisation-unit-span").hide();
+    var orgUnitLevelName = 'National';
+    $("#orgunitLabel").css("margin-bottom", "10px");
+    $('#orgunitLabel').empty();
+    $('#orgunitLabel').text("Organisation Unit" + " - " + orgUnitLevelName);
+}
 
 //on click organisation unit level eg county, counstituency
 $(document).ready(function () {
@@ -88,6 +97,8 @@ $(document).ready(function () {
         var orgunitLabel = 'Organisation Unit';
         var orgUnitLevelName = "";
         if (orgUnitLevel == 'county') {
+            $("#organisation-unit-span").show();
+            $("#orgunitLabel").css("margin-bottom", "");
             organisationUnit.current_level = SETTING.orgisation_level[3];
             $("label[data-name='organisation-unit']").text("County:");
             destroyChosenDropDownList();
@@ -95,17 +106,40 @@ $(document).ready(function () {
             initOrganisationUnitChosenDropDown("county");
             orgUnitLevelName = 'County';
         } else if (orgUnitLevel == 'constituency') {
+            $("#organisation-unit-span").show();
+            $("#orgunitLabel").css("margin-bottom", "");
             organisationUnit.current_level = SETTING.orgisation_level[2];
             destroyChosenDropDownList();
             populateOrgunitList(locationCommon.constituenciesList);
             initOrganisationUnitChosenDropDown("Sub County");
             $("label[data-name='organisation-unit']").text("Constituency:");
             orgUnitLevelName = 'Sub-County';
+        } else if (orgUnitLevel == 'ward') {
+            $("#organisation-unit-span").show();
+            $("#orgunitLabel").css("margin-bottom", "");
+            organisationUnit.current_level = SETTING.orgisation_level[1];
+            destroyChosenDropDownList();
+            populateOrgunitList(locationCommon.wardsList);
+            initOrganisationUnitChosenDropDown("Ward");
+            $("label[data-name='organisation-unit']").text("Ward:");
+            orgUnitLevelName = 'Ward';
+        } else if (orgUnitLevel == 'facility') {
+            $("#organisation-unit-span").show();
+            $("#orgunitLabel").css("margin-bottom", "");
+            organisationUnit.current_level = SETTING.orgisation_level[0];
+            destroyChosenDropDownList();
+            populateOrgunitList(locationCommon.facilitiesList);
+            initOrganisationUnitChosenDropDown("Facility");
+            $("label[data-name='organisation-unit']").text("Facility:");
+            orgUnitLevelName = 'Facility';
         } else if (orgUnitLevel == 'national') {
-            orgUnitLevelName = 'National';
+            resetOrgunitDrillToNational()
         }
-        $('#orgunitLabel').empty();
-        $('#orgunitLabel').text(orgunitLabel + " - " + orgUnitLevelName);
+        if (orgUnitLevel != 'national') {
+            $('#orgunitLabel').empty();
+            $('#orgunitLabel').text(orgunitLabel + " - " + orgUnitLevelName);
+        }
+
     });
 
 });
@@ -205,6 +239,20 @@ function prepareQueryPropertiesToSubmit(currentIndicator, grapType) {
     return queryPropertiesToSubmit;
 }
 
+//checks currently selected locality option and reassign if time or indicator selection changes
+function setLocalityOption() {
+    //set currently select locality option
+    var orgunitId = $("#organisation-unit option:selected").attr('data-id');
+    if (orgunitId) {
+        var orgunitFilter = {};
+        orgunitFilter[organisationUnit.current_level] = new Array(orgunitId);
+        setLocality(organisationUnit.current_level, orgunitFilter);
+    } else {
+        resetOrgunitDrillToNational();
+    }
+}
+
+
 //on change mothly data year selection
 $(document).ready(function () {
     $('#start_year').change(function () {
@@ -213,11 +261,13 @@ $(document).ready(function () {
         yearMonthParameters.currentYear = year;
         setPeriodValues("monthly", year, year);
         indicatorHandler(indicatorType, indicator);
+        setLocalityOption();
         var queryPropertiesToSubmit = prepareQueryPropertiesToSubmit(indicator, SETTING.graph_year_month);
         getQueryValues(queryPropertiesToSubmit, dslGraph);
 
     });
 });
+
 
 //on change indicator
 $(document).ready(function () {
@@ -227,8 +277,11 @@ $(document).ready(function () {
         indicatorType = $(event.target).attr('data-name');
         indicatorName = filter;
         $("#indicator-name-label").text($(event.target).text());
+
+        setLocalityOption();
+
         if (dslGraph.selectedPeriodType == 'yearly') {
-            dslGraph.indicator= filter;
+            dslGraph.indicator = filter;
             getYearlyData();
         } else {
             var year = yearMonthParameters.currentYear;
@@ -527,25 +580,6 @@ function getQueryValues(queryToSubmit, dslGraph) {
     queryParametersList = [];
 }
 
-$(document).ready(function () {
-//load cadre names list
-    fetchCadre(populateCadres);
-    fetchCounties(populateCounty);
-    fetchConstituency($.noop);
-
-    initGraph();
-    //initialise initial values
-    $('#kemsa-switch').prop('checked', false);
-    $('#ihris-switch').prop('checked', false);
-    console.log($('#start_year option[value="2015"]'));
-    $('#start_year').val('2015');
-    $('#montly-option').prop("checked", true);
-    dslGraph.fetchKemsaData = false;
-    dslGraph.fetchIhrisData = false;
-    dslGraph.selectedPeriodType = "monthly";
-
-});
-
 
 //---> start building compare graph <---//
 
@@ -627,4 +661,31 @@ $('#graph-options > a').click(function (event) {
         dslGraph.graphType = SETTING.graph_type[5];
         dslGraph.drawGraph();
     }
+});
+
+
+
+// main();
+$(document).ready(function () {
+//load cadre names list
+    $("#orgunitLabel").css("margin-bottom", "10px");
+    $("#organisation-unit-span").hide();
+    fetchCadre(populateCadres);
+    //fetchCounties(populateCounty);
+    fetchCounties($.noop);
+    fetchConstituency($.noop);
+    fetchFacilities($.noop);
+    fetchWard($.noop);
+
+    initGraph();
+    //initialise initial values
+    $('#kemsa-switch').prop('checked', false);
+    $('#ihris-switch').prop('checked', false);
+    console.log($('#start_year option[value="2015"]'));
+    $('#start_year').val('2015');
+    $('#montly-option').prop("checked", true);
+    dslGraph.fetchKemsaData = false;
+    dslGraph.fetchIhrisData = false;
+    dslGraph.selectedPeriodType = "monthly";
+
 });

@@ -2,7 +2,8 @@
 var locationCommon = {
     countiesList: "",
     constituenciesList: "",
-    wardsList: ""
+    wardsList: "",
+    facilitiesList: ""
 
 };
 
@@ -57,6 +58,28 @@ function fetchCounties(_callback) {
         encode: true,
         success: function (data, textStatus, jqXHR) {
             locationCommon.countiesList = data;
+            _callback();
+        },
+        error: function (response, request) {
+            //  console.log("got an error fetching constituencies");
+            var parsed_data = JSON.parse(response.responseText);
+        }
+
+    });
+}
+
+
+
+//Fetch facilities
+function fetchFacilities(_callback) {
+    $.ajax({
+        type: 'GET', // define the type of HTTP verb we want to use
+        url: SETTING.facilities_api, // the url from server we that we want to use
+        contentType: 'application/json; charset=utf-8',
+        dataType: 'json', // what type of data do we expect back from the server
+        encode: true,
+        success: function (data, textStatus, jqXHR) {
+            locationCommon.facilitiesList = data;
             _callback();
         },
         error: function (response, request) {

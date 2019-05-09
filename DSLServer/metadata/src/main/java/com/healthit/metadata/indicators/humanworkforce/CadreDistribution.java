@@ -88,12 +88,17 @@ public class CadreDistribution implements Metadata {
         } catch (Exception ex) {
             log.error(ex);
         }
+        String isXaxisProcess="true";
+        if(pType=="month"){
+            indicator.put("xaxis", pType);
+            isXaxisProcess="false";
+        }
         indicator.put("xaxis", pType);
         indicator.put("subject", "cadre"); // converter helper data
         indicator.put("dataname", "cadre_count"); // converter helper data
         indicator.put("title", "Cadre distribution");
         indicator.put("graph-type", "0");
-        indicator.put("xaxis-process", "true");
+        indicator.put("xaxis-process", isXaxisProcess); //eg, monthly display of graph by month
         QueryParameters queryParams = new QueryParameters.QueryParametersBuilder()
                 .setEndMonth(endMonth)
                 .setEndYear(endYear)

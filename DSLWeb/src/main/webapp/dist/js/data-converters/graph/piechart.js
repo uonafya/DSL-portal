@@ -10,13 +10,13 @@ function convertToPieChart(metadataData, valueData, numm) {
     var subjectIndex = 0, datanameIndex = 0, xaxisIndex = 0;
 
     $.each(valueData['columns'], function (index, column) {
-        if (column['title'] == metadataData['subject']) {
+        if (column['title'].toLowerCase() == metadataData['subject'].toLowerCase()) {
             subjectIndex = index;
         }
-        if (column['title'] == metadataData['dataname']) {
+        if (column['title'].toLowerCase() == metadataData['dataname'].toLowerCase()) {
             datanameIndex = index;
         }
-        
+
         if (column['title'] == metadataData['xaxis']) {
             xaxisIndex = index;
         }
@@ -43,6 +43,11 @@ function getPieMetaData(componentMetaData, valueData, xaxisIndex, subjectIndex, 
     if (xaxis == 'month') {
         return _getPieDataWithMonthPeriodOption(valueData, componentMetaData, xaxisIndex, subjectIndex, datavalueIndex);
     }
+
+    if (xaxis == 'year') {
+        return _getPieDataWithYearlyPeriodOption(valueData, componentMetaData, xaxisIndex, subjectIndex, datavalueIndex);
+    }
+
 }
 
 
@@ -69,7 +74,7 @@ function _getPieDataWithMonthPeriodOption(valueData, componentMetaData, xaxisInd
     console.log(valueData);
     $.each(valueData['data'], function (index, dataArray) {
         var sub = dataArray[subjectIndex];
-        console.log("The month "+dataArray[xaxisIndex]);
+        console.log("The month " + dataArray[xaxisIndex]);
         if ($.inArray(sub, subjects) != -1) {
             graphData['' + sub + ''][dataArray[xaxisIndex]] = Number(dataArray[datavalueIndex]);
         } else {
@@ -92,7 +97,7 @@ function _getPieDataWithMonthPeriodOption(valueData, componentMetaData, xaxisInd
                 dataPoint['y'] = Number(value[month]);
                 console.log("-------------------------- " + value[month]);
                 chartPoints.push(dataPoint);
-                dataPoint={};
+                dataPoint = {};
                 dataPoint['name'] = key;
                 console.log("nop ---------------------------------- ");
                 console.log(100 - Number(value[month]));
@@ -107,9 +112,74 @@ function _getPieDataWithMonthPeriodOption(valueData, componentMetaData, xaxisInd
         month = month + 1;
         pieCharts.push(chartPoints);
     }
-
-    console.log("final dataa");
-    console.log(pieCharts);
     return pieCharts;
+
+}
+
+
+
+function _getPieDataWithYearlyPeriodOption(valueData, componentMetaData, xaxisIndex, subjectIndex, datavalueIndex) {
+    var dissagregatedSubjects = componentMetaData['dissagregated-subjects'];
+    var yearList = [];
+    var graphData = {};
+    $.each(valueData['data'], function (index, dataArray) {
+        var yearNow = dataArray[xaxisIndex];
+        var subjectValueMap = {};
+//        console.log("years list");
+        //console.log(yearList);
+        if ($.inArray(yearNow, yearList) != -1) {
+
+            graphData['' + yearNow + ''][dataArray[subjectIndex]] = dataArray[datavalueIndex];
+
+        } else {
+
+            yearList.push(yearNow);
+            subjectValueMap[dataArray[subjectIndex]] = dataArray[datavalueIndex];
+//            console.log("The graph");
+//            console.log(graphData);
+//            console.log("The year");
+//            console.log(yearNow);
+            subjectValueMap[dataArray[subjectIndex]] = dataArray[datavalueIndex];
+            graphData['' + yearNow + ''] = subjectValueMap;
+
+        }
+    });
+
+
+    var max = Math.max.apply(Math, yearList); // 3
+    var min = Math.min.apply(Math, yearList); // 1
+
+    console.log("the data ");
+    console.log(graphData);
+
+    var pieCharts = [];
+    var years = [];
+    var startYear = min;
+    while (startYear <= max) {
+        // if ($.inArray(startYear, yearList) != -1) { //check if year to process is in the list
+        var chartPoints = [];
+        console.log("Got here");
+        console.log(graphData[startYear]);
+        $.each(graphData[startYear], function (key, valueObj) {
+            var dataPoint = {};
+            dataPoint['name'] = key;
+            dataPoint['y'] = Number(valueObj);
+            chartPoints.push(dataPoint);
+        });
+        pieCharts.push(chartPoints);
+        years.push(startYear);
+        //}
+        startYear = startYear + 1;
+        console.log("incremental year");
+        console.log(startYear);
+    }
+
+    console.log("The pie charts ");
+    console.log(pieCharts);
+    var yearChartsObject={};
+    yearChartsObject['chart']=pieCharts;
+    yearChartsObject['years']=years;
+    return yearChartsObject;
+
 
 }

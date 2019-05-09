@@ -1,13 +1,16 @@
+/*
+ * To change this license header, choose License Headers in Project Properties.
+ * To change this template file, choose Tools | Templates
+ * and open the template in the editor.
+ */
 package com.healthit.metadata.indicators.servicedelivery;
 
-import com.healthit.dslweb.service.QueryInterpreter;
 import com.healthit.metadata.Metadata;
 import com.healthit.metadata.model.OrgUnitName;
 import com.healthit.metadata.model.PeriodType;
 import com.healthit.metadata.model.RequestEntity;
 import com.healthit.metadata.model.query.QueryParameters;
 import com.healthit.metadata.util.PropertiesLoader;
-import com.healthit.metadata.util.data.Commodity;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -20,17 +23,16 @@ import org.json.JSONObject;
  *
  * @author duncan
  */
-public class MalariaConfirmedCasesRatio implements Metadata {
-
-    final static Logger log = Logger.getLogger(MalariaConfirmedCasesRatio.class.getCanonicalName());
+public class TotalDeliveriesInFacilities implements Metadata {
+     final static Logger log = Logger.getLogger(AverageLengthOfStay.class.getCanonicalName());
     String kemsaQueryFile = "kemsa.properties";
-    String commodityList = "['%phosphate%','%quinine%']";
+    String commodityList = "['%ethambutol%','%isoniazid%', '%rifampicin%', '%pyrazinamide%']";
 
     @Override
     public List<Object> getMetadata(RequestEntity requestString) {
-        log.info("Malaria Confirmed Cases Ratio metadata fetcher");
+        log.info("Total deliveries in facilities");
         Map<String, String> indicator = new HashMap(); //carries metadata for main indicator
-        String pType="month";
+        String pType = "month";
         OrgUnitName orgUnit = OrgUnitName.NATIONAL;
         String orgUnitId = "";
         PeriodType periodType = PeriodType.MONTHLY;
@@ -69,14 +71,14 @@ public class MalariaConfirmedCasesRatio implements Metadata {
 
             if (periodTypeRaw.equals("yearly")) {
                 periodType = PeriodType.YEARLY;
-                pType="year";
+                pType = "year";
                 startYear = (String) period.getJSONArray("start_year").get(0);
                 endYear = (String) period.getJSONArray("end_year").get(0);
             }
 
             if (periodTypeRaw.equals("monthly")) {
                 periodType = PeriodType.MONTHLY;
-                pType="month";
+                pType = "month";
                 startYear = (String) period.getJSONArray("start_year").get(0);
                 endYear = (String) period.getJSONArray("end_year").get(0);
 
@@ -90,7 +92,7 @@ public class MalariaConfirmedCasesRatio implements Metadata {
         indicator.put("xaxis", pType);
         indicator.put("subject", "Indicator"); // converter helper data
         indicator.put("dataname", "value"); // converter helper data
-        indicator.put("title", "Malaria confirmed cases ratio");
+        indicator.put("title", "Total deliveries in facilities");
         indicator.put("graph-type", "4");
         indicator.put("dissagregated-subjects", "false"); //weather the name of the subjects (eg, can be dissagragated as facility by type)
         QueryParameters queryParams = new QueryParameters.QueryParametersBuilder()
@@ -157,7 +159,7 @@ public class MalariaConfirmedCasesRatio implements Metadata {
             log.info("Monthly and County");
             components = getWardYearlyMetadata(queryParams.getStartYear(), queryParams.getEndYear(), queryParams.getStartMonth(), queryParams.getEndMonth(), queryParams.getOrgId());
         }
-        
+
         if (queryParams.getPeriodType() == PeriodType.MONTHLY && queryParams.getOrgUnitName() == OrgUnitName.FACILITY) {
             log.info("Monthly and Facility");
             components = getFacilityMonthlyMetadata(queryParams.getStartYear(), queryParams.getEndYear(), queryParams.getStartMonth(), queryParams.getEndMonth(), queryParams.getOrgId());
@@ -168,72 +170,90 @@ public class MalariaConfirmedCasesRatio implements Metadata {
             components = getFacilityYearlyMetadata(queryParams.getStartYear(), queryParams.getEndYear(), queryParams.getStartMonth(), queryParams.getEndMonth(), queryParams.getOrgId());
         }
         
+        if (queryParams.getPeriodType() == PeriodType.MONTHLY && queryParams.getOrgUnitName() == OrgUnitName.FACILITY) {
+            log.info("Monthly and Facility");
+            components = getFacilityMonthlyMetadata(queryParams.getStartYear(), queryParams.getEndYear(), queryParams.getStartMonth(), queryParams.getEndMonth(), queryParams.getOrgId());
+        }
+
+        if (queryParams.getPeriodType() == PeriodType.YEARLY && queryParams.getOrgUnitName() == OrgUnitName.FACILITY) {
+            log.info("Monthly and Facility");
+            components = getFacilityYearlyMetadata(queryParams.getStartYear(), queryParams.getEndYear(), queryParams.getStartMonth(), queryParams.getEndMonth(), queryParams.getOrgId());
+        }
+
         return components;
     }
 
     private List<Object> getFacilityYearlyMetadata(String startYear, String endYear, String startMonth, String endMonth, String facility) {
         List<Object> components = new ArrayList();
-        return components;
+        return new ArrayList<Object>();
     }
 
     private List<Object> getFacilityMonthlyMetadata(String startYear, String endYear, String startMonth, String endMonth, String facility) {
         List<Object> components = new ArrayList();
-        return components;
+        return new ArrayList<Object>();
     }
 
     private List<Object> getWardYearlyMetadata(String startYear, String endYear, String startMonth, String endMonth, String ward) {
         String kemsaQueryName = "commodity_sum_per_ward_per_year_range";
         String kemsaQuery = getQueryToRun(kemsaQueryName, kemsaQueryFile);
         kemsaQuery = kemsaQuery.replaceAll("@ward@", ward);
-        return Commodity.getCommodityData(startYear, endYear, startMonth, endMonth, kemsaQuery, commodityList, "year");
+        //return Commodity.getCommodityData(startYear, endYear, startMonth, endMonth, kemsaQuery, commodityList, "year");
+        return new ArrayList<Object>();
     }
 
     private List<Object> getWardMonthlyMetadata(String startYear, String endYear, String startMonth, String endMonth, String ward) {
         String kemsaQueryName = "commodity_sum_per_ward_per_year_per_monthly";
         String kemsaQuery = getQueryToRun(kemsaQueryName, kemsaQueryFile);
         kemsaQuery = kemsaQuery.replaceAll("@ward@", ward);
-        return Commodity.getCommodityData(startYear, endYear, startMonth, endMonth, kemsaQuery, commodityList, "monthly");
+        // return Commodity.getCommodityData(startYear, endYear, startMonth, endMonth, kemsaQuery, commodityList, "monthly");
+        return new ArrayList<Object>();
     }
 
     private List<Object> getCountyMonthlyMetadata(String startYear, String endYear, String startMonth, String endMonth, String county) {
         String kemsaQueryName = "commodity_sum_per_county_per_year_per_monthly";
         String kemsaQuery = getQueryToRun(kemsaQueryName, kemsaQueryFile);
         kemsaQuery = kemsaQuery.replaceAll("@county@", county);
-        return Commodity.getCommodityData(startYear, endYear, startMonth, endMonth, kemsaQuery, commodityList, "month");
+        // return Commodity.getCommodityData(startYear, endYear, startMonth, endMonth, kemsaQuery, commodityList, "month");
+        return new ArrayList<Object>();
     }
 
     private List<Object> getCountyYearlyMetadata(String startYear, String endYear, String startMonth, String endMonth, String county) {
         String kemsaQueryName = "commodity_sum_per_county_per_year_range";
         String kemsaQuery = getQueryToRun(kemsaQueryName, kemsaQueryFile);
         kemsaQuery = kemsaQuery.replaceAll("@county@", county);
-        return Commodity.getCommodityData(startYear, endYear, startMonth, endMonth, kemsaQuery, commodityList, "year");
+        // return Commodity.getCommodityData(startYear, endYear, startMonth, endMonth, kemsaQuery, commodityList, "year");
+        return new ArrayList<Object>();
     }
 
     private List<Object> getConstituencyMonthlyMetadata(String startYear, String endYear, String startMonth, String endMonth, String constituency) {
         String kemsaQueryName = "commodity_sum_per_constituency_per_year_per_monthly";
         String kemsaQuery = getQueryToRun(kemsaQueryName, kemsaQueryFile);
         kemsaQuery = kemsaQuery.replaceAll("@constituency@", constituency);
-        return Commodity.getCommodityData(startYear, endYear, startMonth, endMonth, kemsaQuery, commodityList, "month");
+        // return Commodity.getCommodityData(startYear, endYear, startMonth, endMonth, kemsaQuery, commodityList, "month");
+        return new ArrayList<Object>();
     }
 
     private List<Object> getConstituencyYearlyMetadata(String startYear, String endYear, String startMonth, String endMonth, String constituency) {
         String kemsaQueryName = "commodity_sum_per_constituency_per_year_range";
         String kemsaQuery = getQueryToRun(kemsaQueryName, kemsaQueryFile);
         kemsaQuery = kemsaQuery.replaceAll("@constituency@", constituency);
-        return Commodity.getCommodityData(startYear, endYear, startMonth, endMonth, kemsaQuery, commodityList, "year");
+        // return Commodity.getCommodityData(startYear, endYear, startMonth, endMonth, kemsaQuery, commodityList, "year");
+        return new ArrayList<Object>();
     }
 
     private List<Object> getNationalMonthlyMetadata(String startYear, String endYear, String startMonth, String endMonth) {
         String kemsaQueryName = "commodity_sum_per_year_per_monthly";
         String kemsaQuery = getQueryToRun(kemsaQueryName, kemsaQueryFile);
-        return Commodity.getCommodityData(startYear, endYear, startMonth, endMonth, kemsaQuery, commodityList, "month");
+        //  return Commodity.getCommodityData(startYear, endYear, startMonth, endMonth, kemsaQuery, commodityList, "month");
+        return new ArrayList<Object>();
     }
 
     private List<Object> getNationalYearlyMetadata(String startYear, String endYear, String startMonth, String endMonth) {
         String kemsaQueryName = "commodity_sum_year_range";
 
         String kemsaQuery = getQueryToRun(kemsaQueryName, kemsaQueryFile);
-        return Commodity.getCommodityData(startYear, endYear, startMonth, endMonth, kemsaQuery, commodityList, "year");
+        //  return Commodity.getCommodityData(startYear, endYear, startMonth, endMonth, kemsaQuery, commodityList, "year");
+        return new ArrayList<Object>();
     }
 
     private String getQueryToRun(String queryName, String queryFile) {
@@ -243,5 +263,4 @@ public class MalariaConfirmedCasesRatio implements Metadata {
         String query = kemsaQueryFile.getProperty(queryName);
         return query;
     }
-
 }
