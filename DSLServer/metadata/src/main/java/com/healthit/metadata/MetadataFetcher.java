@@ -45,6 +45,7 @@ public class MetadataFetcher {
             
             try {
                 
+                //String classToGetMetadataFrom = metadataMapperFile.getProperty(rstEnty.getSubject().replaceAll("\\s+", "").replaceAll("-", ""));
                 String classToGetMetadataFrom = metadataMapperFile.getProperty(rstEnty.getSubject().replaceAll("\\s+", ""));
                 log.info("class name " + classToGetMetadataFrom);
                 Object[] obj = {rstEnty};
