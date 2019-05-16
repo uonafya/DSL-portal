@@ -565,7 +565,6 @@ function getQueryValues(queryToSubmit, dslGraph) {
                 }
             });
             dslGraph.graphType = SETTING.graph_type[graphType];
-            alert("17");
             dslGraph.drawGraph();
             if (!compareIndicatorMode)
                 insertMetadataComponents(data);

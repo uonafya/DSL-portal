@@ -1,5 +1,6 @@
-package com.healthit.metadata.indicators.uhc;
+package com.healthit.metadata.indicators.servicedelivery;
 
+import com.healthit.metadata.indicators.uhc.*;
 import com.healthit.dslweb.service.QueryInterpreter;
 import com.healthit.metadata.Metadata;
 import com.healthit.metadata.model.OrgUnitName;
@@ -20,15 +21,15 @@ import org.json.JSONObject;
  *
  * @author duncan
  */
-public class TBcurativeRate implements Metadata {
+public class HIvtestrateTBpatients implements Metadata {
 
-    final static Logger log = Logger.getLogger(TBcurativeRate.class.getCanonicalName());
+    final static Logger log = Logger.getLogger(HIvtestrateTBpatients.class.getCanonicalName());
     String kemsaQueryFile = "kemsa.properties";
     String commodityList = "['%ethambutol%','%isoniazid%', '%rifampicin%', '%pyrazinamide%']";
 
     @Override
     public List<Object> getMetadata(RequestEntity requestString) {
-        log.info("Tb curative rate metadata fetcher");
+        log.info("HIV+ test rate - TB patients");
         Map<String, String> indicator = new HashMap(); //carries metadata for main indicator
         String pType="month";
         OrgUnitName orgUnit = OrgUnitName.NATIONAL;
@@ -90,7 +91,7 @@ public class TBcurativeRate implements Metadata {
         indicator.put("xaxis", pType);
         indicator.put("subject", "indicator_name"); // converter helper data
         indicator.put("dataname", "value"); // converter helper data
-        String title="Tb Curative Rate ";
+        String title="HIV+ test rate - TB patients ";
          if(pType=="month"){
             indicator.put("title", title+startYear);
         }else{
