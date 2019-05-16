@@ -90,7 +90,12 @@ public class FemaleInfantsBelow6monthsBreastfeedding implements Metadata {
         indicator.put("xaxis", pType);
         indicator.put("subject", "indicator_name"); // converter helper data
         indicator.put("dataname", "value"); // converter helper data
-        indicator.put("title", "Female Infants below 6months on exclusive breastfeedding");
+        String title= "Female Infants below 6months on exclusive breastfeedding ";
+         if(pType=="month"){
+            indicator.put("title", title+startYear);
+        }else{
+            indicator.put("title", title +startYear+" - "+endYear);
+        }
         indicator.put("graph-type", "4");
         indicator.put("dissagregated-subjects", "false"); //weather the name of the subjects (eg, can be dissagragated as facility by type)
         QueryParameters queryParams = new QueryParameters.QueryParametersBuilder()

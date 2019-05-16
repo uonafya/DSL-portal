@@ -90,7 +90,12 @@ public class UnderFiveAttendingCW implements Metadata {
         indicator.put("xaxis", pType);
         indicator.put("subject", "indicator_name"); // converter helper data
         indicator.put("dataname", "value"); // converter helper data
-        indicator.put("title", "Under 5yrs attending CWC and are stunted");
+        String title= "Under 5yrs attending CWC and are stunted ";
+         if(pType=="month"){
+            indicator.put("title", title+startYear);
+        }else{
+            indicator.put("title", title +startYear+" - "+endYear);
+        }
         indicator.put("graph-type", "4");
         indicator.put("dissagregated-subjects", "false"); //weather the name of the subjects (eg, can be dissagragated as facility by type)
         QueryParameters queryParams = new QueryParameters.QueryParametersBuilder()

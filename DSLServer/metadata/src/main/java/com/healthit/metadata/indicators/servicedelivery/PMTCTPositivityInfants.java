@@ -90,7 +90,12 @@ public class PMTCTPositivityInfants implements Metadata {
         indicator.put("xaxis", pType);
         indicator.put("subject", "indicator_name"); // converter helper data
         indicator.put("dataname", "value"); // converter helper data
-        indicator.put("title", "PMTCT Positivity Infants");
+        if(pType=="month"){
+            indicator.put("title", "PMTCT Positivity Infants "+startYear);
+        }else{
+            indicator.put("title", "PMTCT Positivity Infants "+startYear+" - "+endYear);
+        }
+        indicator.put("title", "PMTCT Positivity Infants "+startYear);
         indicator.put("graph-type", "4");
         indicator.put("dissagregated-subjects", "false"); //weather the name of the subjects (eg, can be dissagragated as facility by type)
         QueryParameters queryParams = new QueryParameters.QueryParametersBuilder()

@@ -218,12 +218,12 @@ function setKemsaValues(commodityType) {
 
 function initGraph() {
     dslGraph = new DslGraph();
-    indicatorName = "PMTCT Positivity Infants";
+    indicatorName = "HIV+ test rate - PMTCT -ANC";
     indicatorType = "indicator:average:with_filter";
-    yearMonthParameters.currentYear = '2015';
-    setPeriodValues("monthly", '2015', '2015');
+    yearMonthParameters.currentYear = '2017';
+    setPeriodValues("monthly", '2017', '2017');
     indicatorHandler("indicator:average:with_filter", indicatorName);
-    var queryPropertiesToSubmit = prepareQueryPropertiesToSubmit("PMTCT Positivity Infants", SETTING.graph_year_month);
+    var queryPropertiesToSubmit = prepareQueryPropertiesToSubmit("HIV+ test rate - PMTCT -ANC", SETTING.graph_year_month);
     getQueryValues(queryPropertiesToSubmit, dslGraph);
 }
 
@@ -565,7 +565,7 @@ function getQueryValues(queryToSubmit, dslGraph) {
                 }
             });
             dslGraph.graphType = SETTING.graph_type[graphType];
-
+            alert("17");
             dslGraph.drawGraph();
             if (!compareIndicatorMode)
                 insertMetadataComponents(data);
@@ -681,8 +681,8 @@ $(document).ready(function () {
     //initialise initial values
     $('#kemsa-switch').prop('checked', false);
     $('#ihris-switch').prop('checked', false);
-    console.log($('#start_year option[value="2015"]'));
-    $('#start_year').val('2015');
+    console.log($('#start_year option[value="2017"]'));
+    $('#start_year').val('2017');
     $('#montly-option').prop("checked", true);
     dslGraph.fetchKemsaData = false;
     dslGraph.fetchIhrisData = false;
