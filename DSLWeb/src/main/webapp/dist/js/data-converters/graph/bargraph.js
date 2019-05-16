@@ -18,7 +18,9 @@ function convertToYearlyColumn() {
  * @returns {Array}
  */
 function convertToBarGraph(metadataData, valueData) {
-    console.log("bar graph converter called " + metadataData);
+    console.log("bar graph converter called " );
+    console.log(metadataData);
+    console.log(valueData);
     var subjectIndex = 0, datanameIndex = 0, xaxisIndex = 0;
 
     $.each(valueData['columns'], function (index, column) {

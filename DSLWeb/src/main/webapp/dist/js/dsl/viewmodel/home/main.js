@@ -1,13 +1,14 @@
-function getMonthlyData(year, indicator, title, elementid,graphType) {
+function getMonthlyData(year, indicator, title, elementid,graphType,type) {
     var dslGraph = new DslGraph();
     yearMonthParameters.currentYear = year;
     setPeriodValues("monthly", year, year);
-    setIndicatorValues("indicator:average:with_filter", indicator);
-    setIhrisValues("human_resource:count");
-    setKemsaValues("commodity:count");
+    sortIndicatorType(type, indicator);
+    //setIhrisValues("human_resource:count");
+    //setKemsaValues("commodity:count");
     var queryPropertiesToSubmit = prepareQueryPropertiesToSubmit(title, SETTING.graph_year_month, elementid, graphType,dslGraph);
     getQueryValues(queryPropertiesToSubmit, dslGraph);
 }
+
 
 var isCadre="human_resource:count:all_cadre_group";
 function getYearRangeData(startYear, endYear, indicator, title, elementid, graphType,data_to_fetch) {
@@ -71,17 +72,14 @@ function getQueryValues(queryToSubmit, dslGraph) {
     queryParametersList = [];
 }
 
-var data_to_fetch=[1,1,1];
-getMonthlyData("2015", "TB curative Rate", "National TB curative Rate against Total commodity issue and Cadre count", "test-graph1",SETTING.graph_type[1]);
+getMonthlyData("2018", "PMTCT Positivity Infants", "National PMTCT Positivity Infants (2018)", "test-graph1",SETTING.graph_type[4],"indicator:average:with_filter");
 
-getYearRangeData("2014", "2017", "TB curative Rate", "National TB curative Rate against Total commodity issue and Cadre count", "test-graph2", SETTING.graph_type[1],data_to_fetch);
+getMonthlyData("2018","HIV+ test rate - PMTCT -ANC", "National HIV+ test rate - PMTCT -ANC (2018)", "test-graph2", SETTING.graph_type[6],"indicator:average:with_filter");
 
-var data_to_fetch=[0,0,0];
-getYearRangeData("2015", "2015", "", "National Cadre distribution 2015", "test-graph3", SETTING.graph_type[0],data_to_fetch);
+getMonthlyData("2018", "facility_owner", "National Facility Distribution by owner", "test-graph4", SETTING.graph_type[0],"facility_owner:count");
 
-var data_to_fetch=[1,1,1];
-getYearRangeData("2012", "2018", "ANC clients attending at least 4 ANC visits", "National ANC clients attending at least 4 ANC visits against Total commodity issue and Cadre count", "test-graph4", SETTING.graph_type[1],data_to_fetch);
+getMonthlyData("2018", "Proportion of tested for HIV TB patient", "National Proportion of tested for HIV TB patient (2018)", "test-graph5", SETTING.graph_type[4],"indicator:average:with_filter");
 
-getYearRangeData("2012", "2018", "EAC ARVs to HIV positive mother during pregnancy", "National EAC ARVs to HIV positive mother during pregnancy against Total commodity issue and Cadre count", "test-graph5", SETTING.graph_type[1],data_to_fetch);
+getMonthlyData("2018", "human_resource", "National Human Resource Distribution (2018)", "test-graph3", SETTING.graph_type[0],"human_resource:count");
 
 

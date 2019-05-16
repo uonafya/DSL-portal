@@ -88,7 +88,7 @@ public class TbPatientsWhoCompletedTreatement implements Metadata {
             log.error(ex);
         }
         indicator.put("xaxis", pType);
-        indicator.put("subject", "Indicator"); // converter helper data
+        indicator.put("subject", "indicator_name"); // converter helper data
         indicator.put("dataname", "value"); // converter helper data
         indicator.put("title", "TB patients who have completed treatment Total");
         indicator.put("graph-type", "4");

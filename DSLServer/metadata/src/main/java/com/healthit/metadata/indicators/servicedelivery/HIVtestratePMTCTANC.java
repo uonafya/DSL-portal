@@ -20,15 +20,15 @@ import org.json.JSONObject;
  *
  * @author duncan
  */
-public class HivPositiveTestRateDTCInPatients implements Metadata {
+public class HIVtestratePMTCTANC implements Metadata {
 
-    final static Logger log = Logger.getLogger(HivPositiveTestRateDTCInPatients.class.getCanonicalName());
+    final static Logger log = Logger.getLogger(HIVtestratePMTCTANC.class.getCanonicalName());
     String kemsaQueryFile = "kemsa.properties";
     String commodityList = "['%abacavir%','%lamivudine%','%zidovudine%','%retrovir%','%lamivudine%','%emtriva%']";
 
     @Override
     public List<Object> getMetadata(RequestEntity requestString) {
-        log.info("Hiv Positive Test Rate DTC In Patients metadata fetcher");
+        log.info("HIV+ test rate - PMTCT -ANC");
         Map<String, String> indicator = new HashMap(); //carries metadata for main indicator
         String pType="month";
         OrgUnitName orgUnit = OrgUnitName.NATIONAL;
@@ -90,7 +90,7 @@ public class HivPositiveTestRateDTCInPatients implements Metadata {
         indicator.put("xaxis", pType);
         indicator.put("subject", "indicator_name"); // converter helper data
         indicator.put("dataname", "value"); // converter helper data
-        indicator.put("title", "HIV+ test rate - DTC inpatients");
+        indicator.put("title", "HIV+ test rate - PMTCT -ANC");
         indicator.put("graph-type", "4");
         indicator.put("dissagregated-subjects", "false"); //weather the name of the subjects (eg, can be dissagragated as facility by type)
         QueryParameters queryParams = new QueryParameters.QueryParametersBuilder()

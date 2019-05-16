@@ -41,6 +41,8 @@ DslGraph.prototype.drawGraph = function draw() {
     } else if (this.type == SETTING.graph_year_month && this.graphType == SETTING.graph_type[4]) {  //bar graph
         var metadataData = getMetadataObject(that.graphData);
         var convertedData = convertToBarGraph(metadataData, that.graphData);
+        console.log("The serie is: ========>");
+        console.log(convertedData[0]);
         drawBarChart(that.elementId, convertedData[2], convertedData[1], convertedData[0]);
 
     } else if (this.type == SETTING.graph_year_month && this.graphType == SETTING.graph_type[6]) { //monthly multiline

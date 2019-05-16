@@ -88,7 +88,7 @@ public class UnderFiveAttendingCW implements Metadata {
             log.error(ex);
         }
         indicator.put("xaxis", pType);
-        indicator.put("subject", "Indicator"); // converter helper data
+        indicator.put("subject", "indicator_name"); // converter helper data
         indicator.put("dataname", "value"); // converter helper data
         indicator.put("title", "Under 5yrs attending CWC and are stunted");
         indicator.put("graph-type", "4");

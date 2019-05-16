@@ -218,12 +218,12 @@ function setKemsaValues(commodityType) {
 
 function initGraph() {
     dslGraph = new DslGraph();
-    indicatorName = "TB curative Rate";
+    indicatorName = "PMTCT Positivity Infants";
     indicatorType = "indicator:average:with_filter";
     yearMonthParameters.currentYear = '2015';
     setPeriodValues("monthly", '2015', '2015');
     indicatorHandler("indicator:average:with_filter", indicatorName);
-    var queryPropertiesToSubmit = prepareQueryPropertiesToSubmit("TB curative Rate", SETTING.graph_year_month);
+    var queryPropertiesToSubmit = prepareQueryPropertiesToSubmit("PMTCT Positivity Infants", SETTING.graph_year_month);
     getQueryValues(queryPropertiesToSubmit, dslGraph);
 }
 

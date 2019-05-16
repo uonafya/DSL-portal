@@ -88,7 +88,7 @@ public class MalariaConfirmedCasesRatio implements Metadata {
             log.error(ex);
         }
         indicator.put("xaxis", pType);
-        indicator.put("subject", "Indicator"); // converter helper data
+        indicator.put("subject", "indicator_name"); // converter helper data
         indicator.put("dataname", "value"); // converter helper data
         indicator.put("title", "Malaria confirmed cases ratio");
         indicator.put("graph-type", "4");

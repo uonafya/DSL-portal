@@ -21,11 +21,40 @@ function setPeriodValues(periodType, startDate, endDate) {
     return queryParametersList;
 }
 
+function sortIndicatorType(indicatorType, indicator, filter){
+    if(indicatorType.indexOf('facility') != -1){
+        setInfrustructureValues(indicatorType, indicator);
+    }else if(indicatorType.indexOf('indicator') != -1){
+        setIndicatorValues(indicatorType, indicator);
+    }else if(indicatorType.indexOf('human_resource') != -1){
+        setHRValues(indicatorType, indicator);
+    }else{
+    }
+    
+}
 
 function setIndicatorValues(indicatorType, indicator, filter) {
     var indicatorValuesToQuery = {};
     indicatorValuesToQuery['what'] = indicatorType;
     indicatorValuesToQuery['filter'] = {'indicator': new Array(indicator)};
+    queryParametersList.push(indicatorValuesToQuery);
+    return queryParametersList;
+}
+
+
+function setInfrustructureValues(indicatorType, indicator, filter) {
+    var indicatorValuesToQuery = {};
+    indicatorValuesToQuery['what'] = indicatorType;
+    indicatorValuesToQuery['filter'] = {'facility': new Array(indicator)};
+    queryParametersList.push(indicatorValuesToQuery);
+    return queryParametersList;
+}
+
+
+function setHRValues(indicatorType, indicator, filter) {
+    var indicatorValuesToQuery = {};
+    indicatorValuesToQuery['what'] = indicatorType;
+    indicatorValuesToQuery['filter'] = {'cadre': new Array(indicator)};
     queryParametersList.push(indicatorValuesToQuery);
     return queryParametersList;
 }
