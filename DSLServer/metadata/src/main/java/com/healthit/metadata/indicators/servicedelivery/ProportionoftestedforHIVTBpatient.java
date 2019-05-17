@@ -90,7 +90,7 @@ public class ProportionoftestedforHIVTBpatient implements Metadata {
         indicator.put("xaxis", pType);
         indicator.put("subject", "indicator_name"); // converter helper data
         indicator.put("dataname", "value"); // converter helper data
-        String title= "PMTCT ARV Prophylaxis Rate (Infant) ";
+        String title= "Proportion of tested for HIV TB patient ";
          if(pType=="month"){
             indicator.put("title", title+startYear);
         }else{

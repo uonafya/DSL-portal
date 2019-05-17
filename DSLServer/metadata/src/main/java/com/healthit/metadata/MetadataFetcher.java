@@ -7,7 +7,6 @@ package com.healthit.metadata;
 
 import com.healthit.metadata.model.RequestEntity;
 import com.healthit.metadata.util.PropertiesLoader;
-import com.healthit.metadata.util.RequestBodyDissolver;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
@@ -28,7 +27,7 @@ public class MetadataFetcher {
 
     public List<Object> getMeta(JSONArray requestBody) {
         log.info("Getmetadata function");
-        List<RequestEntity> rqtEntities = _sort(requestBody);
+        List<RequestEntity> rqtEntities = PropertiesLoader._sort(requestBody);
         Iterator i = rqtEntities.iterator();
         Properties metadataMapperFile = null;
         metadataMapperFile = PropertiesLoader.getPropertiesFile(metadataMapperFile, "metadatamapping.properties");
@@ -69,18 +68,4 @@ public class MetadataFetcher {
         return components;
     }
 
-    /**
-     * Checks the request body for indicators/subjects with available metadata
-     * and calls relevant functions to process meta info.
-     *
-     * @param pBody
-     * @return
-     */
-    public List<RequestEntity> _sort(JSONArray pBody) {
-        log.info("metadata sorting");
-        RequestBodyDissolver requestBodyDissolver = new RequestBodyDissolver();
-        List<RequestEntity> rqtEntities = requestBodyDissolver.dissolve(pBody);
-        log.info("The meta list " + rqtEntities);
-        return rqtEntities;
-    }
 }
