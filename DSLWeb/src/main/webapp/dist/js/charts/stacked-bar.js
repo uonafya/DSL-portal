@@ -22,6 +22,12 @@ function stackedBar(elementId,titlee,categoriee,serie){
                 }
             }
         },
+        credits: {
+            enabled: false
+        },
+        exporting: {
+            enabled: true
+        },
         legend: {
             align: 'right',
             x: -30,

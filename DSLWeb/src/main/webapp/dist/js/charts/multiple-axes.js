@@ -59,6 +59,12 @@ function drawMultipleAxes(elementId, titlee, categoriee, serie) {
                 },
                 opposite: true
             }],
+        credits: {
+            enabled: false
+        },
+        exporting: {
+            enabled: true
+        },
         tooltip: {
             shared: true
         },

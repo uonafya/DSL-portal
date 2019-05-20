@@ -13,6 +13,12 @@ function drawPie(elementId, titlee, seriee,formatt) {
         title: {
             text: titlee
         },
+        credits: {
+            enabled: false
+        },
+        exporting: {
+            enabled: true
+        },
 //        tooltip: {
 //            pointFormat: '{series.name}: <b>{point.percentage:.1f}%</b>'
 //        }

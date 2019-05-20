@@ -21,7 +21,12 @@ function drawBarChart(elementId, titlee, categoriee, serie) {
                 text: 'Period'
             }
         },
-
+        credits: {
+            enabled: false
+        },
+        exporting: {
+            enabled: true
+        },
 //        series: [{
 //                type: 'column',
 //                colorByPoint: true,

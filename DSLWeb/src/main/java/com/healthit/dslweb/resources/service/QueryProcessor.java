@@ -50,7 +50,16 @@ public class QueryProcessor {
 
         while (i.hasNext()) {
             RequestEntity rstEnty = (RequestEntity) i.next();
-            orgUnit = (String) rstEnty.getOrgUnitID();
+            try{
+                orgUnit = (String) rstEnty.getOrgUnitID();
+            }catch(Exception e){
+                
+                JSONObject orgUnitIdOb = (JSONObject) rstEnty.getOrgUnitID();
+                orgUnit = (String) orgUnitIdOb.getJSONArray(rstEnty.getOrgUnitType()).get(0);
+                System.out.println(orgUnit);
+                
+            }
+            
 //            rstEnty.getOrgUnitType();
 //            rstEnty.getPeriodType();
             String subJect = rstEnty.getSubject();
