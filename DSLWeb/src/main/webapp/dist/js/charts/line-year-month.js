@@ -8,6 +8,12 @@ function drawLineYearMonth(elementId, titlee, categoriee, serie) {
                     month: '%b-%Y',
                     year: '%Y'
                 },
+                credits: {
+                    enabled: false
+                },
+                exporting: {
+                    enabled: true
+                },
                 labels: {
                     rotation: 300
                 }

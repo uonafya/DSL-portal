@@ -50,6 +50,9 @@ public class QueryProcessor {
 
         while (i.hasNext()) {
             RequestEntity rstEnty = (RequestEntity) i.next();
+<<<<<<< HEAD
+            orgUnit = (String) rstEnty.getOrgUnitID();
+=======
             try{
                 orgUnit = (String) rstEnty.getOrgUnitID();
             }catch(Exception e){
@@ -60,6 +63,7 @@ public class QueryProcessor {
                 
             }
             
+>>>>>>> nav
 //            rstEnty.getOrgUnitType();
 //            rstEnty.getPeriodType();
             String subJect = rstEnty.getSubject();

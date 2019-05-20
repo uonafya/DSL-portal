@@ -15,7 +15,12 @@ function drawMultiLineGraph(elementId, titlee, categoriee, serie) {
                 text: 'Values'
             }
         },
-
+        credits: {
+            enabled: false
+        },
+        exporting: {
+            enabled: true
+        },
         xAxis: {
               categories: categoriee,
            // categories: categoriee,
