@@ -78,8 +78,8 @@ getMonthlyData("2018","HIV+ test rate - PMTCT -ANC", "National HIV+ test rate - 
 
 getMonthlyData("2018", "facility_owner", "National Facility Distribution by owner", "test-graph4", SETTING.graph_type[0],"facility_owner:count");
 
-getMonthlyData("2018", "Proportion of tested for HIV TB patient", "National Proportion of tested for HIV TB patient (2018)", "test-graph5", SETTING.graph_type[4],"indicator:average:with_filter");
+getMonthlyData("2018", "Proportion of tested for HIV TB patient", "National Proportion of tested for HIV TB patient (2018)", "test-graph3", SETTING.graph_type[4],"indicator:average:with_filter");
 
-getMonthlyData("2018", "human_resource", "National Human Resource Distribution (2018)", "test-graph3", SETTING.graph_type[0],"human_resource:count");
+getMonthlyData("2018", "human_resource", "National Human Resource Distribution (2018)", "test-graph5", SETTING.graph_type[0],"human_resource:count");
 
 
