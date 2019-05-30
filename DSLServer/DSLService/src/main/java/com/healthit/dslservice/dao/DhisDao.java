@@ -7,8 +7,6 @@ package com.healthit.dslservice.dao;
 
 import com.healthit.dslservice.DslException;
 import com.healthit.dslservice.Filter;
-import static com.healthit.dslservice.dao.FacilityDao.log;
-import static com.healthit.dslservice.dao.IhrisDao.log;
 import com.healthit.dslservice.dto.KephLevel;
 import com.healthit.dslservice.dto.adminstrationlevel.Facility;
 import com.healthit.dslservice.dto.dhis.Indicator;

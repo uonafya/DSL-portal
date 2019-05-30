@@ -5,13 +5,13 @@
     xsi:noNamespaceSchemaLocation="ehcache.xsd" updateCheck="true"
     monitoring="autodetect" dynamicConfig="true">
 
-    <cache name="dslCache" 
-           maxBytesLocalHeap="1500000000"
-           maxBytesLocalDisk="6000000000" 
-           eternal="true"  
-           diskSpoolBufferSizeMB="6000"
+    <cache name="dslCache"
+           maxBytesLocalHeap="2000"
+           maxBytesLocalDisk="2000"
+           eternal="true"
+           diskSpoolBufferSizeMB="200"
            timeToIdleSeconds="0" timeToLiveSeconds="0"
-           memoryStoreEvictionPolicy="LFU" 
+           memoryStoreEvictionPolicy="LFU"
            transactionalMode="off">
         <persistence strategy="localTempSwap" />
     </cache>
